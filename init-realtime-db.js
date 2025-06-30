@@ -35,3 +35,8 @@ function cancelReservation(btn) {
 console.log('displayReservations 전달 id:', reservations.map(r => r.id)); 
 
 console.log('lastReservations:', window.lastReservations.map(r => r.id)); 
+
+function showCancelModal(reservation, onConfirm) {
+    console.log('showCancelModal 실행:', reservation);
+    // ... 기존 코드 ...
+} 
