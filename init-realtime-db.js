@@ -19,3 +19,15 @@ async function initializeRealtimeDatabase() {
 initializeRealtimeDatabase();
 
 window.cancelReservation = cancelReservation; 
+
+function cancelReservation(btn) {
+    console.log('취소 버튼 클릭:', btn, btn.getAttribute('data-id'));
+    const reservationId = btn.getAttribute('data-id');
+    console.log('lastReservations:', window.lastReservations, '찾는 id:', reservationId);
+    const reservation = window.lastReservations?.find(r => `${r.id}` === `${reservationId}`);
+    if (!reservation) {
+        alert('예약 정보를 찾을 수 없습니다.');
+        return;
+    }
+    // ... 이하 생략
+} 
