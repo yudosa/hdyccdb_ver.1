@@ -522,50 +522,24 @@
         window.cancelReservation = cancelReservation;
         window.showSimpleCancelModal = showSimpleCancelModal;
 
-        function getTimeBtnsHTML() {
-            const slots = getTimeSlotsForFacility(facilityName === '댄스연습실' ? facilityName : (selectedFacility || facilityName));
-            console.log('getTimeBtnsHTML - slots:', slots);
-            console.log('getTimeBtnsHTML - selectedFacility:', selectedFacility, 'selectedDate:', selectedDate);
-            // ... 이하 생략 ...
-        }
-
         function getReservedTimes(facility, detail, date) {
-            // ... 기존 코드 ...
-            if (reservationData[key] && reservationData[key][date]) {
-                // 30분 단위 시설이면 30분 단위로 반환
-                if (facility && (facility.includes('닌텐도') || facility.includes('플레이스테이션'))) {
-                    return reservationData[key][date];
-                } else {
-                    return reservationData[key][date];
-                }
+            const key = facility + '||' + (detail || '-');
+            if (!reservationData || Object.keys(reservationData).length === 0) {
+                return [];
             }
-            // ... 이하 생략 ...
+            if (reservationData[key] && reservationData[key][date]) {
+                return reservationData[key][date];
+            }
+            return [];
         }
 
-        if (!reservation.status || reservation.status === 'active') {
-            // 30분 단위 시설이면 30분 단위로 push
-            if (reservation.facility && (reservation.facility.includes('닌텐도') || reservation.facility.includes('플레이스테이션'))) {
-                let [h, m] = reservation.start_time.split(':').map(Number);
-                const [endH, endM] = reservation.end_time.split(':').map(Number);
-                while (h < endH || (h === endH && m < endM)) {
-                    const timeStr = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
-                    if (!reservationData[key][reservation.date].includes(timeStr)) {
-                        reservationData[key][reservation.date].push(timeStr);
-                    }
-                    m += 30;
-                    if (m === 60) { m = 0; h += 1; }
-                }
-            } else {
-                // 1시간 단위
-                const startHour = parseInt(reservation.start_time.split(':')[0]);
-                const endHour = parseInt(reservation.end_time.split(':')[0]);
-                for (let h = startHour; h < endHour; h++) {
-                    const timeStr = `${h.toString().padStart(2, '0')}:00`;
-                    if (!reservationData[key][reservation.date].includes(timeStr)) {
-                        reservationData[key][reservation.date].push(timeStr);
-                    }
-                }
-            }
+        function getTimeBtnsHTML() {
+            const slots = getTimeSlotsForFacility(selectedFacility);
+            console.log('getTimeBtnsHTML - selectedFacility:', selectedFacility, 'slots:', slots);
+            // 항상 facilityName + selectedFacility로 key 생성
+            const reserved = Object.keys(reservationData).length > 0 ? 
+                getReservedTimes(facilityName, selectedFacility, selectedDate) : [];
+            // ... 이하 동일 ...
         }
     </script>
 </body>

@@ -112,10 +112,23 @@
         }
         /* 간트차트 스타일 추가 */
         .gantt-timeline-scroll-x { overflow-x: auto; width: 100%; }
-        .gantt-timeline-container { min-width: 100%; background: #fff; border-radius: 16px; box-shadow: 0 4px 24px #0004; padding: 32px; }
+        .gantt-timeline-container {
+            min-width: 1400px;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px #0004;
+            padding: 32px;
+        }
         .gantt-timeline-header { display: flex; margin-bottom: 12px; }
         .gantt-timeline-header .room-label { width: 120px; }
-        .gantt-timeline-header .time-slot { flex: 1; text-align: center; color: #888; font-weight: 600; }
+        .gantt-timeline-header .time-slot {
+            flex: 1;
+            text-align: center;
+            color: #888;
+            font-weight: 600;
+            min-width: 90px;
+            max-width: 160px;
+        }
         .gantt-timeline-row { display: flex; align-items: center; height: 48px; position: relative; }
         .room-label { width: 120px; font-weight: bold; color: #222; }
         .gantt-timeline-bar-bg {
@@ -137,7 +150,21 @@
             width: 0; border-left: 1px dashed #bbb; z-index: 1;
         }
         .gantt-timeline-bar-bg.thirtymin-bg .thirtymin-line { left: 0; }
-        .gantt-timeline-bar { position: absolute; height: 32px; border-radius: 8px; color: #fff; font-weight: 600; display: flex; align-items: center; padding: 0 16px; font-size: 1rem; box-shadow: 0 2px 8px #0002; }
+        .gantt-timeline-bar {
+            position: absolute;
+            height: 32px;
+            border-radius: 8px;
+            color: #fff;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            font-size: 1rem;
+            box-shadow: 0 2px 8px #0002;
+            min-width: 70px;
+            white-space: nowrap;
+            overflow: visible;
+        }
         .bar-blue { background: linear-gradient(90deg, #4fc3f7, #1976d2); }
         .bar-pink { background: linear-gradient(90deg, #f48fb1, #d81b60); }
         .bar-green { background: linear-gradient(90deg, #81c784, #388e3c); }
@@ -726,7 +753,7 @@
                     const left = ((start - startHour * 60) / totalMinutes) * 100;
                     const width = ((end - start) / totalMinutes) * 100;
                     const colorClass = ['bar-blue','bar-pink','bar-green','bar-yellow'][idx % 4];
-                    html += `<div class="gantt-timeline-bar ${colorClass}" style="left:${left}%;width:${width}%" title="${res.name}">${res.name}${res.extra ? ' 외 ' + res.extra + '명' : ''}</div>`;
+                    html += `<div class="gantt-timeline-bar ${colorClass}" style="left:${left}%;width:${width}%" title="${res.name}" data-id="${res.id}">${res.name}${res.extra ? ' 외 ' + res.extra + '명' : ''}</div>`;
                 });
                 html += '</div></div>';
             });
@@ -752,6 +779,34 @@
     }
     document.addEventListener('DOMContentLoaded', () => loadAndRenderGanttTimeline(selectedCategory));
     document.getElementById('statusDate')?.addEventListener('change', () => loadAndRenderGanttTimeline(selectedCategory));
+    // 강제취소 버튼 이벤트 보완 (간트차트 bar 클릭 시)
+    document.getElementById('ganttTimelineWrap').addEventListener('click', function(e) {
+        const bar = e.target.closest('.gantt-timeline-bar');
+        if (bar && isAdmin()) {
+            const reservationId = bar.getAttribute('data-id');
+            if (!reservationId) {
+                alert('예약 ID를 찾을 수 없습니다.');
+                return;
+            }
+            showCancelModal(async () => {
+                try {
+                    const response = await fetch(`/api/reservations/${reservationId}/cancel`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                    if (response.ok) {
+                        showSuccessModal('예약이 성공적으로 취소되었습니다.');
+                        await loadAndRenderGanttTimeline(selectedCategory);
+                    } else {
+                        const errorData = await response.json();
+                        alert('예약 취소 실패: ' + (errorData.error || '알 수 없는 오류'));
+                    }
+                } catch (error) {
+                    alert('예약 취소 중 오류가 발생했습니다.');
+                }
+            });
+        }
+    });
     </script>
 </body>
 </html> 
