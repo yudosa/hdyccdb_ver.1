@@ -326,10 +326,10 @@
                             // 해당 시간대의 예약 찾기
                             const reservationToCancel = reservations.find(r => 
                                 r.space === space && 
-                                r.detail === detail && 
-                                r.start <= hour && 
-                                r.end > hour &&
-                                r.status === 'active' // 활성 예약만 취소 가능
+                                ((r.detail || '') === (detail || '')) &&
+                                Number(r.start) <= Number(hour) &&
+                                Number(r.end) > Number(hour) &&
+                                (r.status === 'active' || !r.status) // status 없으면 active로 간주
                             );
                             
                             if (reservationToCancel && reservationToCancel.id) {
