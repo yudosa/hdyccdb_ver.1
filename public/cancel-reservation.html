@@ -398,11 +398,11 @@
                         alert('예약이 취소되었습니다.');
                         loadMyReservations();
                     } else {
-                        if (result.error && result.error.includes('이미 취소된 예약')) {
-                            loadMyReservations();
-                            return;
+                        if (result.error) {
+                            alert(result.error);
+                        } else {
+                            alert('예약 취소에 실패했습니다.');
                         }
-                        alert(result.error || '예약 취소에 실패했습니다.');
                     }
                 } catch (e) {
                     alert('예약 취소 중 오류가 발생했습니다.');
