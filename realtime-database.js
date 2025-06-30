@@ -6,9 +6,6 @@ const {
   push, 
   update, 
   remove, 
-  query, 
-  orderByChild, 
-  equalTo,
   serverTimestamp,
   onValue
 } = require('firebase/database');
@@ -78,18 +75,25 @@ async function getReservationById(id) {
 async function getReservationsByDate(date) {
   try {
     const reservationsRef = ref(realtimeDb, 'reservations');
-    const dateQuery = query(reservationsRef, orderByChild('date'), equalTo(date));
-    const snapshot = await get(dateQuery);
+    const snapshot = await get(reservationsRef);
     
     const reservations = [];
     if (snapshot.exists()) {
       snapshot.forEach((childSnapshot) => {
-        reservations.push({
-          id: childSnapshot.key,
-          ...childSnapshot.val()
-        });
+        const reservation = childSnapshot.val();
+        if (reservation.date === date) {
+          reservations.push({
+            id: childSnapshot.key,
+            ...reservation
+          });
+        }
       });
     }
+    
+    // 시작 시간으로 정렬
+    reservations.sort((a, b) => {
+      return a.start_time.localeCompare(b.start_time);
+    });
     
     return reservations;
   } catch (error) {

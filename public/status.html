@@ -169,6 +169,7 @@
             
             // API 데이터를 타임라인 형식으로 변환
             return reservations.map(reservation => ({
+                id: reservation.id,
                 date: reservation.date,
                 space: reservation.facility,
                 detail: reservation.detail !== '-' ? reservation.detail : null,
@@ -275,11 +276,50 @@
         // 강제취소 버튼 이벤트 (모달)
         if(isAdmin()) {
             document.querySelectorAll('.admin-cancel-btn').forEach(btn => {
-                btn.onclick = function(e) {
+                btn.onclick = async function(e) {
                     e.stopPropagation();
-                    showCancelModal(() => {
-                        btn.parentElement.innerHTML = '';
-                        showSuccessModal('취소가 되었습니다.');
+                    const space = btn.getAttribute('data-space');
+                    const detail = btn.getAttribute('data-detail');
+                    const hour = parseInt(btn.getAttribute('data-hour'));
+                    
+                    showCancelModal(async () => {
+                        try {
+                            // 해당 시간대의 예약을 찾아서 삭제
+                            const date = document.getElementById('statusDate').value;
+                            const reservations = await getSampleReservations(date);
+                            
+                            // 해당 시간대의 예약 찾기
+                            const reservationToDelete = reservations.find(r => 
+                                r.space === space && 
+                                r.detail === detail && 
+                                r.start <= hour && 
+                                r.end > hour
+                            );
+                            
+                            if (reservationToDelete && reservationToDelete.id) {
+                                // API 호출로 예약 삭제
+                                const response = await fetch(`/api/reservations/${reservationToDelete.id}`, {
+                                    method: 'DELETE',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    }
+                                });
+                                
+                                if (response.ok) {
+                                    showSuccessModal('예약이 성공적으로 취소되었습니다.');
+                                    // 타임라인 다시 렌더링
+                                    await renderTimeline();
+                                } else {
+                                    const errorData = await response.json();
+                                    alert('예약 취소 실패: ' + (errorData.error || '알 수 없는 오류'));
+                                }
+                            } else {
+                                alert('삭제할 예약을 찾을 수 없습니다.');
+                            }
+                        } catch (error) {
+                            console.error('예약 삭제 오류:', error);
+                            alert('예약 취소 중 오류가 발생했습니다.');
+                        }
                     });
                 };
             });
