@@ -250,55 +250,18 @@
     // 예약 데이터를 정확히 매칭하는 함수
     function getReservedTimes(facility, detail, date) {
         console.log('=== getReservedTimes 함수 호출 ===');
+        // detail 없는 시설은 '-'로 통일
+        const detailKey = (facility === '댄스연습실' || facility === '다목적실') ? '-' : detail;
+        const key = facility + '||' + (detailKey || '-');
         console.log('입력 매개변수:', { facility, detail, date });
-        console.log('전역 reservationData:', reservationData);
-        console.log('reservationData 키들:', Object.keys(reservationData));
-        
+        console.log('실제 검색 키:', key);
         if (!reservationData || Object.keys(reservationData).length === 0) {
             console.log('예약 데이터가 비어있음');
             return [];
         }
-        
-        // 여러 키 패턴으로 검색 시도
-        const possibleKeys = [
-            facility + '||' + (detail || '-'),
-            facility + '||' + detail,
-            detail + '||' + facility,
-            detail
-        ];
-        
-        console.log('검색할 키들:', possibleKeys);
-        
-        for (const key of possibleKeys) {
-            console.log(`키 "${key}" 확인 중...`);
-            if (reservationData[key]) {
-                console.log(`키 "${key}"의 데이터:`, reservationData[key]);
-                if (reservationData[key][date]) {
-                    console.log(`날짜 "${date}"의 예약 시간:`, reservationData[key][date]);
-                    // 예약 데이터가 있으면 해당 날짜의 예약 시간 배열 반환
-                    // 기존: return reservationData[key][date];
-                    // 수정: status가 'active'인 예약만 시간 추출
-                    const times = reservationData[key][date];
-                    if (Array.isArray(times)) {
-                        // [{time: '09:00', status: 'active'}, ...] 형태라면
-                        return times.filter(t => t.status === 'active' || !t.status).map(t => t.time);
-                    } else if (typeof times === 'object') {
-                        // { '09:00': {status: 'active'}, ... } 형태라면
-                        return Object.entries(times)
-                            .filter(([time, t]) => t.status === 'active' || !t.status)
-                            .map(([time]) => time);
-                    } else {
-                        // 기존 배열(문자열)이라면 그대로 반환
-                        return times;
-                    }
-                } else {
-                    console.log(`날짜 "${date}"에 대한 데이터 없음`);
-                }
-            } else {
-                console.log(`키 "${key}"에 대한 데이터 없음`);
-            }
+        if (reservationData[key] && reservationData[key][date]) {
+            return reservationData[key][date];
         }
-        
         console.log('예약된 시간 없음');
         return [];
     }
@@ -552,52 +515,27 @@
             console.log('=== 예약 데이터 로드 시작 ===');
             const response = await fetch('/api/reservations');
             const reservations = await response.json();
-            
             console.log('API에서 받은 원본 예약 데이터:', reservations);
-            console.log('예약 데이터 개수:', reservations.length);
-            
-            // 예약 데이터를 정확히 정리
             reservationData = {};
             reservations.forEach((reservation, index) => {
-                console.log(`예약 ${index + 1} 처리:`, reservation);
-                
-                // 여러 키 패턴으로 저장
-                const keys = [
-                    reservation.facility + '||' + (reservation.detail || '-'),
-                    reservation.facility + '||' + reservation.detail,
-                    reservation.detail || reservation.facility
-                ];
-                
-                keys.forEach(key => {
-                    console.log(`  → 키 "${key}"에 저장`);
-                    if (!reservationData[key]) {
-                        reservationData[key] = {};
-                        console.log(`  → 새 키 생성: "${key}"`);
-                    }
-                    if (!reservationData[key][reservation.date]) {
-                        reservationData[key][reservation.date] = [];
-                        console.log(`  → 새 날짜 추가: "${reservation.date}"`);
-                    }
-                    if (!reservation.status || reservation.status === 'active') {
-                        // 예약 구간 전체 시간대 push
-                        const startHour = parseInt(reservation.start_time.split(':')[0]);
-                        const endHour = parseInt(reservation.end_time.split(':')[0]);
-                        for (let h = startHour; h < endHour; h++) {
-                            const timeStr = `${h.toString().padStart(2, '0')}:00`;
-                            if (!reservationData[key][reservation.date].includes(timeStr)) {
-                                reservationData[key][reservation.date].push(timeStr);
-                            }
+                // detail 없는 시설은 '-'로 통일
+                const detailKey = (reservation.facility === '댄스연습실' || reservation.facility === '다목적실') ? '-' : reservation.detail;
+                const key = reservation.facility + '||' + (detailKey || '-');
+                if (!reservationData[key]) reservationData[key] = {};
+                if (!reservationData[key][reservation.date]) reservationData[key][reservation.date] = [];
+                if (!reservation.status || reservation.status === 'active') {
+                    // 예약 구간 전체 시간대 push
+                    const startHour = parseInt(reservation.start_time.split(':')[0]);
+                    const endHour = parseInt(reservation.end_time.split(':')[0]);
+                    for (let h = startHour; h < endHour; h++) {
+                        const timeStr = `${h.toString().padStart(2, '0')}:00`;
+                        if (!reservationData[key][reservation.date].includes(timeStr)) {
+                            reservationData[key][reservation.date].push(timeStr);
                         }
                     }
-                    console.log(`  → 시간 추가: "${reservation.start_time}"`);
-                });
-                
-                console.log(`예약 처리 완료: facility="${reservation.facility}", detail="${reservation.detail}", date="${reservation.date}", time="${reservation.start_time}"`);
+                }
             });
-            
             console.log('최종 정리된 예약 데이터:', reservationData);
-            console.log('예약 데이터 키들:', Object.keys(reservationData));
-            console.log('=== 예약 데이터 로드 완료 ===');
         } catch (error) {
             console.error('예약 데이터 로드 오류:', error);
         }
@@ -605,11 +543,12 @@
 
     function getTimeBtnsHTML() {
         const slots = selectedAMPM==='AM' ? amSlots : pmSlots;
+        // detail 없는 시설은 '-'로 통일
+        const detailKey = (facilityName === '댄스연습실' || facilityName === '다목적실') ? '-' : selectedFacility;
         const reserved = Object.keys(reservationData).length > 0 ? 
-            getReservedTimes(facilityName, selectedFacility, selectedDate) : [];
+            getReservedTimes(facilityName, detailKey, selectedDate) : [];
         let html = '';
         slots.forEach(time => {
-            // 항상 'HH:00' 형식으로 비교
             const paddedTime = time.padStart(5, '0');
             const isReserved = reserved.map(t => t.padStart(5, '0')).includes(paddedTime);
             let isPastTime = false;
@@ -703,6 +642,10 @@
     // 예약 생성 API 호출
     async function createReservation(data) {
         try {
+            // detail 없는 시설은 '-'로 통일
+            if (data.facility === '댄스연습실' || data.facility === '다목적실') {
+                data.detail = '-';
+            }
             const response = await fetch('/api/reservations', {
                 method: 'POST',
                 headers: {
@@ -710,24 +653,17 @@
                 },
                 body: JSON.stringify(data)
             });
-            
             const result = await response.json();
-            
             if (!response.ok) {
                 showModal(result.error || '예약 생성에 실패했습니다.');
                 return;
             }
-            
-            // 예약 성공 시 localStorage에 저장
             localStorage.setItem('reservationFacility', data.facility);
             localStorage.setItem('reservationDetail', data.detail);
             localStorage.setItem('reservationDate', data.date);
             localStorage.setItem('reservationTime', data.start_time);
             localStorage.setItem('reservationId', result.id);
-            
-            // 예약 완료 페이지로 이동
             window.location.href = 'reservation-complete.html';
-            
         } catch (error) {
             console.error('예약 생성 오류:', error);
             showModal('예약 생성 중 오류가 발생했습니다.');

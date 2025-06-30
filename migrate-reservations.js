@@ -37,7 +37,11 @@ async function migrateReservations() {
         // 각 예약에 status 필드 추가
         for (const [key, reservation] of Object.entries(reservations)) {
             if (!reservation.status) {
-                updates[`reservations/${key}/status`] = 'active';
+                if (reservation.cancelled_at) {
+                    updates[`reservations/${key}/status`] = 'cancelled';
+                } else {
+                    updates[`reservations/${key}/status`] = 'active';
+                }
                 count++;
             }
         }
@@ -45,7 +49,7 @@ async function migrateReservations() {
         if (count > 0) {
             // 일괄 업데이트
             await update(ref(database), updates);
-            console.log(`${count}개의 예약에 status 필드가 추가되었습니다.`);
+            console.log(`${count}개의 예약에 status 필드가 추가(정정)되었습니다.`);
         } else {
             console.log('모든 예약이 이미 status 필드를 가지고 있습니다.');
         }
