@@ -120,6 +120,14 @@ async function updateReservation(id, updateData) {
 async function cancelReservation(id) {
   try {
     const reservationRef = ref(realtimeDb, `reservations/${id}`);
+    const snapshot = await get(reservationRef);
+    if (!snapshot.exists()) {
+      throw new Error('예약을 찾을 수 없습니다.');
+    }
+    const reservation = snapshot.val();
+    if (reservation.status === 'cancelled') {
+      throw new Error('이미 취소된 예약입니다.');
+    }
     await update(reservationRef, { 
       status: 'cancelled',
       cancelled_at: serverTimestamp()

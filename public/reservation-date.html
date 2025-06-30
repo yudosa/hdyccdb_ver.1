@@ -597,55 +597,34 @@
 
     function getTimeBtnsHTML() {
         const slots = selectedAMPM==='AM' ? amSlots : pmSlots;
-        
         // 예약 데이터가 없으면 빈 배열로 처리
         const reserved = Object.keys(reservationData).length > 0 ? 
             getReservedTimes(facilityName, selectedFacility, selectedDate) : [];
-        
-        console.log('=== 시간 버튼 생성 디버깅 ===');
-        console.log('facilityName:', facilityName);
-        console.log('selectedFacility:', selectedFacility);
-        console.log('selectedDate:', selectedDate);
-        console.log('예약된 시간:', reserved);
-        console.log('예약 데이터 존재 여부:', Object.keys(reservationData).length > 0);
-        
-        // 오늘 날짜인지 확인 (로컬 시간대 사용)
-        const todayStr = formatDateToYYYYMMDD(today);
-        const isToday = selectedDate === todayStr;
-        const now = new Date();
-        const currentHour = now.getHours();
-        const currentMinute = now.getMinutes();
-        
         let html = '';
         slots.forEach(time => {
+            // 예약된 시간과 정확히 일치하는지 체크 (문자열 비교)
             const isReserved = reserved.includes(time);
             let isPastTime = false;
-            
-            if (isToday) {
+            if (selectedDate === formatDateToYYYYMMDD(today)) {
                 const [hour, minute] = time.split(':').map(Number);
+                const now = new Date();
+                const currentHour = now.getHours();
+                const currentMinute = now.getMinutes();
                 if (hour < currentHour || (hour === currentHour && minute <= currentMinute)) {
                     isPastTime = true;
                 }
             }
-            
             const isDisabled = isReserved || isPastTime;
             const disabledText = isReserved ? ' (예약됨)' : '';
-            
-            console.log(`시간 ${time}: isReserved=${isReserved}, isPastTime=${isPastTime}, isDisabled=${isDisabled}`);
-            
             // 클래스와 속성을 더 명확하게 설정
             let buttonClass = 'time-btn';
             if (isDisabled) buttonClass += ' disabled';
             if (selectedTime === time) buttonClass += ' selected';
-            
             let buttonHtml = `<button class="${buttonClass}" data-time="${time}"`;
             if (isDisabled) buttonHtml += ' disabled';
             buttonHtml += `>${time}${disabledText}</button>`;
-            
             html += buttonHtml;
         });
-        
-        console.log('생성된 HTML:', html);
         return html;
     }
 
