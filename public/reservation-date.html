@@ -541,8 +541,27 @@
         }
     }
 
+    // 시간 슬롯 생성 함수 추가
+    function getTimeSlotsForFacility(facility) {
+        // 닌텐도1~9만 30분 단위
+        if (/^닌텐도[1-9]$/.test(facility)) {
+            // 09:00 ~ 19:00, 30분 단위
+            const slots = [];
+            for (let h = 9; h <= 19; h++) {
+                slots.push(`${String(h).padStart(2, '0')}:00`);
+                if (h !== 19) slots.push(`${String(h).padStart(2, '0')}:30`);
+            }
+            return slots;
+        } else {
+            // 1시간 단위
+            return ['09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00'];
+        }
+    }
+
+    // getTimeBtnsHTML 함수 내 시간 슬롯 생성 부분을 교체
     function getTimeBtnsHTML() {
-        const slots = selectedAMPM==='AM' ? amSlots : pmSlots;
+        // 닌텐도1~9만 30분 단위, 그 외는 1시간 단위
+        const slots = getTimeSlotsForFacility(facilityName === '댄스연습실' ? facilityName : (selectedFacility || facilityName));
         // detail 없는 시설은 '-'로 통일
         const detailKey = (facilityName === '댄스연습실' || facilityName === '다목적실') ? '-' : selectedFacility;
         const reserved = Object.keys(reservationData).length > 0 ? 

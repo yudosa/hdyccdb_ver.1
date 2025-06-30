@@ -323,7 +323,11 @@
                 reservationList.innerHTML = '<div class="no-reservation">해당 정보로 등록된 예약이 없습니다.</div>';
                 return;
             }
-            reservations.sort((a, b) => new Date(b.date) - new Date(a.date));
+            reservations.sort((a, b) => {
+                const dateCompare = new Date(b.date) - new Date(a.date);
+                if (dateCompare !== 0) return dateCompare;
+                return a.start_time.localeCompare(b.start_time);
+            });
             let html = '';
             reservations.forEach((reservation, idx) => {
                 const displayNumber = idx + 1;
@@ -454,6 +458,7 @@
                     console.log('취소 fetch 응답:', response);
                     const result = await response.json();
                     if (response.ok) {
+                        showSuccessModal('예약이 취소되었습니다.');
                         loadMyReservations();
                     } else {
                         if (result.error) {
@@ -486,6 +491,32 @@
             } catch (e) {
                 // 에러 처리 필요시 추가
             }
+        }
+
+        // 예약 취소 성공 안내 모달 함수 추가
+        function showSuccessModal(msg) {
+            document.querySelectorAll('.custom-modal-backdrop').forEach(e => e.remove());
+            const backdrop = document.createElement('div');
+            backdrop.className = 'custom-modal-backdrop';
+            const modal = document.createElement('div');
+            modal.className = 'custom-modal';
+            modal.style.background = '#fff';
+            modal.style.padding = '32px 28px';
+            modal.style.borderRadius = '18px';
+            modal.style.boxShadow = '0 4px 24px #3498db22';
+            modal.style.fontSize = '1.15rem';
+            modal.style.fontWeight = '600';
+            modal.style.color = '#3498db';
+            modal.style.textAlign = 'center';
+            modal.style.minWidth = '220px';
+            modal.style.maxWidth = '90vw';
+            modal.innerHTML = `
+                <div style="margin-bottom:18px;">${msg}</div>
+                <button class="custom-modal-btn" id="modalOkBtn" style="margin-top:10px;">확인</button>
+            `;
+            backdrop.appendChild(modal);
+            document.body.appendChild(backdrop);
+            document.getElementById('modalOkBtn').onclick = () => backdrop.remove();
         }
 
         window.cancelReservation = cancelReservation;
