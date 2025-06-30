@@ -318,6 +318,7 @@
 
         // 예약 취소
         async function cancelReservation(btn) {
+            console.log('취소 버튼 클릭:', btn, btn.getAttribute('data-id'));
             const reservationId = btn.getAttribute('data-id');
             if (!reservationId) {
                 alert('예약 ID를 찾을 수 없습니다.');
@@ -330,11 +331,13 @@
                 return;
             }
             showCancelModal(reservation, async () => {
+                console.log('모달 확인 클릭, onConfirm 실행');
                 try {
                     const response = await fetch(`/api/reservations/${reservationId}/cancel`, {
                         method: 'PATCH',
                         headers: { 'Content-Type': 'application/json' }
                     });
+                    console.log('취소 fetch 응답:', response);
                     const result = await response.json();
                     if (response.ok) {
                         alert('예약이 취소되었습니다.');
@@ -395,7 +398,11 @@
             const confirmBtn = document.createElement('button');
             confirmBtn.className = 'custom-modal-btn danger';
             confirmBtn.textContent = '확인';
-            confirmBtn.onclick = () => { backdrop.remove(); onConfirm(); };
+            confirmBtn.onclick = () => { 
+                console.log('모달 확인 클릭, onConfirm 실행');
+                backdrop.remove(); 
+                onConfirm(); 
+            };
             btns.appendChild(confirmBtn);
             modal.appendChild(btns);
             backdrop.appendChild(modal);

@@ -16,4 +16,6 @@ async function initializeRealtimeDatabase() {
 }
 
 // 스크립트 실행
-initializeRealtimeDatabase(); 
+initializeRealtimeDatabase();
+
+window.cancelReservation = cancelReservation; 
