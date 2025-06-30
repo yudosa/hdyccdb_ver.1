@@ -607,11 +607,11 @@
         const slots = selectedAMPM==='AM' ? amSlots : pmSlots;
         const reserved = Object.keys(reservationData).length > 0 ? 
             getReservedTimes(facilityName, selectedFacility, selectedDate) : [];
-        console.log('reserved:', reserved);
         let html = '';
         slots.forEach(time => {
-            console.log('버튼 시간:', time, 'reserved에 포함?', reserved.includes(time));
-            const isReserved = reserved.includes(time);
+            // 항상 'HH:00' 형식으로 비교
+            const paddedTime = time.padStart(5, '0');
+            const isReserved = reserved.map(t => t.padStart(5, '0')).includes(paddedTime);
             let isPastTime = false;
             if (selectedDate === formatDateToYYYYMMDD(today)) {
                 const [hour, minute] = time.split(':').map(Number);
