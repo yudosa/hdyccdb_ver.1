@@ -315,6 +315,7 @@
 
         // 예약 내역 표시
         function displayReservations(reservations) {
+            console.log('예약 목록 렌더링');
             window.lastReservations = reservations;
             console.log('예약 데이터:', reservations);
             const reservationList = document.getElementById('reservationList');
@@ -390,6 +391,11 @@
                 return;
             }
             console.log('showCancelModal 호출 직전');
+            document.querySelectorAll('.custom-modal-backdrop').forEach(e => e.remove());
+            if (document.querySelector('.custom-modal-backdrop')) {
+                console.log('이미 모달이 열려 있으므로 새로 열지 않음');
+                return;
+            }
             showCancelModal(reservation, async () => {
                 isModalOpen = false;
                 if (isCancelling) return;
@@ -421,6 +427,7 @@
         
         // 모던 커스텀 모달 함수 추가
         function showCancelModal(reservation, onConfirm) {
+            console.log('showCancelModal 함수 진입');
             console.log('showCancelModal 실행:', reservation);
             // 기존 모달 제거
             document.querySelectorAll('.custom-modal-backdrop').forEach(e => e.remove());
