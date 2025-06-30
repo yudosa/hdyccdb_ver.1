@@ -112,7 +112,7 @@
         }
         /* 간트차트 스타일 추가 */
         .gantt-timeline-scroll-x { overflow-x: auto; width: 100%; }
-        .gantt-timeline-container { min-width: 1200px; background: #fff; border-radius: 16px; box-shadow: 0 4px 24px #0004; padding: 32px; }
+        .gantt-timeline-container { min-width: 100%; background: #fff; border-radius: 16px; box-shadow: 0 4px 24px #0004; padding: 32px; }
         .gantt-timeline-header { display: flex; margin-bottom: 12px; }
         .gantt-timeline-header .room-label { width: 120px; }
         .gantt-timeline-header .time-slot { flex: 1; text-align: center; color: #888; font-weight: 600; }
@@ -124,24 +124,28 @@
             position: relative;
             height: 100%;
         }
-        .gantt-timeline-bar-bg.thirtymin-bg::before {
+        .gantt-timeline-bar-bg.thirtymin-bg {
+            position: relative;
+        }
+        /* 09:00~20:00, 30분 단위(11개) 점선 구분선 */
+        .gantt-timeline-bar-bg.thirtymin-bg::before,
+        .gantt-timeline-bar-bg.thirtymin-bg::after,
+        .gantt-timeline-bar-bg.thirtymin-bg .thirtymin-line {
             content: '';
             position: absolute;
             top: 0; bottom: 0;
-            left: 25%; width: 0; border-left: 1px dashed #bbb; z-index: 1;
+            width: 0; border-left: 1px dashed #bbb; z-index: 1;
         }
-        .gantt-timeline-bar-bg.thirtymin-bg::after {
-            content: '';
-            position: absolute;
-            top: 0; bottom: 0;
-            left: 75%; width: 0; border-left: 1px dashed #bbb; z-index: 1;
-        }
+        .gantt-timeline-bar-bg.thirtymin-bg .thirtymin-line { left: 0; }
         .gantt-timeline-bar { position: absolute; height: 32px; border-radius: 8px; color: #fff; font-weight: 600; display: flex; align-items: center; padding: 0 16px; font-size: 1rem; box-shadow: 0 2px 8px #0002; }
         .bar-blue { background: linear-gradient(90deg, #4fc3f7, #1976d2); }
         .bar-pink { background: linear-gradient(90deg, #f48fb1, #d81b60); }
         .bar-green { background: linear-gradient(90deg, #81c784, #388e3c); }
         .bar-yellow { background: linear-gradient(90deg, #fff176, #fbc02d); color: #222; }
         .current-time-line { position: absolute; top: 0; bottom: 0; width: 2px; background: orange; z-index: 10; }
+        .main-card {
+            overflow-x: auto;
+        }
     </style>
 </head>
 <body>
@@ -701,9 +705,14 @@
             details.forEach(detail => {
                 html += '<div class="gantt-timeline-row">';
                 html += `<div class="room-label">${detail || space.name}</div>`;
-                // 30분 단위 시설이면 구분선 배경 클래스 추가
-                const is30min = /^닌텐도[1-9]$/.test(detail) || /^플레이스테이션[1-2]$/.test(detail);
+                const is30min = detail && (detail.includes('닌텐도') || detail.includes('플레이스테이션'));
                 html += `<div class="gantt-timeline-bar-bg${is30min ? ' thirtymin-bg' : ''}" style="position:relative;">`;
+                if (is30min) {
+                    for (let i = 1; i < 22; i += 2) { // 09:30~19:30, 30분 단위 11개
+                        const left = (i * 100 / 22).toFixed(2) + '%';
+                        html += `<div class="thirtymin-line" style="left:${left};"></div>`;
+                    }
+                }
                 // 해당 공간/세부시설의 예약만 추출
                 const rowReservations = reservations.filter(r =>
                     r.facility === space.name && (r.detail === detail || (!r.detail && !detail))

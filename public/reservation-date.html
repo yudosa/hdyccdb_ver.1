@@ -248,20 +248,15 @@
 
     // 예약 데이터를 정확히 매칭하는 함수
     function getReservedTimes(facility, detail, date) {
-        console.log('=== getReservedTimes 함수 호출 ===');
         // detail 없는 시설은 '-'로 통일
         const detailKey = (facility === '댄스연습실' || facility === '다목적실') ? '-' : detail;
         const key = facility + '||' + (detailKey || '-');
-        console.log('입력 매개변수:', { facility, detail, date });
-        console.log('실제 검색 키:', key);
         if (!reservationData || Object.keys(reservationData).length === 0) {
-            console.log('예약 데이터가 비어있음');
             return [];
         }
         if (reservationData[key] && reservationData[key][date]) {
             return reservationData[key][date];
         }
-        console.log('예약된 시간 없음');
         return [];
     }
 
@@ -539,12 +534,10 @@
 
     // getTimeBtnsHTML 함수 내 시간 슬롯 생성 부분을 교체
     function getTimeBtnsHTML() {
-        // 닌텐도1~9만 30분 단위, 그 외는 1시간 단위
-        const slots = getTimeSlotsForFacility(facilityName === '댄스연습실' ? facilityName : (selectedFacility || facilityName));
-        // detail 없는 시설은 '-'로 통일
-        const detailKey = (facilityName === '댄스연습실' || facilityName === '다목적실') ? '-' : selectedFacility;
+        const slots = getTimeSlotsForFacility(selectedFacility);
+        // key 생성 로직을 selectedFacility 기준으로 통일
         const reserved = Object.keys(reservationData).length > 0 ? 
-            getReservedTimes(facilityName, detailKey, selectedDate) : [];
+            getReservedTimes(selectedFacility, selectedFacility, selectedDate) : [];
         let html = '';
         slots.forEach(time => {
             const paddedTime = time.padStart(5, '0');
