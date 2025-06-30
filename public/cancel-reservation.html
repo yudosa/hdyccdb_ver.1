@@ -298,7 +298,7 @@
                                 <span class="detail-value">#${reservation.id}</span>
                             </div>
                         </div>
-                        <button class="cancel-btn" onclick="cancelReservation('${reservation.id}')">예약 취소</button>
+                        <button class="cancel-btn" data-id="${reservation.id}" onclick="cancelReservation(this)">예약 취소</button>
                     </div>
                 `;
             });
@@ -318,7 +318,8 @@
         }
 
         // 예약 취소
-        async function cancelReservation(reservationId) {
+        async function cancelReservation(btn) {
+            const reservationId = btn.getAttribute('data-id');
             // 해당 예약 정보를 가져와서 모달에 표시
             try {
                 const response = await fetch('/api/reservations');

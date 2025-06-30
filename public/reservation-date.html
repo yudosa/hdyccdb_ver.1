@@ -275,7 +275,22 @@
                 console.log(`키 "${key}"의 데이터:`, reservationData[key]);
                 if (reservationData[key][date]) {
                     console.log(`날짜 "${date}"의 예약 시간:`, reservationData[key][date]);
-                    return reservationData[key][date];
+                    // 예약 데이터가 있으면 해당 날짜의 예약 시간 배열 반환
+                    // 기존: return reservationData[key][date];
+                    // 수정: status가 'active'인 예약만 시간 추출
+                    const times = reservationData[key][date];
+                    if (Array.isArray(times)) {
+                        // [{time: '09:00', status: 'active'}, ...] 형태라면
+                        return times.filter(t => t.status === 'active' || !t.status).map(t => t.time);
+                    } else if (typeof times === 'object') {
+                        // { '09:00': {status: 'active'}, ... } 형태라면
+                        return Object.entries(times)
+                            .filter(([time, t]) => t.status === 'active' || !t.status)
+                            .map(([time]) => time);
+                    } else {
+                        // 기존 배열(문자열)이라면 그대로 반환
+                        return times;
+                    }
                 } else {
                     console.log(`날짜 "${date}"에 대한 데이터 없음`);
                 }

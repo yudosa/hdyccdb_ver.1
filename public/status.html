@@ -253,7 +253,8 @@
                         const res = reservations.find(r =>
                             r.space === space.name &&
                             r.detail === detail &&
-                            r.start <= hour && r.end > hour
+                            r.start <= hour && r.end > hour &&
+                            (r.status === 'active' || !r.status)
                         );
                         // 비활성화 조건: 오늘 날짜 & 현재 시각보다 이전 시간
                         let isPast = (date === todayStr && hour < currentHour);
@@ -282,7 +283,8 @@
                     const res = reservations.find(r =>
                         r.space === space.name &&
                         (!r.detail) &&
-                        r.start <= hour && r.end > hour
+                        r.start <= hour && r.end > hour &&
+                        (r.status === 'active' || !r.status)
                     );
                     let isPast = (date === todayStr && hour < currentHour);
                     if (res) {
