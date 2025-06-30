@@ -110,6 +110,20 @@
         .reservation-cell-cancelled:hover {
             background-color: #f5c6cb !important;
         }
+        /* 간트차트 스타일 추가 */
+        .gantt-timeline-container { width: 100%; max-width: 900px; margin: 40px auto; background: #fff; border-radius: 16px; box-shadow: 0 4px 24px #0004; padding: 32px; }
+        .gantt-timeline-header { display: flex; margin-bottom: 12px; }
+        .gantt-timeline-header .room-label { width: 120px; }
+        .gantt-timeline-header .time-slot { flex: 1; text-align: center; color: #888; font-weight: 600; }
+        .gantt-timeline-row { display: flex; align-items: center; height: 48px; position: relative; }
+        .room-label { width: 120px; font-weight: bold; color: #222; }
+        .gantt-timeline-bar-bg { flex: 1; display: flex; position: relative; height: 100%; }
+        .gantt-timeline-bar { position: absolute; height: 32px; border-radius: 8px; color: #fff; font-weight: 600; display: flex; align-items: center; padding: 0 16px; font-size: 1rem; box-shadow: 0 2px 8px #0002; }
+        .bar-blue { background: linear-gradient(90deg, #4fc3f7, #1976d2); }
+        .bar-pink { background: linear-gradient(90deg, #f48fb1, #d81b60); }
+        .bar-green { background: linear-gradient(90deg, #81c784, #388e3c); }
+        .bar-yellow { background: linear-gradient(90deg, #fff176, #fbc02d); color: #222; }
+        .current-time-line { position: absolute; top: 0; bottom: 0; width: 2px; background: orange; z-index: 10; }
     </style>
 </head>
 <body>
@@ -121,7 +135,7 @@
             <div style="font-size:1.12rem; color:#555; text-align:center; margin-bottom:21px;">오늘의 시설 이용현황을 확인하세요</div>
         </div>
         <!-- 타임라인 카드 -->
-        <div class="main-card" style="background:#fff; border-radius:28px; box-shadow:0 4px 24px #e0e7ef22; max-width:700px; width:90vw; margin:32px auto 0 auto; padding:26px 16px 21px 16px; text-align:center;">
+        <div class="main-card" style="background:#fff; border-radius:28px; box-shadow:0 4px 24px #e0e7ef22; max-width:900px; width:90vw; margin:32px auto 0 auto; padding:26px 16px 21px 16px; text-align:center;">
             <h2 style="font-size:1.5rem; font-weight:800; color:#e74c3c; margin-bottom:7px;">타임라인</h2>
             <div style="font-size:1.12rem; color:#555; text-align:center; margin-bottom:21px;">시간대별 예약 현황을 확인하세요.</div>
             <!-- 날짜/기간/CSV 다운로드 UI -->
@@ -140,7 +154,7 @@
                 </div>
             </div>
             <div class="category-row" id="categoryRow" style="margin-top:18px;"></div>
-            <div id="timelineWrap" style="margin-top:18px;"></div>
+            <div id="ganttTimelineWrap" style="margin-top:18px;"></div>
             <div class="form-actions-centered" style="margin-top:32px;" id="timelineActions">
                 <button class="btn-secondary-centered" onclick="location.href='index.html'" style="color:#222;" id="btnBack">◀ 이전</button>
                 <button class="btn-secondary-centered" onclick="location.href='admin.html'" style="color:#222;" id="btnAdmin">🛠️ 관리자모드</button>
@@ -197,8 +211,34 @@
             return []; // 오류 시 빈 배열 반환
         }
     }
-    // 시간대(09~19시)
-    const hours = Array.from({length: 11}, (_,i) => i+9);
+    // 1시간 단위 타임라인 생성 함수
+    function getHourSlots() {
+        const slots = [];
+        for (let h = 9; h <= 19; h++) {
+            slots.push(`${String(h).padStart(2, '0')}:00`);
+        }
+        return slots;
+    }
+    // 30분 단위 구간 반환
+    function get30MinRanges(hour) {
+        const h = String(hour).padStart(2, '0');
+        return [
+            { start: `${h}:00`, end: `${h}:30` },
+            { start: `${h}:30`, end: `${String(Number(h)+1).padStart(2, '0')}:00` }
+        ];
+    }
+    // 예약의 start~end 구간을 30분 단위로 쪼개는 함수
+    function getReservedSlots(start, end) {
+        const slots = [];
+        let [h, m] = start.split(':').map(Number);
+        const [endH, endM] = end.split(':').map(Number);
+        while (h < endH || (h === endH && m < endM)) {
+            slots.push(`${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`);
+            m += 30;
+            if (m === 60) { m = 0; h += 1; }
+        }
+        return slots;
+    }
     // 카테고리 버튼 렌더링
     const categoryRow = document.getElementById('categoryRow');
     let selectedCategory = '전체';
@@ -222,27 +262,6 @@
         document.getElementById('adminWatermark').style.display = 'none';
         document.getElementById('csvRangeWrap').style.display = 'none';
     }
-    // 30분 단위 타임라인 생성 함수
-    function get30MinTimeSlots() {
-        const slots = [];
-        for (let h = 9; h <= 19; h++) {
-            slots.push(`${String(h).padStart(2, '0')}:00`);
-            if (h !== 19) slots.push(`${String(h).padStart(2, '0')}:30`);
-        }
-        return slots;
-    }
-    // 예약의 start~end 구간을 30분 단위로 쪼개는 함수
-    function getReservedSlots(start, end) {
-        const slots = [];
-        let [h, m] = start.split(':').map(Number);
-        const [endH, endM] = end.split(':').map(Number);
-        while (h < endH || (h === endH && m < endM)) {
-            slots.push(`${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`);
-            m += 30;
-            if (m === 60) { m = 0; h += 1; }
-        }
-        return slots;
-    }
     // 타임라인 렌더링
     async function renderTimeline() {
         const timelineWrap = document.getElementById('timelineWrap');
@@ -254,9 +273,9 @@
         let filteredSpaces = selectedCategory === '전체'
             ? spaces
             : spaces.filter(s => s.name === selectedCategory);
-        const timeSlots = get30MinTimeSlots();
+        const hourSlots = getHourSlots();
         let html = '<div class="timeline-scroll-x"><table class="timeline-table"><thead><tr><th>공간명</th>';
-        timeSlots.forEach(t => { html += `<th>${t}</th>`; });
+        hourSlots.forEach(t => { html += `<th>${t}</th>`; });
         html += '</tr></thead><tbody>';
         // 오늘 날짜 판별
         const todayStr = formatDateToYYYYMMDD(new Date());
@@ -267,56 +286,70 @@
             if (space.details) {
                 space.details.forEach(detail => {
                     html += `<tr><td class="space-label">${detail}</td>`;
-                    timeSlots.forEach(slot => {
-                        const res = reservations.find(r =>
-                            r.space === space.name &&
-                            r.detail === detail &&
-                            getReservedSlots(r.start_time, r.end_time).includes(slot) &&
-                            (r.status === 'active' || !r.status)
-                        );
-                        // 비활성화 조건: 오늘 날짜 & 현재 시각보다 이전 시간
-                        let isPast = (date === todayStr && (
-                            parseInt(slot.split(':')[0]) < currentHour ||
-                            (parseInt(slot.split(':')[0]) === currentHour && parseInt(slot.split(':')[1]) <= currentMinute)
-                        ));
-                        if (res) {
-                            // 취소된 예약은 다른 스타일로 표시
-                            const isCancelled = res.status === 'cancelled';
-                            const cellClass = isCancelled ? 'reservation-cell-cancelled' : 
-                                            (isPast ? 'reservation-cell-disabled' : 'reservation-cell');
-                            html += `<td class="${cellClass}" title="${res.name} (${res.purpose || '예약'})${isCancelled ? ' [취소됨]' : ''}">${res.name}`;
-                            if(isAdmin() && !isPast && !isCancelled) {
-                                html += ` <button class='admin-cancel-btn' data-space='${space.name}' data-detail='${detail||''}' data-hour='${slot}' style='margin-left:4px; background:none; border:none; color:#e74c3c; font-size:1.1em; font-weight:900; cursor:pointer;' title='강제취소'>×</button>`;
-                            }
-                            html += `</td>`;
+                    hourSlots.forEach(hour => {
+                        // 닌텐도 시설이면 2분할
+                        if (/^닌텐도[1-9]$/.test(detail)) {
+                            const ranges = get30MinRanges(hour.split(':')[0]);
+                            html += '<td style="padding:0;">';
+                            ranges.forEach((range, idx) => {
+                                const res = reservations.find(r =>
+                                    r.space === space.name &&
+                                    r.detail === detail &&
+                                    getReservedSlots(r.start_time, r.end_time).includes(range.start) &&
+                                    (r.status === 'active' || !r.status)
+                                );
+                                let isPast = (date === todayStr && (
+                                    parseInt(range.start.split(':')[0]) < currentHour ||
+                                    (parseInt(range.start.split(':')[0]) === currentHour && parseInt(range.start.split(':')[1]) <= currentMinute)
+                                ));
+                                if (res) {
+                                    const isCancelled = res.status === 'cancelled';
+                                    const cellClass = isCancelled ? 'reservation-cell-cancelled' : 
+                                                    (isPast ? 'reservation-cell-disabled' : 'reservation-cell');
+                                    html += `<div class="${cellClass}" style="height:18px;line-height:18px;font-size:0.9em;border-bottom:${idx===0?'1px solid #eee':'none'};">${range.start}~${range.end} ${res.name}</div>`;
+                                } else {
+                                    html += `<div class="empty-cell" style="height:18px;line-height:18px;font-size:0.9em;border-bottom:${idx===0?'1px solid #eee':'none'};"></div>`;
+                                }
+                            });
+                            html += '</td>';
                         } else {
-                            html += '<td class="empty-cell"></td>';
+                            // 기존 시설(1칸)
+                            const res = reservations.find(r =>
+                                r.space === space.name &&
+                                r.detail === detail &&
+                                parseInt(r.start_time.split(':')[0]) <= parseInt(hour.split(':')[0]) &&
+                                parseInt(r.end_time.split(':')[0]) > parseInt(hour.split(':')[0]) &&
+                                (r.status === 'active' || !r.status)
+                            );
+                            let isPast = (date === todayStr && parseInt(hour.split(':')[0]) < currentHour);
+                            if (res) {
+                                const isCancelled = res.status === 'cancelled';
+                                const cellClass = isCancelled ? 'reservation-cell-cancelled' : 
+                                                (isPast ? 'reservation-cell-disabled' : 'reservation-cell');
+                                html += `<td class="${cellClass}" title="${res.name} (${res.purpose || '예약'})${isCancelled ? ' [취소됨]' : ''}">${res.name}</td>`;
+                            } else {
+                                html += '<td class="empty-cell"></td>';
+                            }
                         }
                     });
                     html += '</tr>';
                 });
             } else {
                 html += `<tr><td class="space-label">${space.name}</td>`;
-                timeSlots.forEach(slot => {
+                hourSlots.forEach(hour => {
                     const res = reservations.find(r =>
                         r.space === space.name &&
                         (!r.detail) &&
-                        getReservedSlots(r.start_time, r.end_time).includes(slot) &&
+                        parseInt(r.start_time.split(':')[0]) <= parseInt(hour.split(':')[0]) &&
+                        parseInt(r.end_time.split(':')[0]) > parseInt(hour.split(':')[0]) &&
                         (r.status === 'active' || !r.status)
                     );
-                    let isPast = (date === todayStr && (
-                        parseInt(slot.split(':')[0]) < currentHour ||
-                        (parseInt(slot.split(':')[0]) === currentHour && parseInt(slot.split(':')[1]) <= currentMinute)
-                    ));
+                    let isPast = (date === todayStr && parseInt(hour.split(':')[0]) < currentHour);
                     if (res) {
                         const isCancelled = res.status === 'cancelled';
                         const cellClass = isCancelled ? 'reservation-cell-cancelled' : 
                                         (isPast ? 'reservation-cell-disabled' : 'reservation-cell');
-                        html += `<td class="${cellClass}" title="${res.name} (${res.purpose || '예약'})${isCancelled ? ' [취소됨]' : ''}">${res.name}`;
-                        if(isAdmin() && !isPast && !isCancelled) {
-                            html += ` <button class='admin-cancel-btn' data-space='${space.name}' data-detail='' data-hour='${slot}' style='margin-left:4px; background:none; border:none; color:#e74c3c; font-size:1.1em; font-weight:900; cursor:pointer;' title='강제취소'>×</button>`;
-                        }
-                        html += `</td>`;
+                        html += `<td class="${cellClass}" title="${res.name} (${res.purpose || '예약'})${isCancelled ? ' [취소됨]' : ''}">${res.name}</td>`;
                     } else {
                         html += '<td class="empty-cell"></td>';
                     }
@@ -627,6 +660,61 @@
             return []; // 오류 시 빈 배열 반환
         }
     }
+    // 간트차트 타임라인 렌더링 함수
+    function renderGanttTimeline(reservations, spaces, startHour = 9, endHour = 19) {
+        const container = document.getElementById('ganttTimelineWrap');
+        if (!container) return;
+        // 시간대 헤더 생성
+        let html = '<div class="gantt-timeline-container">';
+        html += '<div class="gantt-timeline-header">';
+        html += '<div class="room-label"></div>';
+        for (let h = startHour; h < endHour; h++) {
+            html += `<div class="time-slot">${h.toString().padStart(2,'0')}:00</div>`;
+        }
+        html += '</div>';
+        // 각 공간별 row 생성
+        spaces.forEach(space => {
+            const details = space.details || [null];
+            details.forEach(detail => {
+                html += '<div class="gantt-timeline-row">';
+                html += `<div class="room-label">${detail || space.name}</div>`;
+                html += '<div class="gantt-timeline-bar-bg" style="position:relative;">';
+                // 해당 공간/세부시설의 예약만 추출
+                const rowReservations = reservations.filter(r =>
+                    r.facility === space.name && (r.detail === detail || (!r.detail && !detail))
+                );
+                rowReservations.forEach((res, idx) => {
+                    // 닌텐도1~9, 플레이스테이션1~2는 30분 단위 bar
+                    const is30min = /^닌텐도[1-9]$/.test(detail) || /^플레이스테이션[1-2]$/.test(detail);
+                    const start = parseTimeToMinutes(res.start_time);
+                    const end = parseTimeToMinutes(res.end_time);
+                    const totalMinutes = (endHour - startHour) * 60;
+                    const left = ((start - startHour * 60) / totalMinutes) * 100;
+                    const width = ((end - start) / totalMinutes) * 100;
+                    const colorClass = ['bar-blue','bar-pink','bar-green','bar-yellow'][idx % 4];
+                    html += `<div class="gantt-timeline-bar ${colorClass}" style="left:${left}%;width:${width}%" title="${res.name}">${res.name}${res.extra ? ' 외 ' + res.extra + '명' : ''}</div>`;
+                });
+                html += '</div></div>';
+            });
+        });
+        html += '</div>';
+        container.innerHTML = html;
+    }
+    // 시간 문자열(HH:mm) → 분 변환
+    function parseTimeToMinutes(t) {
+        const [h, m] = t.split(':').map(Number);
+        return h * 60 + m;
+    }
+    // 실제 데이터 불러와서 렌더링
+    async function loadAndRenderGanttTimeline() {
+        const date = document.getElementById('statusDate')?.value || getTodayStr();
+        const response = await fetch(`/api/reservations/date/${date}`);
+        const reservations = await response.json();
+        // extra(외 n명) 계산 예시: 같은 예약자명 여러명일 때 등
+        renderGanttTimeline(reservations, spaces);
+    }
+    document.addEventListener('DOMContentLoaded', loadAndRenderGanttTimeline);
+    document.getElementById('statusDate')?.addEventListener('change', loadAndRenderGanttTimeline);
     </script>
 </body>
 </html> 

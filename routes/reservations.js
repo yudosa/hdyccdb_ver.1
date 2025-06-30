@@ -36,7 +36,7 @@ router.get('/date/:date', async (req, res) => {
 router.post('/', async (req, res) => {
     console.log('예약 생성 요청 받음:', req.body);
     
-    const { name, phone, facility, detail, date, start_time, end_time, purpose } = req.body;
+    const { name, phone, facility, detail, date, start_time, end_time, purpose, gender, age } = req.body;
     
     // 필수 필드 검증 (phone은 선택사항으로 변경)
     if (!name || !facility || !date || !start_time || !end_time) {
@@ -103,7 +103,9 @@ router.post('/', async (req, res) => {
             date,
             start_time,
             end_time,
-            purpose: purpose || ''
+            purpose: purpose || '',
+            gender: gender || '',
+            age: age || ''
         };
         
         const newReservation = await realtimeDb.addReservation(reservationData);

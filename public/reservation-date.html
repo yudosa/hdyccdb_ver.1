@@ -224,6 +224,19 @@
                         </table>
                     </div>
                     <div class="time-select-block" id="timeSelectBlock" style="display:none;"></div>
+                    <div class="form-group">
+                        <label for="userGender">성별</label>
+                        <select id="userGender" class="form-control">
+                            <option value="">선택</option>
+                            <option value="남">남</option>
+                            <option value="여">여</option>
+                            <option value="기타">기타</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="userAge">나이</label>
+                        <input type="number" id="userAge" class="form-control" min="1" max="99" placeholder="나이 입력">
+                    </div>
                     <div class="form-actions-centered">
                         <button class="btn-secondary-centered" style="color:#222;">◀ 이전</button>
                         <button class="btn-secondary-centered" style="color:#222;">다음 ▶</button>
@@ -516,8 +529,8 @@
 
     // 시간 슬롯 생성 함수 추가
     function getTimeSlotsForFacility(facility) {
-        // 닌텐도1~9만 30분 단위
-        if (/^닌텐도[1-9]$/.test(facility)) {
+        // 닌텐도1~9, 플레이스테이션1~2만 30분 단위
+        if (/^닌텐도[1-9]$/.test(facility) || /^플레이스테이션[1-2]$/.test(facility)) {
             // 09:00 ~ 19:00, 30분 단위
             const slots = [];
             for (let h = 9; h <= 19; h++) {
@@ -614,7 +627,9 @@
                 date: selectedDate,
                 start_time: selectedTime,
                 end_time: getEndTime(selectedTime), // 1시간 후
-                purpose: ''
+                purpose: '',
+                gender: document.getElementById('userGender').value,
+                age: document.getElementById('userAge').value
             };
             
             console.log('예약 데이터:', reservationData); // 디버깅
