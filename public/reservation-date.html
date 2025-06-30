@@ -239,9 +239,11 @@
     const amSlots = timeSlots.slice(0, 4); // 09~12
     const pmSlots = timeSlots.slice(4);   // 13~19
 
-    let selectedFacility = '닌텐도1';
+    let selectedFacility = null;
     let selectedDate = null;
     let selectedTime = null;
+    let slots = [];
+    let reserved = [];
     
     // 예약 데이터 (API에서 가져옴)
     let reservationData = {};
@@ -251,6 +253,7 @@
         // detail 없는 시설은 '-'로 통일
         const detailKey = (facility === '댄스연습실' || facility === '다목적실') ? '-' : detail;
         const key = facility + '||' + (detailKey || '-');
+        console.log('getReservedTimes - key:', key);
         if (!reservationData || Object.keys(reservationData).length === 0) {
             return [];
         }
@@ -517,7 +520,6 @@
     function getTimeSlotsForFacility(facility) {
         // 닌텐도1~9, 플레이스테이션1~2만 30분 단위
         if (facility && (facility.includes('닌텐도') || facility.includes('플레이스테이션'))) {
-            // 09:00 ~ 19:00, 30분 단위
             const slots = [];
             for (let h = 9; h <= 19; h++) {
                 slots.push(`${String(h).padStart(2, '0')}:00`);
@@ -525,17 +527,19 @@
             }
             return slots;
         } else {
-            // 1시간 단위
             return ['09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00'];
         }
     }
 
     // getTimeBtnsHTML 함수 내 시간 슬롯 생성 부분을 교체
     function getTimeBtnsHTML() {
+        // 디버깅용 콘솔
+        console.log('getTimeBtnsHTML - facilityName:', facilityName, 'selectedFacility:', selectedFacility, 'selectedDate:', selectedDate);
         const slots = getTimeSlotsForFacility(selectedFacility);
-        console.log('getTimeBtnsHTML - selectedFacility:', selectedFacility, 'slots:', slots);
+        console.log('getTimeBtnsHTML - slots:', slots);
         const reserved = Object.keys(reservationData).length > 0 ? 
-            getReservedTimes(facilityName, selectedFacility, selectedDate) : [];
+            getReservedTimes(selectedFacility, selectedFacility, selectedDate) : [];
+        console.log('getTimeBtnsHTML - reserved:', reserved);
         let html = '';
         slots.forEach(time => {
             const paddedTime = time.padStart(5, '0');

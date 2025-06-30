@@ -541,6 +541,24 @@
                 getReservedTimes(facilityName, selectedFacility, selectedDate) : [];
             // ... 이하 동일 ...
         }
+
+        function setDetailOptions() {
+            if (facilityName === '댄스연습실') {
+                detailCard.style.display = 'none';
+                selectedFacility = facilityName;
+            } else {
+                detailCard.style.display = '';
+                detailSelect.innerHTML = options.map(o => `<option value=\"${o.v}\">${o.t}</option>`).join('');
+                selectedFacility = detailSelect.value;
+                console.log('setDetailOptions - selectedFacility:', selectedFacility);
+            }
+        }
+        detailSelect.addEventListener('change', function() {
+            selectedFacility = this.value;
+            console.log('detailSelect change - selectedFacility:', selectedFacility);
+            selectedTime = null;
+            showTimeSelect();
+        });
     </script>
 </body>
 </html>

@@ -753,7 +753,7 @@
                     const left = ((start - startHour * 60) / totalMinutes) * 100;
                     const width = ((end - start) / totalMinutes) * 100;
                     const colorClass = ['bar-blue','bar-pink','bar-green','bar-yellow'][idx % 4];
-                    html += `<div class="gantt-timeline-bar ${colorClass}" style="left:${left}%;width:${width}%" title="${res.name}" data-id="${res.id}">${res.name}${res.extra ? ' 외 ' + res.extra + '명' : ''}</div>`;
+                    html += `<div class="gantt-timeline-bar ${colorClass}" style="left:${left}%;width:${width}%;min-width:70px;white-space:nowrap;overflow:visible;" title="${res.name}" data-id="${res.id}">${res.name}${res.extra ? ' 외 ' + res.extra + '명' : ''}</div>`;
                 });
                 html += '</div></div>';
             });

@@ -129,6 +129,17 @@ async function handleReservationSubmit(event) {
     event.preventDefault();
     
     const formData = new FormData(reservationForm);
+    // localStorage에서 회원정보(성별, 나이) 읽기
+    let gender = null, age = null;
+    try {
+        const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+        if (userInfo) {
+            gender = userInfo.gender || null;
+            age = userInfo.age || null;
+        }
+    } catch (e) {
+        console.warn('localStorage userInfo 파싱 오류:', e);
+    }
     const reservationData = {
         name: formData.get('name'),
         phone: formData.get('phone'),
@@ -136,7 +147,9 @@ async function handleReservationSubmit(event) {
         date: formData.get('date'),
         start_time: formData.get('start_time'),
         end_time: formData.get('end_time'),
-        purpose: formData.get('purpose') || ''
+        purpose: formData.get('purpose') || '',
+        gender,
+        age
     };
     
     console.log('예약 데이터 전송:', reservationData);
