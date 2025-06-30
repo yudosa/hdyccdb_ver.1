@@ -579,7 +579,15 @@
                         console.log(`  → 새 날짜 추가: "${reservation.date}"`);
                     }
                     if (!reservation.status || reservation.status === 'active') {
-                        reservationData[key][reservation.date].push(reservation.start_time);
+                        // 예약 구간 전체 시간대 push
+                        const startHour = parseInt(reservation.start_time.split(':')[0]);
+                        const endHour = parseInt(reservation.end_time.split(':')[0]);
+                        for (let h = startHour; h < endHour; h++) {
+                            const timeStr = `${h.toString().padStart(2, '0')}:00`;
+                            if (!reservationData[key][reservation.date].includes(timeStr)) {
+                                reservationData[key][reservation.date].push(timeStr);
+                            }
+                        }
                     }
                     console.log(`  → 시간 추가: "${reservation.start_time}"`);
                 });
