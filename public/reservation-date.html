@@ -432,17 +432,16 @@
         }
         
         // 달력 날짜 클릭 이벤트 재등록
-        document.getElementById('calendarBody').addEventListener('click', function(e) {
+        document.getElementById('calendarBody').addEventListener('click', async function(e) {
             if (e.target.classList.contains('calendar-day') && !e.target.classList.contains('disabled') && e.target.textContent) {
                 document.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('selected'));
                 e.target.classList.add('selected');
                 selectedDate = e.target.getAttribute('data-date');
                 selectedTime = null;
-                
                 console.log('날짜 선택됨:', selectedDate); // 디버깅 추가
-                
                 // 예약 데이터 확인 후 시간 선택 UI 표시
-                checkReservationsAndShowTimeSelect();
+                await loadReservationData();
+                showTimeSelect();
             }
         });
     }

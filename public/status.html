@@ -111,13 +111,31 @@
             background-color: #f5c6cb !important;
         }
         /* 간트차트 스타일 추가 */
-        .gantt-timeline-container { width: 100%; max-width: 100vw; margin: 40px auto; background: #fff; border-radius: 16px; box-shadow: 0 4px 24px #0004; padding: 32px; overflow-x: auto; min-width: 1200px; }
+        .gantt-timeline-scroll-x { overflow-x: auto; width: 100%; }
+        .gantt-timeline-container { min-width: 1200px; background: #fff; border-radius: 16px; box-shadow: 0 4px 24px #0004; padding: 32px; }
         .gantt-timeline-header { display: flex; margin-bottom: 12px; }
         .gantt-timeline-header .room-label { width: 120px; }
         .gantt-timeline-header .time-slot { flex: 1; text-align: center; color: #888; font-weight: 600; }
         .gantt-timeline-row { display: flex; align-items: center; height: 48px; position: relative; }
         .room-label { width: 120px; font-weight: bold; color: #222; }
-        .gantt-timeline-bar-bg { flex: 1; display: flex; position: relative; height: 100%; }
+        .gantt-timeline-bar-bg {
+            flex: 1;
+            display: flex;
+            position: relative;
+            height: 100%;
+        }
+        .gantt-timeline-bar-bg.thirtymin-bg::before {
+            content: '';
+            position: absolute;
+            top: 0; bottom: 0;
+            left: 25%; width: 0; border-left: 1px dashed #bbb; z-index: 1;
+        }
+        .gantt-timeline-bar-bg.thirtymin-bg::after {
+            content: '';
+            position: absolute;
+            top: 0; bottom: 0;
+            left: 75%; width: 0; border-left: 1px dashed #bbb; z-index: 1;
+        }
         .gantt-timeline-bar { position: absolute; height: 32px; border-radius: 8px; color: #fff; font-weight: 600; display: flex; align-items: center; padding: 0 16px; font-size: 1rem; box-shadow: 0 2px 8px #0002; }
         .bar-blue { background: linear-gradient(90deg, #4fc3f7, #1976d2); }
         .bar-pink { background: linear-gradient(90deg, #f48fb1, #d81b60); }
@@ -154,7 +172,9 @@
                 </div>
             </div>
             <div class="category-row" id="categoryRow" style="margin-top:18px;"></div>
-            <div id="ganttTimelineWrap" style="margin-top:18px;"></div>
+            <div id="ganttTimelineWrap" style="margin-top:18px;">
+                <div class="gantt-timeline-scroll-x"></div>
+            </div>
             <div class="form-actions-centered" style="margin-top:32px;" id="timelineActions">
                 <button class="btn-secondary-centered" onclick="location.href='index.html'" style="color:#222;" id="btnBack">◀ 이전</button>
                 <button class="btn-secondary-centered" onclick="location.href='admin.html'" style="color:#222;" id="btnAdmin">🛠️ 관리자모드</button>
@@ -668,7 +688,6 @@
     function renderGanttTimeline(reservations, spaces, startHour = 9, endHour = 20) {
         const container = document.getElementById('ganttTimelineWrap');
         if (!container) return;
-        // 시간대 헤더 생성
         let html = '<div class="gantt-timeline-container">';
         html += '<div class="gantt-timeline-header">';
         html += '<div class="room-label"></div>';
@@ -682,7 +701,9 @@
             details.forEach(detail => {
                 html += '<div class="gantt-timeline-row">';
                 html += `<div class="room-label">${detail || space.name}</div>`;
-                html += '<div class="gantt-timeline-bar-bg" style="position:relative;">';
+                // 30분 단위 시설이면 구분선 배경 클래스 추가
+                const is30min = /^닌텐도[1-9]$/.test(detail) || /^플레이스테이션[1-2]$/.test(detail);
+                html += `<div class="gantt-timeline-bar-bg${is30min ? ' thirtymin-bg' : ''}" style="position:relative;">`;
                 // 해당 공간/세부시설의 예약만 추출
                 const rowReservations = reservations.filter(r =>
                     r.facility === space.name && (r.detail === detail || (!r.detail && !detail))
@@ -702,19 +723,22 @@
             });
         });
         html += '</div>';
-        container.innerHTML = html;
+        // 스크롤 래퍼에 표 삽입
+        const scrollDiv = container.querySelector('.gantt-timeline-scroll-x');
+        if (scrollDiv) scrollDiv.innerHTML = html;
+        else container.innerHTML = `<div class="gantt-timeline-scroll-x">${html}</div>`;
     }
     // 시간 문자열(HH:mm) → 분 변환
     function parseTimeToMinutes(t) {
         const [h, m] = t.split(':').map(Number);
         return h * 60 + m;
     }
-    // 실제 데이터 불러와서 렌더링
-    async function loadAndRenderGanttTimeline(category = '전체') {
+    // loadAndRenderGanttTimeline 함수 보완
+    async function loadAndRenderGanttTimeline(category = selectedCategory) {
         const date = document.getElementById('statusDate')?.value || getTodayStr();
         const response = await fetch(`/api/reservations/date/${date}`);
         const reservations = await response.json();
-        let filteredSpaces = category === '전체' ? spaces : spaces.filter(s => s.name === category);
+        let filteredSpaces = (category === '전체' || !category) ? spaces : spaces.filter(s => s.name === category);
         renderGanttTimeline(reservations, filteredSpaces, 9, 20);
     }
     document.addEventListener('DOMContentLoaded', () => loadAndRenderGanttTimeline(selectedCategory));
