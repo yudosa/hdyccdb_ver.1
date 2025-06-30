@@ -224,19 +224,6 @@
                         </table>
                     </div>
                     <div class="time-select-block" id="timeSelectBlock" style="display:none;"></div>
-                    <div class="form-group">
-                        <label for="userGender">성별</label>
-                        <select id="userGender" class="form-control">
-                            <option value="">선택</option>
-                            <option value="남">남</option>
-                            <option value="여">여</option>
-                            <option value="기타">기타</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="userAge">나이</label>
-                        <input type="number" id="userAge" class="form-control" min="1" max="99" placeholder="나이 입력">
-                    </div>
                     <div class="form-actions-centered">
                         <button class="btn-secondary-centered" style="color:#222;">◀ 이전</button>
                         <button class="btn-secondary-centered" style="color:#222;">다음 ▶</button>
@@ -341,13 +328,11 @@
         selectedFacility = this.value;
         console.log('선택된 세부선택:', selectedFacility); // 디버깅
         // 시간 선택 영역 초기화
-        selectedDate = null;
         selectedTime = null;
-        document.querySelectorAll('.calendar-day.selected').forEach(d => d.classList.remove('selected'));
-        document.getElementById('timeSelectBlock').style.display = 'none';
-        
-        // 예약 데이터 다시 로드
-        loadReservationData();
+        // 시간 선택 UI 즉시 갱신
+        showTimeSelect();
+        // 예약 데이터 다시 로드 (필요시)
+        // loadReservationData();
     });
 
     // 달력 관련 변수
@@ -619,6 +604,8 @@
             const userName = localStorage.getItem('userName') || '고객';
             const userPhone = localStorage.getItem('userPhone') || '';
             
+            const userGender = localStorage.getItem('userGender') || '';
+            const userAge = localStorage.getItem('userAge') || '';
             const reservationData = {
                 name: userName,
                 phone: userPhone || undefined, // 빈 문자열 대신 undefined 전송
@@ -628,8 +615,8 @@
                 start_time: selectedTime,
                 end_time: getEndTime(selectedTime), // 1시간 후
                 purpose: '',
-                gender: document.getElementById('userGender').value,
-                age: document.getElementById('userAge').value
+                gender: userGender,
+                age: userAge
             };
             
             console.log('예약 데이터:', reservationData); // 디버깅
