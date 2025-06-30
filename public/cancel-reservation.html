@@ -456,6 +456,8 @@
             confirmBtn.className = 'custom-modal-btn danger';
             confirmBtn.textContent = '확인';
             confirmBtn.onclick = () => { 
+                if (confirmBtn.disabled) return;
+                confirmBtn.disabled = true;
                 console.log('모달 확인 클릭, onConfirm 실행');
                 backdrop.remove(); 
                 isModalOpen = false;
