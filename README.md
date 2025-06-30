@@ -283,3 +283,39 @@ db.pool.connect()
     padding-top: 0 !important;
     padding-bottom: 0 !important;
 }
+
+window.cancelReservation = cancelReservation;
+
+function getTimeBtnsHTML() {
+    const slots = selectedAMPM==='AM' ? amSlots : pmSlots;
+    const reserved = Object.keys(reservationData).length > 0 ? 
+        getReservedTimes(facilityName, selectedFacility, selectedDate) : [];
+    console.log('reserved:', reserved);
+    let html = '';
+    slots.forEach(time => {
+        const paddedTime = time.padStart(5, '0');
+        const reservedPadded = reserved.map(t => t.padStart(5, '0'));
+        const isReserved = reservedPadded.includes(paddedTime);
+        console.log('버튼 시간:', time, 'reserved:', reserved, 'padded:', paddedTime, 'isReserved:', isReserved);
+        let isPastTime = false;
+        if (selectedDate === formatDateToYYYYMMDD(today)) {
+            const [hour, minute] = time.split(':').map(Number);
+            const now = new Date();
+            const currentHour = now.getHours();
+            const currentMinute = now.getMinutes();
+            if (hour < currentHour || (hour === currentHour && minute <= currentMinute)) {
+                isPastTime = true;
+            }
+        }
+        const isDisabled = isReserved || isPastTime;
+        const disabledText = isReserved ? ' (예약됨)' : '';
+        let buttonClass = 'time-btn';
+        if (isDisabled) buttonClass += ' disabled';
+        if (selectedTime === time) buttonClass += ' selected';
+        let buttonHtml = `<button class="${buttonClass}" data-time="${time}"`;
+        if (isDisabled) buttonHtml += ' disabled';
+        buttonHtml += `>${time}${disabledText}</button>`;
+        html += buttonHtml;
+    });
+    return html;
+}
