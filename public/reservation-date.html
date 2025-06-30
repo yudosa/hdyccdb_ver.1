@@ -313,20 +313,15 @@
                 ];
             }
             detailSelect.innerHTML = options.map(o => `<option value="${o.v}">${o.t}</option>`).join('');
-            
-            // selectedFacility를 현재 시설의 첫 번째 옵션으로 설정
-            if (options.length > 0) {
-                selectedFacility = options[0].v;
-                console.log('selectedFacility 업데이트:', selectedFacility);
-            }
+            // 선택된 세부시설로 selectedFacility를 명확히 할당
+            selectedFacility = detailSelect.value;
         }
     }
     setDetailOptions();
 
     // 세부선택 버튼 클릭
-    document.getElementById('detailSelect').addEventListener('change', function() {
+    detailSelect.addEventListener('change', function() {
         selectedFacility = this.value;
-        console.log('선택된 세부선택:', selectedFacility); // 디버깅
         // 시간 선택 영역 초기화
         selectedTime = null;
         // 시간 선택 UI 즉시 갱신

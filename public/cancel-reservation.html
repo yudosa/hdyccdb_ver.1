@@ -521,6 +521,13 @@
 
         window.cancelReservation = cancelReservation;
         window.showSimpleCancelModal = showSimpleCancelModal;
+
+        function getTimeBtnsHTML() {
+            const slots = getTimeSlotsForFacility(facilityName === '댄스연습실' ? facilityName : (selectedFacility || facilityName));
+            console.log('getTimeBtnsHTML - slots:', slots);
+            console.log('getTimeBtnsHTML - selectedFacility:', selectedFacility, 'selectedDate:', selectedDate);
+            // ... 이하 생략 ...
+        }
     </script>
 </body>
 </html>
