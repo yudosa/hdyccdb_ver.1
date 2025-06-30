@@ -298,7 +298,7 @@
                                 <span class="detail-value">#${reservation.id}</span>
                             </div>
                         </div>
-                        <button class="cancel-btn" data-id="${reservation.id}" onclick="cancelReservation(this)">예약 취소</button>
+                        ${reservation.status === 'cancelled' ? `<div style="color:#e74c3c;font-weight:700;">[취소된 예약]</div>` : `<button class="cancel-btn" data-id="${reservation.id}" onclick="cancelReservation(this)">예약 취소</button>`}
                     </div>
                 `;
             });
@@ -330,12 +330,15 @@
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json' }
                 });
+                const result = await response.json();
                 if (response.ok) {
                     alert('예약이 취소되었습니다.');
-                    // 예약 목록 새로고침
                     loadMyReservations();
                 } else {
-                    const result = await response.json();
+                    if (result.error && result.error.includes('이미 취소된 예약')) {
+                        loadMyReservations();
+                        return;
+                    }
                     alert(result.error || '예약 취소에 실패했습니다.');
                 }
             } catch (e) {

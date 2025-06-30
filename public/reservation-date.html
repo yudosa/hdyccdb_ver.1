@@ -28,10 +28,10 @@
             background: linear-gradient(90deg, #a8edea 0%, #fed6e3 100%); 
             color: #222; 
         }
-        .time-btn.disabled { 
-            background: #cccccc !important; 
-            color: #888888 !important; 
-            cursor: not-allowed !important; 
+        .time-btn.disabled {
+            background: #cccccc !important;
+            color: #888888 !important;
+            cursor: not-allowed !important;
             text-decoration: line-through !important;
             opacity: 0.5 !important;
             pointer-events: none !important;
@@ -605,12 +605,10 @@
 
     function getTimeBtnsHTML() {
         const slots = selectedAMPM==='AM' ? amSlots : pmSlots;
-        // 예약 데이터가 없으면 빈 배열로 처리
         const reserved = Object.keys(reservationData).length > 0 ? 
             getReservedTimes(facilityName, selectedFacility, selectedDate) : [];
         let html = '';
         slots.forEach(time => {
-            // 예약된 시간과 정확히 일치하는지 체크 (문자열 비교)
             const isReserved = reserved.includes(time);
             let isPastTime = false;
             if (selectedDate === formatDateToYYYYMMDD(today)) {
@@ -624,7 +622,6 @@
             }
             const isDisabled = isReserved || isPastTime;
             const disabledText = isReserved ? ' (예약됨)' : '';
-            // 클래스와 속성을 더 명확하게 설정
             let buttonClass = 'time-btn';
             if (isDisabled) buttonClass += ' disabled';
             if (selectedTime === time) buttonClass += ' selected';
