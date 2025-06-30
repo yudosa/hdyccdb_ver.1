@@ -25,11 +25,13 @@ function cancelReservation(btn) {
     const reservationId = btn.getAttribute('data-id');
     console.log('lastReservations:', window.lastReservations, '찾는 id:', reservationId);
     const reservation = window.lastReservations?.find(r => `${r.id}` === `${reservationId}`);
+    console.log('find 결과:', reservation);
     if (!reservation) {
         alert('예약 정보를 찾을 수 없습니다.');
         return;
     }
-    // ... 이하 생략
+    console.log('showCancelModal 호출 직전');
+    showCancelModal(reservation, async () => { ... });
 } 
 
 console.log('displayReservations 전달 id:', reservations.map(r => r.id)); 
