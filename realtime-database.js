@@ -18,6 +18,7 @@ async function addReservation(reservationData) {
     
     const reservationWithTimestamp = {
       ...reservationData,
+      status: 'active', // 예약 상태 추가 (active, cancelled, completed)
       created_at: serverTimestamp(),
       id: newReservationRef.key
     };
@@ -115,7 +116,23 @@ async function updateReservation(id, updateData) {
   }
 }
 
-// 예약 삭제
+// 예약 취소 (상태 변경)
+async function cancelReservation(id) {
+  try {
+    const reservationRef = ref(realtimeDb, `reservations/${id}`);
+    await update(reservationRef, { 
+      status: 'cancelled',
+      cancelled_at: serverTimestamp()
+    });
+    console.log('예약이 취소되었습니다. ID:', id);
+    return true;
+  } catch (error) {
+    console.error('예약 취소 오류:', error);
+    throw error;
+  }
+}
+
+// 예약 삭제 (완전 삭제)
 async function deleteReservation(id) {
   try {
     const reservationRef = ref(realtimeDb, `reservations/${id}`);
@@ -256,6 +273,7 @@ module.exports = {
   getReservationById,
   getReservationsByDate,
   updateReservation,
+  cancelReservation,
   deleteReservation,
   addFacility,
   getAllFacilities,

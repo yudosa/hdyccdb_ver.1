@@ -147,7 +147,20 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-// 예약 삭제
+// 예약 취소 (상태 변경)
+router.patch('/:id/cancel', async (req, res) => {
+    try {
+        const { id } = req.params;
+        await realtimeDb.cancelReservation(id);
+        res.json({ message: '예약이 성공적으로 취소되었습니다.' });
+        
+    } catch (error) {
+        console.error('예약 취소 오류:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// 예약 삭제 (완전 삭제)
 router.delete('/:id', async (req, res) => {
     try {
         const { id } = req.params;
