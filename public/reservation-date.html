@@ -240,7 +240,7 @@
     const pmSlots = timeSlots.slice(4);   // 13~19
 
     let selectedFacility = null;
-    let selectedDate = null;
+    let selectedDetail = null;
     let selectedTime = null;
     let slots = [];
     let reserved = [];
@@ -320,8 +320,8 @@
 
     // 세부선택 버튼 클릭
     detailSelect.addEventListener('change', function() {
-        selectedFacility = this.value;
-        console.log('detailSelect change - selectedFacility:', selectedFacility);
+        selectedDetail = this.value;
+        console.log('detailSelect change - selectedDetail:', selectedDetail);
         selectedTime = null;
         showTimeSelect();
     });
@@ -517,9 +517,8 @@
     }
 
     // 시간 슬롯 생성 함수 추가
-    function getTimeSlotsForFacility(facility) {
-        // 닌텐도1~9, 플레이스테이션1~2만 30분 단위
-        if (facility && (facility.includes('닌텐도') || facility.includes('플레이스테이션'))) {
+    function getTimeSlotsForFacility(facility, detail) {
+        if (facility && (facility === '닌텐도' || facility === '플레이스테이션')) {
             const slots = [];
             for (let h = 9; h <= 19; h++) {
                 slots.push(`${String(h).padStart(2, '0')}:00`);
@@ -533,12 +532,11 @@
 
     // getTimeBtnsHTML 함수 내 시간 슬롯 생성 부분을 교체
     function getTimeBtnsHTML() {
-        // 디버깅용 콘솔
-        console.log('getTimeBtnsHTML - facilityName:', facilityName, 'selectedFacility:', selectedFacility, 'selectedDate:', selectedDate);
-        const slots = getTimeSlotsForFacility(selectedFacility);
+        console.log('getTimeBtnsHTML - facilityName:', selectedFacility, 'selectedDetail:', selectedDetail, 'selectedDate:', selectedDate);
+        const slots = getTimeSlotsForFacility(selectedFacility, selectedDetail);
         console.log('getTimeBtnsHTML - slots:', slots);
         const reserved = Object.keys(reservationData).length > 0 ? 
-            getReservedTimes(selectedFacility, selectedFacility, selectedDate) : [];
+            getReservedTimes(selectedFacility, selectedDetail, selectedDate) : [];
         console.log('getTimeBtnsHTML - reserved:', reserved);
         let html = '';
         slots.forEach(time => {
@@ -579,14 +577,14 @@
             e.preventDefault();
             
             console.log('다음 버튼 클릭 - 선택된 항목들:'); // 디버깅
-            console.log('시설:', facilityName);
-            console.log('세부선택:', detailSelect.value);
+            console.log('시설:', selectedFacility);
+            console.log('세부선택:', selectedDetail);
             console.log('날짜:', selectedDate);
             console.log('시간:', selectedTime);
             
             // 유효성 검사
-            let needDetail = facilityName !== '댄스연습실';
-            let detailValue = needDetail ? detailSelect.value : null;
+            let needDetail = selectedFacility !== '댄스연습실';
+            let detailValue = needDetail ? selectedDetail : null;
             
             if (needDetail && !detailValue) {
                 showModal('세부선택을 선택해주세요.');
@@ -611,12 +609,12 @@
             const userAge = localStorage.getItem('userAge') || '';
             const reservationData = {
                 name: userName,
-                phone: userPhone || undefined, // 빈 문자열 대신 undefined 전송
-                facility: facilityName, // 일반 시설명
-                detail: detailValue || '-', // 세부선택
+                phone: userPhone || undefined,
+                facility: selectedFacility, // 상위 카테고리명
+                detail: detailValue || '-', // 세부시설명
                 date: selectedDate,
                 start_time: selectedTime,
-                end_time: getEndTime(selectedTime), // 1시간 후
+                end_time: getEndTime(selectedTime),
                 purpose: '',
                 gender: userGender,
                 age: userAge
