@@ -489,13 +489,27 @@
                 if (!reservationData[key]) reservationData[key] = {};
                 if (!reservationData[key][reservation.date]) reservationData[key][reservation.date] = [];
                 if (!reservation.status || reservation.status === 'active') {
-                    // 예약 구간 전체 시간대 push
-                    const startHour = parseInt(reservation.start_time.split(':')[0]);
-                    const endHour = parseInt(reservation.end_time.split(':')[0]);
-                    for (let h = startHour; h < endHour; h++) {
-                        const timeStr = `${h.toString().padStart(2, '0')}:00`;
-                        if (!reservationData[key][reservation.date].includes(timeStr)) {
-                            reservationData[key][reservation.date].push(timeStr);
+                    // 30분 단위 시설이면 30분 단위로 push
+                    if (reservation.facility && (reservation.facility.includes('닌텐도') || reservation.facility.includes('플레이스테이션'))) {
+                        let [h, m] = reservation.start_time.split(':').map(Number);
+                        const [endH, endM] = reservation.end_time.split(':').map(Number);
+                        while (h < endH || (h === endH && m < endM)) {
+                            const timeStr = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+                            if (!reservationData[key][reservation.date].includes(timeStr)) {
+                                reservationData[key][reservation.date].push(timeStr);
+                            }
+                            m += 30;
+                            if (m === 60) { m = 0; h += 1; }
+                        }
+                    } else {
+                        // 1시간 단위
+                        const startHour = parseInt(reservation.start_time.split(':')[0]);
+                        const endHour = parseInt(reservation.end_time.split(':')[0]);
+                        for (let h = startHour; h < endHour; h++) {
+                            const timeStr = `${h.toString().padStart(2, '0')}:00`;
+                            if (!reservationData[key][reservation.date].includes(timeStr)) {
+                                reservationData[key][reservation.date].push(timeStr);
+                            }
                         }
                     }
                 }
