@@ -250,7 +250,12 @@
 
     // 예약 데이터를 정확히 매칭하는 함수
     function getReservedTimes(facility, detail, date) {
-        // detail 없는 시설은 '-'로 통일
+        // detail이 상위 카테고리명(닌텐도 등)이면 detailSelect.value로 강제
+        if (facility && (facility === '닌텐도' || facility === '플레이스테이션' || facility === '노래방' || facility === '보드게임')) {
+            if (!detail || detail === facility) {
+                detail = detailSelect.value.replace(/\s+/g, '');
+            }
+        }
         const detailKey = (facility === '댄스연습실' || facility === '다목적실') ? '-' : detail;
         const key = facility + '||' + (detailKey || '-');
         console.log('getReservedTimes - key:', key);
@@ -275,52 +280,53 @@
         if (facilityName) {
             facilityTitle.innerHTML = `<span style="color: #3498db;">${facilityName}</span> 시설 이용 신청`;
         }
-        
         if (facilityName === '댄스연습실') {
             detailCard.style.display = 'none';
-            selectedFacility = facilityName; // 댄스연습실은 세부선택 없음
+            selectedFacility = facilityName;
+            selectedDetail = '-';
         } else {
             detailCard.style.display = '';
             let options = '';
             if (facilityName === '닌텐도') {
                 options = [
-                    {v:'닌텐도', t:'🎮 닌텐도1'},
-                    {v:'닌텐도', t:'🎮 닌텐도2'},
-                    {v:'닌텐도', t:'🎮 닌텐도3'},
-                    {v:'닌텐도', t:'🎮 닌텐도4'},
-                    {v:'닌텐도', t:'🎮 닌텐도5'},
-                    {v:'닌텐도', t:'🎮 닌텐도6'},
-                    {v:'닌텐도', t:'🎮 닌텐도7'},
-                    {v:'닌텐도', t:'🎮 닌텐도8'},
-                    {v:'닌텐도', t:'🎮 닌텐도9 ♿'}
+                    {v:'닌텐도1', t:'🎮 닌텐도1'},
+                    {v:'닌텐도2', t:'🎮 닌텐도2'},
+                    {v:'닌텐도3', t:'🎮 닌텐도3'},
+                    {v:'닌텐도4', t:'🎮 닌텐도4'},
+                    {v:'닌텐도5', t:'🎮 닌텐도5'},
+                    {v:'닌텐도6', t:'🎮 닌텐도6'},
+                    {v:'닌텐도7', t:'🎮 닌텐도7'},
+                    {v:'닌텐도8', t:'🎮 닌텐도8'},
+                    {v:'닌텐도9', t:'🎮 닌텐도9 ♿'}
                 ];
             } else if (facilityName === '플레이스테이션') {
                 options = [
-                    {v:'플레이스테이션', t:'🕹️ 플레이스테이션1'},
-                    {v:'플레이스테이션', t:'🕹️ 플레이스테이션2'}
+                    {v:'플레이스테이션1', t:'🕹️ 플레이스테이션1'},
+                    {v:'플레이스테이션2', t:'🕹️ 플레이스테이션2'}
                 ];
             } else if (facilityName === '노래방') {
                 options = [
-                    {v:'노래방', t:'🎤 노래방1'},
-                    {v:'노래방', t:'🎤 노래방2'}
+                    {v:'노래방1', t:'🎤 노래방1'},
+                    {v:'노래방2', t:'🎤 노래방2'}
                 ];
             } else if (facilityName === '보드게임') {
                 options = [
-                    {v:'보드게임', t:'🎲 보드게임1'},
-                    {v:'보드게임', t:'🎲 보드게임2'}
+                    {v:'보드게임1', t:'🎲 보드게임1'},
+                    {v:'보드게임2', t:'🎲 보드게임2'}
                 ];
             }
             detailSelect.innerHTML = options.map(o => `<option value="${o.v}">${o.t}</option>`).join('');
-            // 항상 세부시설명으로 selectedFacility 할당
-            selectedFacility = detailSelect.value;
-            console.log('setDetailOptions - selectedFacility:', selectedFacility);
+            // 항상 세부시설명으로 selectedDetail 할당
+            selectedFacility = facilityName;
+            selectedDetail = detailSelect.value.replace(/\s+/g, '');
+            console.log('setDetailOptions - selectedFacility:', selectedFacility, 'selectedDetail:', selectedDetail);
         }
     }
     setDetailOptions();
 
     // 세부선택 버튼 클릭
     detailSelect.addEventListener('change', function() {
-        selectedDetail = this.value;
+        selectedDetail = this.value.replace(/\s+/g, ''); // 공백 제거
         console.log('detailSelect change - selectedDetail:', selectedDetail);
         selectedTime = null;
         showTimeSelect();
@@ -585,6 +591,10 @@
             // 유효성 검사
             let needDetail = selectedFacility !== '댄스연습실';
             let detailValue = needDetail ? selectedDetail : null;
+            // detailValue가 상위 카테고리명일 경우 detailSelect.value로 강제, 공백 제거
+            if (needDetail && (!detailValue || detailValue === selectedFacility)) {
+                detailValue = detailSelect.value.replace(/\s+/g, '');
+            }
             
             if (needDetail && !detailValue) {
                 showModal('세부선택을 선택해주세요.');
@@ -610,8 +620,8 @@
             const reservationData = {
                 name: userName,
                 phone: userPhone || undefined,
-                facility: selectedFacility, // 상위 카테고리명
-                detail: detailValue || '-', // 세부시설명
+                facility: selectedFacility,
+                detail: detailValue || '-',
                 date: selectedDate,
                 start_time: selectedTime,
                 end_time: getEndTime(selectedTime),
