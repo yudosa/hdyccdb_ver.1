@@ -689,7 +689,7 @@
         }
         
         try {
-            const response = await fetch(`/api/reservations/date/${date}`);
+            const response = await fetch(`/api/reservations/date/${date}?_=${Date.now()}`, { cache: 'no-store' });
             if (!response.ok) {
                 throw new Error('예약 데이터를 불러올 수 없습니다.');
             }
@@ -781,7 +781,7 @@
     // loadAndRenderGanttTimeline 함수 보완
     async function loadAndRenderGanttTimeline(category = selectedCategory) {
         const date = document.getElementById('statusDate')?.value || getTodayStr();
-        const response = await fetch(`/api/reservations/date/${date}`);
+        const response = await fetch(`/api/reservations/date/${date}?_=${Date.now()}`, { cache: 'no-store' });
         let reservations = await response.json();
         let filteredSpaces = (category === '전체' || !category) ? spaces : spaces.filter(s => s.name === category);
 
