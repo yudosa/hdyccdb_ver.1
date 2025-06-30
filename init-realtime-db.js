@@ -31,3 +31,5 @@ function cancelReservation(btn) {
     }
     // ... 이하 생략
 } 
+
+console.log('displayReservations 전달 id:', reservations.map(r => r.id)); 
