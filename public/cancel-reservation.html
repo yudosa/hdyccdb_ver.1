@@ -376,9 +376,58 @@
             return `${year}년 ${month}월 ${day}일 (${dayOfWeek})`;
         }
 
+        function showSimpleCancelModal(onConfirm) {
+            // 기존 모달 제거
+            document.querySelectorAll('.custom-modal-backdrop').forEach(e => e.remove());
+            if (document.querySelector('.custom-modal-backdrop')) return;
+
+            const backdrop = document.createElement('div');
+            backdrop.className = 'custom-modal-backdrop';
+            backdrop.style.position = 'fixed';
+            backdrop.style.left = 0;
+            backdrop.style.top = 0;
+            backdrop.style.width = '100vw';
+            backdrop.style.height = '100vh';
+            backdrop.style.background = 'rgba(0,0,0,0.35)';
+            backdrop.style.zIndex = 9999;
+            backdrop.style.display = 'flex';
+            backdrop.style.alignItems = 'center';
+            backdrop.style.justifyContent = 'center';
+
+            const modal = document.createElement('div');
+            modal.className = 'custom-modal';
+            modal.style.background = '#fff';
+            modal.style.padding = '32px 28px';
+            modal.style.borderRadius = '18px';
+            modal.style.boxShadow = '0 4px 24px #3498db22';
+            modal.style.fontSize = '1.15rem';
+            modal.style.fontWeight = '600';
+            modal.style.color = '#222';
+            modal.style.textAlign = 'center';
+            modal.style.minWidth = '220px';
+            modal.style.maxWidth = '90vw';
+
+            modal.innerHTML = `
+                <div style="margin-bottom:18px;">정말 예약을 취소하시겠습니까?</div>
+                <div style="display:flex;gap:18px;justify-content:center;">
+                    <button class="custom-modal-btn" id="modalCancelBtn">취소</button>
+                    <button class="custom-modal-btn danger" id="modalConfirmBtn">확인</button>
+                </div>
+            `;
+
+            backdrop.appendChild(modal);
+            document.body.appendChild(backdrop);
+
+            document.getElementById('modalCancelBtn').onclick = () => backdrop.remove();
+            document.getElementById('modalConfirmBtn').onclick = () => {
+                backdrop.remove();
+                onConfirm();
+            };
+        }
+
         async function cancelReservation(btn) {
-            if (isCancelling || isModalOpen) return;
-            isModalOpen = true;
+            if (isCancelling) return;
+            isCancelling = true;
             console.log('취소 버튼 클릭:', btn, btn.getAttribute('data-id'));
             const reservationId = btn.getAttribute('data-id');
             console.log('lastReservations:', window.lastReservations, '찾는 id:', reservationId);
@@ -387,19 +436,11 @@
             console.log('find 결과:', reservation);
             if (!reservation) {
                 alert('예약 정보를 찾을 수 없습니다.');
-                isModalOpen = false;
+                isCancelling = false;
                 return;
             }
-            console.log('showCancelModal 호출 직전');
-            document.querySelectorAll('.custom-modal-backdrop').forEach(e => e.remove());
-            if (document.querySelector('.custom-modal-backdrop')) {
-                console.log('이미 모달이 열려 있으므로 새로 열지 않음');
-                return;
-            }
-            showCancelModal(reservation, async () => {
-                isModalOpen = false;
-                if (isCancelling) return;
-                isCancelling = true;
+            console.log('showSimpleCancelModal 호출 직전');
+            showSimpleCancelModal(async () => {
                 console.log('모달 확인 클릭, onConfirm 실행');
                 try {
                     const response = await fetch(`/api/reservations/${reservationId}/cancel`, {
@@ -424,60 +465,9 @@
                 isCancelling = false;
             });
         }
-        
-        // 모던 커스텀 모달 함수 추가
-        function showCancelModal(reservation, onConfirm) {
-            console.log('showCancelModal 함수 진입');
-            console.log('showCancelModal 실행:', reservation);
-            // 기존 모달 제거
-            document.querySelectorAll('.custom-modal-backdrop').forEach(e => e.remove());
-            const backdrop = document.createElement('div');
-            backdrop.className = 'custom-modal-backdrop';
-            const modal = document.createElement('div');
-            modal.className = 'custom-modal';
-            // 예약 내역
-            const msgDiv = document.createElement('div');
-            msgDiv.style.margin = '24px 0 12px 0';
-            msgDiv.style.fontSize = '1.15rem';
-            msgDiv.style.fontWeight = '600';
-            msgDiv.innerHTML = `
-                <div style="margin-bottom:12px;font-weight:800;font-size:1.1rem;">${reservation.name}님의 예약</div>
-                <div style="color:#555;margin-bottom:8px;">시설명: <b>${reservation.facility}</b> &nbsp; 세부선택: <b>${reservation.detail || '-'}</b></div>
-                <div style="color:#555;margin-bottom:8px;">예약일: <b>${reservation.date}</b> &nbsp; 예약시간: <b>${reservation.start_time} ~ ${reservation.end_time}</b></div>
-                <div style="color:#555;margin-bottom:8px;">예약번호: <b>#${reservation.id}</b></div>
-                <div style="margin:18px 0 0 0;color:#e74c3c;font-weight:700;">예약을 취소하시겠습니까?</div>
-            `;
-            modal.appendChild(msgDiv);
-            // 버튼
-            const btns = document.createElement('div');
-            btns.className = 'custom-modal-btns';
-            const cancelBtn = document.createElement('button');
-            cancelBtn.className = 'custom-modal-btn';
-            cancelBtn.textContent = '취소';
-            cancelBtn.onclick = () => {
-                backdrop.remove();
-                isModalOpen = false;
-            };
-            btns.appendChild(cancelBtn);
-            const confirmBtn = document.createElement('button');
-            confirmBtn.className = 'custom-modal-btn danger';
-            confirmBtn.textContent = '확인';
-            confirmBtn.onclick = () => { 
-                if (confirmBtn.disabled) return;
-                confirmBtn.disabled = true;
-                console.log('모달 확인 클릭, onConfirm 실행');
-                backdrop.remove(); 
-                isModalOpen = false;
-                onConfirm(); 
-            };
-            btns.appendChild(confirmBtn);
-            modal.appendChild(btns);
-            backdrop.appendChild(modal);
-            document.body.appendChild(backdrop);
-        }
 
         window.cancelReservation = cancelReservation;
-        window.showCancelModal = showCancelModal;
+        window.showSimpleCancelModal = showSimpleCancelModal;
     </script>
 </body>
 </html>
