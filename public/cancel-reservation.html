@@ -453,13 +453,13 @@
                         loadMyReservations();
                     } else {
                         if (result.error) {
-                            alert(result.error);
+                            // alert(result.error); // 알림 제거
                         } else {
-                            alert('예약 취소에 실패했습니다.');
+                            // alert('예약 취소에 실패했습니다.'); // 알림 제거
                         }
                     }
                 } catch (e) {
-                    alert('예약 취소 중 오류가 발생했습니다.');
+                    // alert('예약 취소 중 오류가 발생했습니다.'); // 알림 제거
                 }
                 isCancelling = false;
             });
