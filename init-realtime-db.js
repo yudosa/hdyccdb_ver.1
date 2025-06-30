@@ -40,3 +40,5 @@ function showCancelModal(reservation, onConfirm) {
     console.log('showCancelModal 실행:', reservation);
     // ... 기존 코드 ...
 } 
+
+window.showCancelModal = showCancelModal; 
