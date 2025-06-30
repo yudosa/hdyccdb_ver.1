@@ -242,7 +242,6 @@
     let selectedFacility = '닌텐도1';
     let selectedDate = null;
     let selectedTime = null;
-    let selectedAMPM = 'AM';
     
     // 예약 데이터 (API에서 가져옴)
     let reservationData = {};
@@ -476,38 +475,12 @@
             <div style="margin-bottom: 20px; text-align: center;">
                 <h3 style="color: #3498db; margin: 0;">선택된 날짜: ${selectedDate}</h3>
             </div>
-            <div class="ampm-tabs">
-                <button class="ampm-tab${selectedAMPM==='AM'?' active':''}" data-ampm="AM">오전</button>
-                <button class="ampm-tab${selectedAMPM==='PM'?' active':''}" data-ampm="PM">오후</button>
-            </div>
             <div class="time-btn-group">
                 ${getTimeBtnsHTML()}
             </div>
         `;
         
         console.log('시간 선택 UI HTML 생성 완료'); // 디버깅 추가
-        
-        // 오전/오후 탭 이벤트
-        block.querySelectorAll('.ampm-tab').forEach(tab => {
-            tab.onclick = function() {
-                selectedAMPM = tab.getAttribute('data-ampm');
-                showTimeSelect();
-            }
-        });
-        
-        // 시간 버튼 이벤트
-        block.querySelectorAll('.time-btn').forEach(btn => {
-            if (!btn.classList.contains('disabled')) {
-                btn.onclick = function() {
-                    block.querySelectorAll('.time-btn').forEach(b => b.classList.remove('selected'));
-                    btn.classList.add('selected');
-                    selectedTime = btn.getAttribute('data-time');
-                    console.log('선택된 시간:', selectedTime); // 디버깅
-                }
-            }
-        });
-        
-        console.log('시간 선택 UI 이벤트 등록 완료'); // 디버깅 추가
     }
 
     async function loadReservationData() {

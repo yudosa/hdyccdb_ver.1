@@ -222,53 +222,71 @@
         document.getElementById('adminWatermark').style.display = 'none';
         document.getElementById('csvRangeWrap').style.display = 'none';
     }
+    // 30분 단위 타임라인 생성 함수
+    function get30MinTimeSlots() {
+        const slots = [];
+        for (let h = 9; h <= 19; h++) {
+            slots.push(`${String(h).padStart(2, '0')}:00`);
+            if (h !== 19) slots.push(`${String(h).padStart(2, '0')}:30`);
+        }
+        return slots;
+    }
+    // 예약의 start~end 구간을 30분 단위로 쪼개는 함수
+    function getReservedSlots(start, end) {
+        const slots = [];
+        let [h, m] = start.split(':').map(Number);
+        const [endH, endM] = end.split(':').map(Number);
+        while (h < endH || (h === endH && m < endM)) {
+            slots.push(`${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`);
+            m += 30;
+            if (m === 60) { m = 0; h += 1; }
+        }
+        return slots;
+    }
     // 타임라인 렌더링
     async function renderTimeline() {
         const timelineWrap = document.getElementById('timelineWrap');
         const date = document.getElementById('statusDate').value;
-        
-        // 로딩 표시
         timelineWrap.innerHTML = '<div style="text-align: center; padding: 20px;">예약 현황을 불러오는 중...</div>';
-        
-        // 관리자 모드일 때는 모든 예약, 일반 모드일 때는 활성 예약만
         const reservations = isAdmin() 
             ? await getAllReservationsForAdmin(date)
             : await getSampleReservations(date);
-            
         let filteredSpaces = selectedCategory === '전체'
             ? spaces
             : spaces.filter(s => s.name === selectedCategory);
+        const timeSlots = get30MinTimeSlots();
         let html = '<div class="timeline-scroll-x"><table class="timeline-table"><thead><tr><th>공간명</th>';
-        hours.forEach(h => { html += `<th>${h}시</th>`; });
+        timeSlots.forEach(t => { html += `<th>${t}</th>`; });
         html += '</tr></thead><tbody>';
         // 오늘 날짜 판별
         const todayStr = formatDateToYYYYMMDD(new Date());
         const now = new Date();
         const currentHour = now.getHours();
+        const currentMinute = now.getMinutes();
         filteredSpaces.forEach(space => {
             if (space.details) {
                 space.details.forEach(detail => {
                     html += `<tr><td class="space-label">${detail}</td>`;
-                    hours.forEach(hour => {
+                    timeSlots.forEach(slot => {
                         const res = reservations.find(r =>
                             r.space === space.name &&
                             r.detail === detail &&
-                            r.start <= hour && r.end > hour &&
+                            getReservedSlots(r.start_time, r.end_time).includes(slot) &&
                             (r.status === 'active' || !r.status)
                         );
                         // 비활성화 조건: 오늘 날짜 & 현재 시각보다 이전 시간
-                        let isPast = (date === todayStr && hour < currentHour);
+                        let isPast = (date === todayStr && (
+                            parseInt(slot.split(':')[0]) < currentHour ||
+                            (parseInt(slot.split(':')[0]) === currentHour && parseInt(slot.split(':')[1]) <= currentMinute)
+                        ));
                         if (res) {
                             // 취소된 예약은 다른 스타일로 표시
                             const isCancelled = res.status === 'cancelled';
                             const cellClass = isCancelled ? 'reservation-cell-cancelled' : 
                                             (isPast ? 'reservation-cell-disabled' : 'reservation-cell');
-                            
                             html += `<td class="${cellClass}" title="${res.name} (${res.purpose || '예약'})${isCancelled ? ' [취소됨]' : ''}">${res.name}`;
-                            
-                            // 관리자 모드에서만 버튼 표시 (취소되지 않은 예약만)
                             if(isAdmin() && !isPast && !isCancelled) {
-                                html += ` <button class='admin-cancel-btn' data-space='${space.name}' data-detail='${detail||''}' data-hour='${hour}' style='margin-left:4px; background:none; border:none; color:#e74c3c; font-size:1.1em; font-weight:900; cursor:pointer;' title='강제취소'>×</button>`;
+                                html += ` <button class='admin-cancel-btn' data-space='${space.name}' data-detail='${detail||''}' data-hour='${slot}' style='margin-left:4px; background:none; border:none; color:#e74c3c; font-size:1.1em; font-weight:900; cursor:pointer;' title='강제취소'>×</button>`;
                             }
                             html += `</td>`;
                         } else {
@@ -279,25 +297,24 @@
                 });
             } else {
                 html += `<tr><td class="space-label">${space.name}</td>`;
-                hours.forEach(hour => {
+                timeSlots.forEach(slot => {
                     const res = reservations.find(r =>
                         r.space === space.name &&
                         (!r.detail) &&
-                        r.start <= hour && r.end > hour &&
+                        getReservedSlots(r.start_time, r.end_time).includes(slot) &&
                         (r.status === 'active' || !r.status)
                     );
-                    let isPast = (date === todayStr && hour < currentHour);
+                    let isPast = (date === todayStr && (
+                        parseInt(slot.split(':')[0]) < currentHour ||
+                        (parseInt(slot.split(':')[0]) === currentHour && parseInt(slot.split(':')[1]) <= currentMinute)
+                    ));
                     if (res) {
-                        // 취소된 예약은 다른 스타일로 표시
                         const isCancelled = res.status === 'cancelled';
                         const cellClass = isCancelled ? 'reservation-cell-cancelled' : 
                                         (isPast ? 'reservation-cell-disabled' : 'reservation-cell');
-                        
                         html += `<td class="${cellClass}" title="${res.name} (${res.purpose || '예약'})${isCancelled ? ' [취소됨]' : ''}">${res.name}`;
-                        
-                        // 관리자 모드에서만 버튼 표시 (취소되지 않은 예약만)
                         if(isAdmin() && !isPast && !isCancelled) {
-                            html += ` <button class='admin-cancel-btn' data-space='${space.name}' data-detail='' data-hour='${hour}' style='margin-left:4px; background:none; border:none; color:#e74c3c; font-size:1.1em; font-weight:900; cursor:pointer;' title='강제취소'>×</button>`;
+                            html += ` <button class='admin-cancel-btn' data-space='${space.name}' data-detail='' data-hour='${slot}' style='margin-left:4px; background:none; border:none; color:#e74c3c; font-size:1.1em; font-weight:900; cursor:pointer;' title='강제취소'>×</button>`;
                         }
                         html += `</td>`;
                     } else {
@@ -317,7 +334,7 @@
                     e.stopPropagation();
                     const space = btn.getAttribute('data-space');
                     const detail = btn.getAttribute('data-detail');
-                    const hour = parseInt(btn.getAttribute('data-hour'));
+                    const hour = btn.getAttribute('data-hour');
                     
                     showCancelModal(async () => {
                         try {
@@ -475,7 +492,7 @@
             const res = await fetch(`/api/reservations/range?start=${csvStart}&end=${csvEnd}`);
             if (!res.ok) throw new Error('데이터를 불러올 수 없습니다.');
             const data = await res.json();
-            let csv = '이용날짜,이용시간,이용자이름,이용자 나이,이용시설,세부내역,전화번호\n';
+            let csv = '이용날짜,이용시간,이용자이름,이용자 나이,이용자 성별,이용시설,세부내역,전화번호\n';
             data.forEach(r => {
                 function hourStr(t) {
                     if (!t) return '';
@@ -485,7 +502,7 @@
                     return '';
                 }
                 const timeStr = `${hourStr(r.start_time||r.start)} ~ ${hourStr(r.end_time||r.end)}`;
-                csv += `${r.date||''},${timeStr},${r.name||''},${r.age||''},${r.facility||r.space||''},${r.detail||''},${r.phone||''}\n`;
+                csv += `${r.date||''},${timeStr},${r.name||''},${r.age||''},${r.gender||''},${r.facility||r.space||''},${r.detail||''},${r.phone||''}\n`;
             });
             // UTF-8 BOM 추가
             const BOM = '\uFEFF';
