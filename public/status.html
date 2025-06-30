@@ -742,18 +742,27 @@
                 }
                 // 해당 공간/세부시설의 예약만 추출
                 const rowReservations = reservations.filter(r =>
-                    r.facility === space.name && (r.detail === detail || (!r.detail && !detail))
+                    (r.facility === space.name && (r.detail === detail || (!r.detail && !detail))) ||
+                    (r.space === space.name && (r.detail === detail || (!r.detail && !detail)))
                 );
                 rowReservations.forEach((res, idx) => {
                     // 닌텐도1~9, 플레이스테이션1~2는 30분 단위 bar
-                    const is30min = /^닌텐도[1-9]$/.test(detail) || /^플레이스테이션[1-2]$/.test(detail);
-                    const start = parseTimeToMinutes(res.start_time);
-                    const end = parseTimeToMinutes(res.end_time);
+                    const is30min = (detail && (detail.includes('닌텐도') || detail.includes('플레이스테이션')));
+                    // start_time, end_time이 없으면 start/end 사용
+                    const startTime = res.start_time || res.start;
+                    const endTime = res.end_time || res.end;
+                    const start = parseTimeToMinutes(startTime);
+                    const end = parseTimeToMinutes(endTime);
                     const totalMinutes = (endHour - startHour) * 60;
                     const left = ((start - startHour * 60) / totalMinutes) * 100;
                     const width = ((end - start) / totalMinutes) * 100;
                     const colorClass = ['bar-blue','bar-pink','bar-green','bar-yellow'][idx % 4];
-                    html += `<div class="gantt-timeline-bar ${colorClass}" style="left:${left}%;width:${width}%;min-width:70px;white-space:nowrap;overflow:visible;" title="${res.name}" data-id="${res.id}">${res.name}${res.extra ? ' 외 ' + res.extra + '명' : ''}</div>`;
+                    let barContent = `${res.name}${res.extra ? ' 외 ' + res.extra + '명' : ''}`;
+                    // 관리자 모드일 때 x 버튼 추가
+                    if (isAdmin()) {
+                        barContent += ` <button class="bar-cancel-btn" data-id="${res.id}" title="예약 취소" style="background:none;border:none;color:#fff;font-weight:bold;font-size:1.1em;cursor:pointer;padding:0 4px;">×</button>`;
+                    }
+                    html += `<div class="gantt-timeline-bar ${colorClass}" style="left:${left}%;width:${width}%;min-width:35px;white-space:nowrap;overflow:visible;position:relative;" title="${res.name}" data-id="${res.id}">${barContent}</div>`;
                 });
                 html += '</div></div>';
             });
@@ -773,14 +782,47 @@
     async function loadAndRenderGanttTimeline(category = selectedCategory) {
         const date = document.getElementById('statusDate')?.value || getTodayStr();
         const response = await fetch(`/api/reservations/date/${date}`);
-        const reservations = await response.json();
+        let reservations = await response.json();
         let filteredSpaces = (category === '전체' || !category) ? spaces : spaces.filter(s => s.name === category);
+
+        // 일반 모드에서는 status === 'active'만 표시
+        if (!isAdmin()) {
+            reservations = reservations.filter(r => r.status === 'active');
+        }
+
         renderGanttTimeline(reservations, filteredSpaces, 9, 20);
     }
     document.addEventListener('DOMContentLoaded', () => loadAndRenderGanttTimeline(selectedCategory));
     document.getElementById('statusDate')?.addEventListener('change', () => loadAndRenderGanttTimeline(selectedCategory));
-    // 강제취소 버튼 이벤트 보완 (간트차트 bar 클릭 시)
+    // x 버튼 클릭 이벤트 위임 추가 (관리자 모드)
     document.getElementById('ganttTimelineWrap').addEventListener('click', function(e) {
+        if (isAdmin() && e.target.classList.contains('bar-cancel-btn')) {
+            const reservationId = e.target.getAttribute('data-id');
+            if (!reservationId) {
+                alert('예약 ID를 찾을 수 없습니다.');
+                return;
+            }
+            showCancelModal(async () => {
+                try {
+                    const response = await fetch(`/api/reservations/${reservationId}/cancel`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                    if (response.ok) {
+                        showSuccessModal('예약이 성공적으로 취소되었습니다.');
+                        await loadAndRenderGanttTimeline(selectedCategory);
+                    } else {
+                        const errorData = await response.json();
+                        alert('예약 취소 실패: ' + (errorData.error || '알 수 없는 오류'));
+                    }
+                } catch (error) {
+                    alert('예약 취소 중 오류가 발생했습니다.');
+                }
+            });
+            e.stopPropagation();
+            return;
+        }
+        // 기존 bar 클릭 취소 이벤트(관리자 모드)
         const bar = e.target.closest('.gantt-timeline-bar');
         if (bar && isAdmin()) {
             const reservationId = bar.getAttribute('data-id');
