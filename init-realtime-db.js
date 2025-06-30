@@ -33,3 +33,5 @@ function cancelReservation(btn) {
 } 
 
 console.log('displayReservations 전달 id:', reservations.map(r => r.id)); 
+
+console.log('lastReservations:', window.lastReservations.map(r => r.id)); 
