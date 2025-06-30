@@ -448,33 +448,25 @@
 
     function showTimeSelect() {
         const block = document.getElementById('timeSelectBlock');
-        console.log('=== showTimeSelect 함수 호출 ==='); // 디버깅 추가
-        console.log('timeSelectBlock 요소:', block); // 디버깅 추가
-        console.log('selectedDate:', selectedDate); // 디버깅 추가
-        
-        // 무조건 시간 선택 UI를 보이게 함
         block.style.display = 'block';
-        
-        console.log('시간 선택 UI 표시:', selectedDate); // 디버깅
-        
-        // 예약 데이터가 로드되지 않았다면 빈 배열로 처리
-        if (Object.keys(reservationData).length === 0) {
-            console.log('예약 데이터가 비어있어서 빈 배열로 처리합니다.'); // 디버깅 추가
-            reservationData = {}; // 빈 객체로 초기화
-        }
-        
-        console.log('시간 선택 UI HTML 생성 시작'); // 디버깅 추가
-        
         block.innerHTML = `
             <div style="margin-bottom: 20px; text-align: center;">
                 <h3 style="color: #3498db; margin: 0;">선택된 날짜: ${selectedDate}</h3>
             </div>
-            <div class="time-btn-group">
+            <div class="time-btn-group" id="timeBtnGroup">
                 ${getTimeBtnsHTML()}
             </div>
         `;
-        
-        console.log('시간 선택 UI HTML 생성 완료'); // 디버깅 추가
+        // 시간 버튼 클릭 이벤트 바인딩
+        const btnGroup = document.getElementById('timeBtnGroup');
+        if (btnGroup) {
+            btnGroup.querySelectorAll('.time-btn:not(.disabled)').forEach(btn => {
+                btn.onclick = function() {
+                    selectedTime = btn.getAttribute('data-time');
+                    showTimeSelect(); // UI 갱신
+                };
+            });
+        }
     }
 
     async function loadReservationData() {
