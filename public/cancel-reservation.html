@@ -465,6 +465,25 @@
             });
         }
 
+        // 예약 목록 새로고침 함수 추가
+        async function loadMyReservations() {
+            try {
+                const response = await fetch('/api/reservations');
+                if (!response.ok) {
+                    // 에러 처리 필요시 추가
+                    return;
+                }
+                const reservations = await response.json();
+                // 사용자 이름/전화번호로 필터링 (입력값 기준)
+                const name = document.getElementById('searchName').value.trim();
+                const phone = document.getElementById('searchPhone').value.trim();
+                const userReservations = reservations.filter(r => r.name === name && r.phone === phone);
+                displayReservations(userReservations);
+            } catch (e) {
+                // 에러 처리 필요시 추가
+            }
+        }
+
         window.cancelReservation = cancelReservation;
         window.showSimpleCancelModal = showSimpleCancelModal;
     </script>
