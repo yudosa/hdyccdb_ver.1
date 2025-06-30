@@ -78,15 +78,14 @@ router.post('/', async (req, res) => {
         // 중복 예약 확인
         const existingReservations = await realtimeDb.getReservationsByDate(date);
         const conflictingReservation = existingReservations.find(reservation => {
+            if (reservation.status !== 'active') return false; // active만 중복 체크
             if (reservation.facility !== facility || reservation.detail !== (detail || '-')) {
                 return false;
             }
-            
             const reservationStart = moment(reservation.start_time, 'HH:mm');
             const reservationEnd = moment(reservation.end_time, 'HH:mm');
             const newStart = moment(start_time, 'HH:mm');
             const newEnd = moment(end_time, 'HH:mm');
-            
             return (newStart.isBefore(reservationEnd) && newEnd.isAfter(reservationStart));
         });
         
