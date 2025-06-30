@@ -152,9 +152,14 @@ router.patch('/:id/cancel', async (req, res) => {
         const { id } = req.params;
         await realtimeDb.cancelReservation(id);
         res.json({ message: '예약이 성공적으로 취소되었습니다.' });
-        
     } catch (error) {
         console.error('예약 취소 오류:', error);
+        if (error.message === '예약을 찾을 수 없습니다.') {
+            return res.status(404).json({ error: error.message });
+        }
+        if (error.message === '이미 취소된 예약입니다.') {
+            return res.status(400).json({ error: error.message });
+        }
         res.status(500).json({ error: error.message });
     }
 });

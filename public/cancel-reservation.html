@@ -166,13 +166,45 @@
             background: #fff;
             padding: 32px 28px;
             border-radius: 18px;
-            box-shadow: 0 4px 24px #27ae6022;
+            box-shadow: 0 4px 24px #3498db22;
             font-size: 1.15rem;
             font-weight: 600;
-            color: #222;
+            color: #3498db;
             text-align: center;
             min-width: 220px;
             max-width: 90vw;
+        }
+        .custom-modal-btns {
+            display: flex;
+            gap: 18px;
+            justify-content: center;
+            margin-top: 18px;
+        }
+        .custom-modal-btn {
+            margin-top: 0;
+            padding: 10px 28px;
+            border-radius: 12px;
+            background: linear-gradient(90deg,#a8edea,#fed6e3);
+            border: none;
+            font-weight: 700;
+            font-size: 1.08rem;
+            color: #222;
+            cursor: pointer;
+            box-shadow: 0 2px 8px #3498db22;
+            transition: background 0.18s, color 0.18s, transform 0.18s;
+        }
+        .custom-modal-btn:hover {
+            background: linear-gradient(90deg,#fed6e3,#a8edea);
+            color: #3498db;
+            transform: scale(1.04);
+        }
+        .custom-modal-btn.danger {
+            background: linear-gradient(90deg,#fcb69f,#ff8177);
+            color: #fff;
+        }
+        .custom-modal-btn.danger:hover {
+            background: linear-gradient(90deg,#ff8177,#fcb69f);
+            color: #fff;
         }
     </style>
 </head>
