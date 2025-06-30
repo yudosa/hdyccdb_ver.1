@@ -246,6 +246,9 @@
     </div>
 
     <script>
+        let isCancelling = false;
+        let isModalOpen = false;
+
         // 전화번호 자동 포맷팅
         document.getElementById('searchPhone').addEventListener('input', function(e) {
             let value = e.target.value.replace(/[^0-9]/g, '');
@@ -372,8 +375,9 @@
             return `${year}년 ${month}월 ${day}일 (${dayOfWeek})`;
         }
 
-        // 예약 취소
         async function cancelReservation(btn) {
+            if (isCancelling || isModalOpen) return;
+            isModalOpen = true;
             console.log('취소 버튼 클릭:', btn, btn.getAttribute('data-id'));
             const reservationId = btn.getAttribute('data-id');
             console.log('lastReservations:', window.lastReservations, '찾는 id:', reservationId);
@@ -382,10 +386,14 @@
             console.log('find 결과:', reservation);
             if (!reservation) {
                 alert('예약 정보를 찾을 수 없습니다.');
+                isModalOpen = false;
                 return;
             }
             console.log('showCancelModal 호출 직전');
             showCancelModal(reservation, async () => {
+                isModalOpen = false;
+                if (isCancelling) return;
+                isCancelling = true;
                 console.log('모달 확인 클릭, onConfirm 실행');
                 try {
                     const response = await fetch(`/api/reservations/${reservationId}/cancel`, {
@@ -407,6 +415,7 @@
                 } catch (e) {
                     alert('예약 취소 중 오류가 발생했습니다.');
                 }
+                isCancelling = false;
             });
         }
         
@@ -438,7 +447,10 @@
             const cancelBtn = document.createElement('button');
             cancelBtn.className = 'custom-modal-btn';
             cancelBtn.textContent = '취소';
-            cancelBtn.onclick = () => backdrop.remove();
+            cancelBtn.onclick = () => {
+                backdrop.remove();
+                isModalOpen = false;
+            };
             btns.appendChild(cancelBtn);
             const confirmBtn = document.createElement('button');
             confirmBtn.className = 'custom-modal-btn danger';
@@ -446,6 +458,7 @@
             confirmBtn.onclick = () => { 
                 console.log('모달 확인 클릭, onConfirm 실행');
                 backdrop.remove(); 
+                isModalOpen = false;
                 onConfirm(); 
             };
             btns.appendChild(confirmBtn);
