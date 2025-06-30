@@ -578,7 +578,9 @@
                         reservationData[key][reservation.date] = [];
                         console.log(`  → 새 날짜 추가: "${reservation.date}"`);
                     }
-                    reservationData[key][reservation.date].push(reservation.start_time);
+                    if (!reservation.status || reservation.status === 'active') {
+                        reservationData[key][reservation.date].push(reservation.start_time);
+                    }
                     console.log(`  → 시간 추가: "${reservation.start_time}"`);
                 });
                 

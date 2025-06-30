@@ -320,26 +320,26 @@
         // 예약 취소
         async function cancelReservation(btn) {
             const reservationId = btn.getAttribute('data-id');
-            // 해당 예약 정보를 가져와서 모달에 표시
+            if (!reservationId) {
+                alert('예약 ID를 찾을 수 없습니다.');
+                return;
+            }
+            if (!confirm('정말 예약을 취소하시겠습니까?')) return;
             try {
-                const response = await fetch('/api/reservations');
-                if (!response.ok) {
-                    throw new Error('예약 정보를 불러올 수 없습니다.');
+                const response = await fetch(`/api/reservations/${reservationId}/cancel`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                if (response.ok) {
+                    alert('예약이 취소되었습니다.');
+                    // 예약 목록 새로고침
+                    loadMyReservations();
+                } else {
+                    const result = await response.json();
+                    alert(result.error || '예약 취소에 실패했습니다.');
                 }
-                
-                const reservations = await response.json();
-                const reservation = reservations.find(r => r.id === reservationId);
-                
-                if (!reservation) {
-                    showModal('예약 정보를 찾을 수 없습니다.');
-                    return;
-                }
-                
-                showCancelConfirmModal(reservation);
-                
-            } catch (error) {
-                console.error('예약 정보 조회 오류:', error);
-                showModal('예약 정보를 불러올 수 없습니다.');
+            } catch (e) {
+                alert('예약 취소 중 오류가 발생했습니다.');
             }
         }
         
@@ -377,107 +377,8 @@
                         <button style='padding:10px 24px;border-radius:12px;background:linear-gradient(90deg,#a8edea,#fed6e3);border:none;font-weight:700;font-size:1rem;color:#222;cursor:pointer;' onclick='this.closest("div").parentElement.remove()'>취소</button>
                     </div>
                 </div>
-            `;
-            
-            document.body.appendChild(modal);
-            
-            // 모달 배경 클릭 시 닫기
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                    modal.remove();
-                }
-            });
-        }
-        
-        // 취소 확인 처리
-        async function confirmCancel(reservationId) {
-            // 모달 닫기
-            document.querySelector('div[style*="position: fixed"]').remove();
-            
-            try {
-                const response = await fetch(`/api/reservations/${reservationId}`, {
-                    method: 'DELETE'
-                });
-                
-                if (!response.ok) {
-                    const result = await response.json();
-                    throw new Error(result.error || '예약 취소에 실패했습니다.');
-                }
-                
-                showSuccessModal('예약이 성공적으로 취소되었습니다.');
-                
-                // 예약 목록 새로고침
-                const name = document.getElementById('searchName').value.trim();
-                const phone = document.getElementById('searchPhone').value.trim();
-                await searchReservations(name, phone);
-                
-            } catch (error) {
-                console.error('예약 취소 오류:', error);
-                showModal(error.message || '예약 취소 중 오류가 발생했습니다.');
-            }
-        }
-        
-        // 성공 모달 표시
-        function showSuccessModal(msg) {
-            let modal = document.createElement('div');
-            modal.style.position = 'fixed';
-            modal.style.left = 0;
-            modal.style.top = 0;
-            modal.style.width = '100vw';
-            modal.style.height = '100vh';
-            modal.style.background = 'rgba(0,0,0,0.35)';
-            modal.style.display = 'flex';
-            modal.style.alignItems = 'center';
-            modal.style.justifyContent = 'center';
-            modal.style.zIndex = 9999;
-            
-            modal.innerHTML = `
-                <div style="background:#fff;padding:32px 28px;border-radius:18px;box-shadow:0 4px 24px #27ae6022;font-size:1.15rem;font-weight:600;color:#27ae60;text-align:center;min-width:220px;max-width:90vw;">
-                    <div style="font-size:2rem;margin-bottom:16px;width:60px;height:60px;border:3px solid #27ae60;border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px auto;background:#27ae60;color:#fff;">✓</div>
-                    <div style="margin-bottom:20px;">${msg}</div>
-                    <button style='margin-top:8px;padding:10px 28px;border-radius:12px;background:linear-gradient(90deg,#a8edea,#fed6e3);border:none;font-weight:700;font-size:1.08rem;color:#222;cursor:pointer;' onclick='this.parentElement.parentElement.remove()'>확인</button>
-                </div>
-            `;
-            
-            document.body.appendChild(modal);
-            
-            // 모달 배경 클릭 시 닫기
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                    modal.remove();
-                }
-            });
-        }
-
-        // 모달 표시
-        function showModal(msg) {
-            let modal = document.createElement('div');
-            modal.style.position = 'fixed';
-            modal.style.left = 0;
-            modal.style.top = 0;
-            modal.style.width = '100vw';
-            modal.style.height = '100vh';
-            modal.style.background = 'rgba(0,0,0,0.35)';
-            modal.style.display = 'flex';
-            modal.style.alignItems = 'center';
-            modal.style.justifyContent = 'center';
-            modal.style.zIndex = 9999;
-            // 메시지에 따라 색상 다르게 적용
-            let color = '#e74c3c'; // 기본 빨간색
-            if (msg.includes('성공적으로 취소')) color = '#3498db'; // 파란색
-            modal.innerHTML = `
-                <div style="background:#fff;padding:32px 28px;border-radius:18px;box-shadow:0 4px 24px #e74c3c22;font-size:1.15rem;font-weight:600;color:${color};text-align:center;min-width:220px;max-width:90vw;">
-                    ${msg}<br><br>
-                    <button style='margin-top:18px;padding:10px 28px;border-radius:12px;background:linear-gradient(90deg,#e74c3c,#c0392b);border:none;font-weight:700;font-size:1.08rem;color:#fff;cursor:pointer;' onclick='this.parentElement.parentElement.remove()'>확인</button>
-                </div>
-            `;
-            document.body.appendChild(modal);
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                    modal.remove();
-                }
-            });
+            `
         }
     </script>
 </body>
-</html> 
+</html>
