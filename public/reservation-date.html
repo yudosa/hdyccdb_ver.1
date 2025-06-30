@@ -196,15 +196,15 @@
                     <div class="detail-card">
                         <div class="detail-label">세부선택</div>
                         <select class="detail-select" id="detailSelect">
-                            <option value="닌텐도1">🎮 닌텐도1</option>
-                            <option value="닌텐도2">🎮 닌텐도2</option>
-                            <option value="닌텐도3">🎮 닌텐도3</option>
-                            <option value="닌텐도4">🎮 닌텐도4</option>
-                            <option value="닌텐도5">🎮 닌텐도5</option>
-                            <option value="닌텐도6">🎮 닌텐도6</option>
-                            <option value="닌텐도7">🎮 닌텐도7</option>
-                            <option value="닌텐도8">🎮 닌텐도8</option>
-                            <option value="닌텐도9">🎮 닌텐도9</option>
+                            <option value="닌텐도">🎮 닌텐도1</option>
+                            <option value="닌텐도">🎮 닌텐도2</option>
+                            <option value="닌텐도">🎮 닌텐도3</option>
+                            <option value="닌텐도">🎮 닌텐도4</option>
+                            <option value="닌텐도">🎮 닌텐도5</option>
+                            <option value="닌텐도">🎮 닌텐도6</option>
+                            <option value="닌텐도">🎮 닌텐도7</option>
+                            <option value="닌텐도">🎮 닌텐도8</option>
+                            <option value="닌텐도">🎮 닌텐도9</option>
                         </select>
                     </div>
                     <div class="reservation-calendar-block">
@@ -284,30 +284,30 @@
             let options = '';
             if (facilityName === '닌텐도') {
                 options = [
-                    {v:'닌텐도1', t:'🎮 닌텐도1'},
-                    {v:'닌텐도2', t:'🎮 닌텐도2'},
-                    {v:'닌텐도3', t:'🎮 닌텐도3'},
-                    {v:'닌텐도4', t:'🎮 닌텐도4'},
-                    {v:'닌텐도5', t:'🎮 닌텐도5'},
-                    {v:'닌텐도6', t:'🎮 닌텐도6'},
-                    {v:'닌텐도7', t:'🎮 닌텐도7'},
-                    {v:'닌텐도8', t:'🎮 닌텐도8'},
-                    {v:'닌텐도9', t:'🎮 닌텐도9 ♿'}
+                    {v:'닌텐도', t:'🎮 닌텐도1'},
+                    {v:'닌텐도', t:'🎮 닌텐도2'},
+                    {v:'닌텐도', t:'🎮 닌텐도3'},
+                    {v:'닌텐도', t:'🎮 닌텐도4'},
+                    {v:'닌텐도', t:'🎮 닌텐도5'},
+                    {v:'닌텐도', t:'🎮 닌텐도6'},
+                    {v:'닌텐도', t:'🎮 닌텐도7'},
+                    {v:'닌텐도', t:'🎮 닌텐도8'},
+                    {v:'닌텐도', t:'🎮 닌텐도9 ♿'}
                 ];
             } else if (facilityName === '플레이스테이션') {
                 options = [
-                    {v:'플레이스테이션1', t:'🕹️ 플레이스테이션1'},
-                    {v:'플레이스테이션2', t:'🕹️ 플레이스테이션2'}
+                    {v:'플레이스테이션', t:'🕹️ 플레이스테이션1'},
+                    {v:'플레이스테이션', t:'🕹️ 플레이스테이션2'}
                 ];
             } else if (facilityName === '노래방') {
                 options = [
-                    {v:'노래방1', t:'🎤 노래방1'},
-                    {v:'노래방2', t:'🎤 노래방2'}
+                    {v:'노래방', t:'🎤 노래방1'},
+                    {v:'노래방', t:'🎤 노래방2'}
                 ];
             } else if (facilityName === '보드게임') {
                 options = [
-                    {v:'보드게임1', t:'🎲 보드게임1'},
-                    {v:'보드게임2', t:'🎲 보드게임2'}
+                    {v:'보드게임', t:'🎲 보드게임1'},
+                    {v:'보드게임', t:'🎲 보드게임2'}
                 ];
             }
             detailSelect.innerHTML = options.map(o => `<option value="${o.v}">${o.t}</option>`).join('');
