@@ -619,7 +619,7 @@
         if(isAdmin()) showAdminUI(); else hideAdminUI();
         updateActionButtons();
         renderCategories();
-        await renderTimeline();
+        await loadAndRenderGanttTimeline(selectedCategory);
     });
     // 중앙 모달 함수
     function showCancelModal(onConfirm) {
@@ -717,6 +717,10 @@
     }
     // 간트차트 타임라인 렌더링 함수
     function renderGanttTimeline(reservations, spaces, startHour = 9, endHour = 20) {
+        console.log('=== renderGanttTimeline 호출됨 ===');
+        console.log('reservations:', reservations);
+        console.log('spaces:', spaces);
+        
         const container = document.getElementById('ganttTimelineWrap');
         if (!container) return;
         let html = '<div class="gantt-timeline-container">';
