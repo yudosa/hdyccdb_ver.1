@@ -173,6 +173,10 @@
         .main-card {
             overflow-x: auto;
         }
+        .td-half { position: relative; height: 36px; padding: 0; }
+        .half-cell { position: absolute; left: 0; width: 100%; height: 50%; line-height: 18px; font-size: 0.9em; }
+        .half-cell.top { top: 0; border-bottom: 1px solid #eee; }
+        .half-cell.bottom { bottom: 0; }
     </style>
 </head>
 <body>
@@ -343,30 +347,28 @@
                 space.details.forEach(detail => {
                     html += `<tr><td class="space-label">${detail}</td>`;
                     hourSlots.forEach(hour => {
-                        // 닌텐도/플스 30분 단위 시설
+                        // 닌텐도/플스 1시간 칸 2분할(상/하)
                         if (/^닌텐도[1-9]$/.test(detail) || /^플레이스테이션[1-9]$/.test(detail)) {
-                            const ranges = get30MinRanges(hour.split(':')[0]);
-                            html += '<td style="padding:0;">';
-                            ranges.forEach((range, idx) => {
-                                const res = reservations.find(r =>
-                                    r.space === space.name &&
-                                    r.detail === detail &&
-                                    getReservedSlots(r.start_time, r.end_time).includes(range.start) &&
-                                    (r.status === 'active' || !r.status)
-                                );
-                                let isPast = (date === todayStr && (
-                                    parseInt(range.start.split(':')[0]) < currentHour ||
-                                    (parseInt(range.start.split(':')[0]) === currentHour && parseInt(range.start.split(':')[1]) <= currentMinute)
-                                ));
-                                if (res) {
-                                    const isCancelled = res.status === 'cancelled';
-                                    const cellClass = isCancelled ? 'reservation-cell-cancelled' : 
-                                                    (isPast ? 'reservation-cell-disabled' : 'reservation-cell');
-                                    html += `<div class="${cellClass}" style="height:18px;line-height:18px;font-size:0.9em;border-bottom:${idx===0?'1px solid #eee':'none'};">${range.start}~${range.end} ${res.name}</div>`;
-                                } else {
-                                    html += `<div class="empty-cell" style="height:18px;line-height:18px;font-size:0.9em;border-bottom:${idx===0?'1px solid #eee':'none'};"></div>`;
-                                }
-                            });
+                            html += '<td class="td-half">';
+                            // 상단(00~30)
+                            const resTop = reservations.find(r =>
+                                r.space === space.name &&
+                                r.detail === detail &&
+                                r.start_time === hour &&
+                                (r.status === 'active' || !r.status)
+                            );
+                            html += `<div class="half-cell top ${resTop ? 'reservation-cell' : 'empty-cell'}">${resTop ? resTop.name : ''}</div>`;
+                            // 하단(30~00)
+                            // 다음 시간대 계산
+                            const [h,] = hour.split(':').map(Number);
+                            const nextHour = (h+1).toString().padStart(2,'0')+':00';
+                            const resBottom = reservations.find(r =>
+                                r.space === space.name &&
+                                r.detail === detail &&
+                                r.start_time === (h+':30').padStart(5,'0') &&
+                                (r.status === 'active' || !r.status)
+                            );
+                            html += `<div class="half-cell bottom ${resBottom ? 'reservation-cell' : 'empty-cell'}">${resBottom ? resBottom.name : ''}</div>`;
                             html += '</td>';
                         } else {
                             // 1시간 단위 시설: 예약의 시작 시간에만 이름 표시

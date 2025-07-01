@@ -34,6 +34,13 @@ async function checkReservations() {
         console.log('\n=== 예약 데이터 전체 구조 ===');
         console.log(JSON.stringify(reservations, null, 2));
         
+        const res = reservations.find(r =>
+            r.space === space.name &&
+            r.detail === detail &&
+            r.start_time === hour &&
+            (r.status === 'active' || !r.status)
+        );
+        
     } catch (error) {
         console.error('확인 중 오류 발생:', error);
     }
