@@ -482,8 +482,8 @@
             hourSlots.push(`${String(h).padStart(2, '0')}:00`);
         }
         // 헤더 (flex)
-        let html = `<div class=\"gantt-timeline-header\" style=\"display:flex;min-width:${totalHours*hourWidth+160}px;background:#fff;\">`;
-        html += '<div class=\"room-label\" style=\"width:160px;min-width:160px;max-width:160px;background:#f3f6fa;font-weight:700;color:#444;display:flex;align-items:center;justify-content:center;\"></div>';
+        let html = `<div class=\"gantt-timeline-header\" style=\"display:flex;min-width:${totalHours*hourWidth+hourWidth}px;background:#fff;\">`;
+        html += '<div class=\"room-label\" style=\"width:'+hourWidth+'px;min-width:'+hourWidth+'px;max-width:'+hourWidth+'px;background:#f3f6fa;font-weight:700;color:#444;display:flex;align-items:center;justify-content:center;\"></div>';
         hourSlots.forEach((t, i) => {
             html += `<div class=\"time-slot\" style=\"width:${hourWidth}px;min-width:${hourWidth}px;max-width:${hourWidth}px;border-left:${i===0?'2px solid #b0b8c1':'1px solid #e0e7ef'};background:transparent;text-align:center;font-size:1.05rem;color:#888;font-weight:700;display:flex;align-items:center;justify-content:center;\">${t}</div>`;
         });
@@ -493,9 +493,9 @@
         spaces.forEach((space, spaceIdx) => {
             const details = space.details || [null];
             details.forEach((detail, detailIdx) => {
-                html += `<div class=\"gantt-timeline-row\" style=\"display:flex;position:relative;min-width:${totalHours*hourWidth+160}px;min-height:44px;align-items:center;background:#fff;border-bottom:1px dashed #e0e7ef;\">`;
+                html += `<div class=\"gantt-timeline-row\" style=\"display:flex;position:relative;min-width:${totalHours*hourWidth+hourWidth}px;min-height:44px;align-items:center;background:#fff;border-bottom:1px dashed #e0e7ef;\">`;
                 let label = detail || space.name;
-                html += `<div class=\"room-label\" style=\"width:160px;min-width:160px;max-width:160px;background:#f3f6fa;font-weight:700;color:#444;display:flex;align-items:center;justify-content:center;\">${label}</div>`;
+                html += `<div class=\"room-label\" style=\"width:${hourWidth}px;min-width:${hourWidth}px;max-width:${hourWidth}px;background:#f3f6fa;font-weight:700;color:#444;display:flex;align-items:center;justify-content:center;\">${label}</div>`;
                 // 시간 칸 (세로선)
                 for (let h = 0; h < totalHours; h++) {
                     html += `<div class=\"gantt-cell\" style=\"width:${hourWidth}px;min-width:${hourWidth}px;max-width:${hourWidth}px;border-left:${h===0?'2px solid #b0b8c1':'1px solid #e0e7ef'};background:transparent;\"></div>`;
@@ -513,11 +513,12 @@
                     const toMinutes = t => { const [h, m] = t.split(':').map(Number); return h*60 + m; };
                     const startMin = toMinutes(res.start_time || res.start);
                     const endMin = toMinutes(res.end_time || res.end);
-                    let leftPx = ((startMin - startHour*60) / 60) * hourWidth + 160; // 160px(이름칸) 보정
+                    let leftPx = ((startMin - startHour*60) / 60) * hourWidth + hourWidth; // hourWidth(이름칸) 보정
                     let widthPx = ((endMin - startMin) / 60) * hourWidth;
-                    if (widthPx < 120) widthPx = 120; // 최소 너비 120px로 강제
+                    // 30분 단위 예약은 최소 너비 강제하지 않음
+                    // 9:00~9:30, 9:30~10:00 등 정확히 반만 차지
                     const colorClass = colorClasses[(spaceIdx + detailIdx + idx) % colorClasses.length];
-                    html += `<div class="gantt-bar ${colorClass}" style="left:${leftPx}px;width:${widthPx}px;cursor:${isAdmin() ? 'pointer' : 'default'};position:absolute;top:3px;z-index:2;height:38px;border-radius:0;box-shadow:0 2px 8px #b2bec333;padding:0 16px;display:flex;align-items:center;justify-content:center;font-size:1.12rem;font-weight:700;background:linear-gradient(90deg,#a8edea 0%,#fed6e3 100%);color:#222;border:none;" data-id="${res.id}" data-name="${res.name}"><span class="bar-name" style="width:100%;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${res.name}</span></div>`;
+                    html += `<div class=\"gantt-bar ${colorClass}\" style=\"left:${leftPx}px;width:${widthPx}px;cursor:${isAdmin() ? 'pointer' : 'default'};position:absolute;top:3px;z-index:2;height:38px;border-radius:0;box-shadow:0 2px 8px #b2bec333;padding:0 8px;display:flex;align-items:center;justify-content:center;font-size:1.12rem;font-weight:700;background:linear-gradient(90deg,#a8edea 0%,#fed6e3 100%);color:#222;border:none;\" data-id=\"${res.id}\" data-name=\"${res.name}\"><span class=\"bar-name\" style=\"width:100%;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;\">${res.name}</span></div>`;
                 });
                 html += '</div>';
             });
@@ -602,6 +603,7 @@
             let firstDay = new Date(year, month, 1);
             let startDate = new Date(firstDay); startDate.setDate(startDate.getDate() - firstDay.getDay());
             let calendarBody = modalBg.querySelector('#calendarBody');
+            calendarBody.innerHTML = '';
             for(let i=0;i<6;i++){
                 let row = document.createElement('tr');
                 for(let j=0;j<7;j++){
