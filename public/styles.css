@@ -2097,4 +2097,8 @@ section h2 {
 .space-label,
 .bar-tooltip {
     border-radius: 0 !important;
+}
+
+.gantt-timeline-header .room-label {
+    background: #fff !important;
 } 

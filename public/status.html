@@ -492,16 +492,16 @@
         if (!container) return;
         // 1시간 단위 헤더
         const hourSlots = [];
-        const hourWidth = 100; // px, 1시간 칸 너비
+        const columnWidth = 180; // px, for both name and time columns (플스 등 이름이 긴 시설 대응)
         const totalHours = endHour - startHour;
         for (let h = startHour; h < endHour; h++) {
             hourSlots.push(`${String(h).padStart(2, '0')}:00`);
         }
         // 헤더 (flex)
-        let html = `<div class=\"gantt-timeline-header\" style=\"display:flex;min-width:${totalHours*hourWidth+hourWidth}px;background:#fff;\">`;
-        html += '<div class=\"room-label\" style=\"width:'+hourWidth+'px;min-width:'+hourWidth+'px;max-width:'+hourWidth+'px;background:#f3f6fa;font-weight:700;color:#444;display:flex;align-items:center;justify-content:center;\"></div>';
+        let html = `<div class=\"gantt-timeline-header\" style=\"display:flex;min-width:${totalHours*columnWidth+columnWidth}px;background:#fff;\">`;
+        html += '<div class=\"room-label\" style=\"width:'+columnWidth+'px;min-width:'+columnWidth+'px;max-width:'+columnWidth+'px;background:#f3f6fa;font-weight:700;color:#444;display:flex;align-items:center;justify-content:center;\"></div>';
         hourSlots.forEach((t, i) => {
-            html += `<div class=\"time-slot\" style=\"width:${hourWidth}px;min-width:${hourWidth}px;max-width:${hourWidth}px;border-left:${i===0?'2px solid #b0b8c1':'1px solid #e0e7ef'};background:transparent;text-align:center;font-size:1.05rem;color:#888;font-weight:700;display:flex;align-items:center;justify-content:center;\">${t}</div>`;
+            html += `<div class=\"time-slot\" style=\"width:${columnWidth}px;min-width:${columnWidth}px;max-width:${columnWidth}px;border-left:${i===0?'2px solid #b0b8c1':'1px solid #e0e7ef'};background:transparent;text-align:center;font-size:1.05rem;color:#888;font-weight:700;display:flex;align-items:center;justify-content:center;\">${t}</div>`;
         });
         html += '</div>';
         // row (flex, no zebra)
@@ -509,12 +509,12 @@
         spaces.forEach((space, spaceIdx) => {
             const details = space.details || [null];
             details.forEach((detail, detailIdx) => {
-                html += `<div class=\"gantt-timeline-row\" style=\"display:flex;position:relative;min-width:${totalHours*hourWidth+hourWidth}px;min-height:44px;align-items:center;background:#fff;border-bottom:1px dashed #e0e7ef;\">`;
+                html += `<div class=\"gantt-timeline-row\" style=\"display:flex;position:relative;min-width:${totalHours*columnWidth+columnWidth}px;min-height:44px;align-items:center;background:#fff;border-bottom:1px dashed #e0e7ef;\">`;
                 let label = detail || space.name;
-                html += `<div class=\"room-label\" style=\"width:${hourWidth}px;min-width:${hourWidth}px;max-width:${hourWidth}px;background:#f3f6fa;font-weight:700;color:#444;display:flex;align-items:center;justify-content:center;\">${label}</div>`;
+                html += `<div class=\"room-label\" style=\"width:${columnWidth}px;min-width:${columnWidth}px;max-width:${columnWidth}px;background:#f3f6fa;font-weight:700;color:#444;display:flex;align-items:center;justify-content:center;\">${label}</div>`;
                 // 시간 칸 (세로선)
                 for (let h = 0; h < totalHours; h++) {
-                    html += `<div class=\"gantt-cell\" style=\"width:${hourWidth}px;min-width:${hourWidth}px;max-width:${hourWidth}px;border-left:${h===0?'2px solid #b0b8c1':'1px solid #e0e7ef'};background:transparent;\"></div>`;
+                    html += `<div class=\"gantt-cell\" style=\"width:${columnWidth}px;min-width:${columnWidth}px;max-width:${columnWidth}px;border-left:${h===0?'2px solid #b0b8c1':'1px solid #e0e7ef'};background:transparent;\"></div>`;
                 }
                 // bar 계산: px 단위
                 const rowReservations = reservations.filter(r => {
@@ -529,10 +529,9 @@
                     const toMinutes = t => { const [h, m] = t.split(':').map(Number); return h*60 + m; };
                     const startMin = toMinutes(res.start_time || res.start);
                     const endMin = toMinutes(res.end_time || res.end);
-                    let leftPx = ((startMin - startHour*60) / 60) * hourWidth + hourWidth; // hourWidth(이름칸) 보정
-                    let widthPx = ((endMin - startMin) / 60) * hourWidth;
-                    // 30분 단위 예약은 최소 너비 강제하지 않음
-                    const isHalf = widthPx <= hourWidth * 0.6; // 30분 단위(반칸) 여부
+                    let leftPx = ((startMin - startHour*60) / 60) * columnWidth + columnWidth; // columnWidth(이름칸) 보정
+                    let widthPx = ((endMin - startMin) / 60) * columnWidth;
+                    const isHalf = widthPx <= columnWidth * 0.6;
                     const colorClass = colorClasses[(spaceIdx + detailIdx + idx) % colorClasses.length];
                     html += `<div class=\"gantt-bar ${colorClass}\" style=\"left:${leftPx}px;width:${widthPx}px;cursor:${isAdmin() ? 'pointer' : 'default'};position:absolute;top:3px;z-index:2;height:38px;border-radius:0;box-shadow:0 2px 8px #b2bec333;padding:0 4px;display:flex;align-items:center;justify-content:center;font-size:1.12rem;font-weight:700;background:linear-gradient(90deg,#a8edea 0%,#fed6e3 100%);color:#222;border:none;\" data-id=\"${res.id}\" data-name=\"${res.name}\" data-start=\"${res.start_time || res.start || ''}\" data-end=\"${res.end_time || res.end || ''}\"><span class=\"bar-name\" style=\"width:100%;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;${isHalf ? 'font-size:0.9em;' : ''}\">${res.name}</span></div>`;
                 });
