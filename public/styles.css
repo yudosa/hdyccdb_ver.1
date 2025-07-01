@@ -2004,11 +2004,7 @@ section h2 {
     align-items: center;
 }
 .gantt-timeline-bar-bg.thirtymin-bg .thirtymin-line {
-    border-left: 1px dashed #bbb;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    z-index: 1;
+    border-left: none !important;
 }
 .gantt-timeline-scroll-x {
     overflow-x: auto;
@@ -2023,4 +2019,26 @@ section h2 {
     z-index: 2;
     background: #fff;
     box-shadow: 2px 0 4px -2px #e0e0e0;
+}
+
+.gantt-timeline-scroll-x,
+.gantt-timeline-header,
+.gantt-timeline-row,
+.timeline-table,
+.timeline-table th,
+.timeline-table td,
+.space-label,
+.empty-cell {
+    background: #fff !important;
+    background-color: #fff !important;
+}
+
+.gantt-timeline-row,
+.timeline-table tr,
+.timeline-table td,
+.timeline-table th {
+    border-bottom: 1px solid #e0e0e0 !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-top: none !important;
 } 
