@@ -201,12 +201,12 @@
             min-width: 60px;
             max-width: 180px;
         }
-        .gantt-bar.bar-blue    { background: linear-gradient(90deg, #1da1f2 60%, #0066ff 100%); color: #fff; }
-        .gantt-bar.bar-pink    { background: linear-gradient(90deg, #ff4f81 60%, #ff6a00 100%); color: #fff; }
-        .gantt-bar.bar-mint    { background: linear-gradient(90deg, #00e6d3 60%, #00b894 100%); color: #fff; }
+        .gantt-bar.bar-blue    { background: linear-gradient(90deg, #1da1f2 60%, #0066ff 100%); color: #fff; box-shadow: 0 2px 8px #1da1f288; }
+        .gantt-bar.bar-pink    { background: linear-gradient(90deg, #ff4f81 60%, #ff6a00 100%); color: #fff; box-shadow: 0 2px 8px #ff4f8188; }
+        .gantt-bar.bar-mint    { background: linear-gradient(90deg, #00e6d3 60%, #00b894 100%); color: #fff; box-shadow: 0 2px 8px #00e6d388; }
         .gantt-bar.bar-lavender{ background: #c3b6f7; color: #5e548e; }
-        .gantt-bar.bar-yellow  { background: linear-gradient(90deg, #ffe156 60%, #ffd600 100%); color: #222; }
-        .gantt-bar.bar-purple  { background: linear-gradient(90deg, #7c5fff 60%, #4e54c8 100%); color: #fff; }
+        .gantt-bar.bar-yellow  { background: linear-gradient(90deg, #ffe156 60%, #ffd600 100%); color: #222; box-shadow: 0 2px 8px #ffe15688; }
+        .gantt-bar.bar-purple  { background: linear-gradient(90deg, #7c5fff 60%, #4e54c8 100%); color: #fff; box-shadow: 0 2px 8px #7c5fff88; }
         .gantt-timeline-row .gantt-bar:not(:last-child) { margin-right: 6px; }
         .gantt-timeline-row .gantt-bar .bar-name {
             font-weight: 700;
@@ -264,12 +264,12 @@
             background: linear-gradient(90deg, #a8edea 0%, #fed6e3 100%);
             font-size: 1rem;
         }
-        .gantt-bar.bar-blue    { background: linear-gradient(90deg, #1da1f2 60%, #0066ff 100%); color: #fff; }
-        .gantt-bar.bar-pink    { background: linear-gradient(90deg, #ff4f81 60%, #ff6a00 100%); color: #fff; }
-        .gantt-bar.bar-mint    { background: linear-gradient(90deg, #00e6d3 60%, #00b894 100%); color: #fff; }
+        .gantt-bar.bar-blue    { background: linear-gradient(90deg, #1da1f2 60%, #0066ff 100%); color: #fff; box-shadow: 0 2px 8px #1da1f288; }
+        .gantt-bar.bar-pink    { background: linear-gradient(90deg, #ff4f81 60%, #ff6a00 100%); color: #fff; box-shadow: 0 2px 8px #ff4f8188; }
+        .gantt-bar.bar-mint    { background: linear-gradient(90deg, #00e6d3 60%, #00b894 100%); color: #fff; box-shadow: 0 2px 8px #00e6d388; }
         .gantt-bar.bar-lavender{ background: #c3b6f7; color: #5e548e; }
-        .gantt-bar.bar-yellow  { background: linear-gradient(90deg, #ffe156 60%, #ffd600 100%); color: #222; }
-        .gantt-bar.bar-purple  { background: linear-gradient(90deg, #7c5fff 60%, #4e54c8 100%); color: #fff; }
+        .gantt-bar.bar-yellow  { background: linear-gradient(90deg, #ffe156 60%, #ffd600 100%); color: #222; box-shadow: 0 2px 8px #ffe15688; }
+        .gantt-bar.bar-purple  { background: linear-gradient(90deg, #7c5fff 60%, #4e54c8 100%); color: #fff; box-shadow: 0 2px 8px #7c5fff88; }
         .gantt-bar {
             border-radius: 16px;
             box-shadow: 0 2px 12px #b2bec333;
@@ -476,7 +476,7 @@
         if (!container) return;
         // 1시간 단위 헤더
         const hourSlots = [];
-        const totalHours = endHour - startHour;
+        const totalMinutes = (endHour - startHour) * 60;
         for (let h = startHour; h < endHour; h++) {
             hourSlots.push(`${String(h).padStart(2, '0')}:00`);
         }
@@ -488,14 +488,14 @@
         });
         html += '</div>';
         // row
-        const colorClasses = ['bar-blue','bar-pink','bar-mint','bar-yellow','bar-purple'];
+        const colorClasses = ['bar-blue','bar-mint','bar-pink','bar-yellow','bar-purple'];
         spaces.forEach((space, spaceIdx) => {
             const details = space.details || [null];
             details.forEach((detail, detailIdx) => {
                 html += '<div class="gantt-timeline-row">';
                 let label = detail || space.name;
                 html += `<div class="room-label">${label}</div>`;
-                // bar 계산: 1시간 칸 단위로 정확히 맞춤
+                // bar 계산: 전체 row(09:00~20:00, 660분) 기준으로 %
                 const rowReservations = reservations.filter(r => {
                     const facilityMatch = (r.facility === space.name) || (r.space === space.name);
                     if (!facilityMatch) return false;
@@ -504,15 +504,14 @@
                     return reservationDetail === currentDetail;
                 });
                 rowReservations.forEach((res, idx) => {
-                    // left/width 계산 (1시간 칸 단위)
+                    // left/width 계산 (분 단위)
                     const toMinutes = t => { const [h, m] = t.split(':').map(Number); return h*60 + m; };
                     const startMin = toMinutes(res.start_time || res.start);
                     const endMin = toMinutes(res.end_time || res.end);
-                    const N = totalHours;
-                    const left = ((startMin - startHour*60) / 60) / N * 100;
-                    const width = ((endMin - startMin) / 60) / N * 100;
+                    const left = ((startMin - startHour*60) / totalMinutes) * 100;
+                    const width = ((endMin - startMin) / totalMinutes) * 100;
                     const colorClass = colorClasses[(spaceIdx + detailIdx + idx) % colorClasses.length];
-                    html += `<div class="gantt-bar ${colorClass}" style="left:${left}%;width:${width}%;">
+                    html += `<div class="gantt-bar ${colorClass}" style="left:${left}%;width:${width}%;cursor:${isAdmin() ? 'pointer' : 'default'};" data-id="${res.id}" data-name="${res.name}">
                         <span class="bar-name">${res.name}</span>
                     </div>`;
                 });
@@ -520,6 +519,29 @@
             });
         });
         container.innerHTML = `<div class='gantt-timeline-scroll-x'>${html}</div>`;
+        // 관리자 모드에서만 bar 클릭 시 강제취소
+        if (isAdmin()) {
+            container.querySelectorAll('.gantt-bar').forEach(bar => {
+                bar.onclick = function(e) {
+                    const id = bar.getAttribute('data-id');
+                    const name = bar.getAttribute('data-name');
+                    showCancelModal(async () => {
+                        try {
+                            const res = await fetch(`/api/reservations/${id}/cancel`, { method: 'POST' });
+                            if (res.ok) {
+                                showSuccessModal('예약이 강제 취소되었습니다.');
+                                await loadAndRenderGanttTimeline(selectedCategory);
+                            } else {
+                                alert('취소에 실패했습니다.');
+                            }
+                        } catch (err) {
+                            alert('취소 중 오류가 발생했습니다.');
+                        }
+                    });
+                    e.stopPropagation();
+                };
+            });
+        }
     }
     // 날짜 포맷 함수 (한국어 형식)
     function formatDateKorean(dateStr) {
