@@ -476,15 +476,16 @@
         if (!container) return;
         // 1시간 단위 헤더
         const hourSlots = [];
-        const totalMinutes = (endHour - startHour) * 60;
+        const hourWidth = 100; // px, 1시간 칸 너비
+        const totalHours = endHour - startHour;
         for (let h = startHour; h < endHour; h++) {
             hourSlots.push(`${String(h).padStart(2, '0')}:00`);
         }
         // 헤더
-        let html = '<div class="gantt-timeline-header">';
-        html += '<div class="room-label"></div>';
+        let html = `<div class=\"gantt-timeline-header\" style=\"min-width:${totalHours*hourWidth+120}px;\">`;
+        html += '<div class=\"room-label\" style=\"width:160px;min-width:160px;max-width:160px;\"></div>';
         hourSlots.forEach(t => {
-            html += `<div class="time-slot">${t}</div>`;
+            html += `<div class=\"time-slot\" style=\"width:${hourWidth}px;min-width:${hourWidth}px;max-width:${hourWidth}px;\">${t}</div>`;
         });
         html += '</div>';
         // row
@@ -492,10 +493,10 @@
         spaces.forEach((space, spaceIdx) => {
             const details = space.details || [null];
             details.forEach((detail, detailIdx) => {
-                html += '<div class="gantt-timeline-row">';
+                html += `<div class=\"gantt-timeline-row\" style=\"min-width:${totalHours*hourWidth+160}px;\">`;
                 let label = detail || space.name;
-                html += `<div class="room-label">${label}</div>`;
-                // bar 계산: 전체 row(09:00~20:00, 660분) 기준으로 %
+                html += `<div class=\"room-label\" style=\"width:160px;min-width:160px;max-width:160px;\">${label}</div>`;
+                // bar 계산: px 단위
                 const rowReservations = reservations.filter(r => {
                     const facilityMatch = (r.facility === space.name) || (r.space === space.name);
                     if (!facilityMatch) return false;
@@ -504,14 +505,14 @@
                     return reservationDetail === currentDetail;
                 });
                 rowReservations.forEach((res, idx) => {
-                    // left/width 계산 (분 단위)
+                    // left/width 계산 (px 단위)
                     const toMinutes = t => { const [h, m] = t.split(':').map(Number); return h*60 + m; };
                     const startMin = toMinutes(res.start_time || res.start);
                     const endMin = toMinutes(res.end_time || res.end);
-                    const left = ((startMin - startHour*60) / totalMinutes) * 100;
-                    const width = ((endMin - startMin) / totalMinutes) * 100;
+                    const leftPx = ((startMin - startHour*60) / 60) * hourWidth;
+                    const widthPx = ((endMin - startMin) / 60) * hourWidth;
                     const colorClass = colorClasses[(spaceIdx + detailIdx + idx) % colorClasses.length];
-                    html += `<div class="gantt-bar ${colorClass}" style="left:${left}%;width:${width}%;cursor:${isAdmin() ? 'pointer' : 'default'};" data-id="${res.id}" data-name="${res.name}">
+                    html += `<div class="gantt-bar ${colorClass}" style="left:${leftPx}px;width:${widthPx}px;cursor:${isAdmin() ? 'pointer' : 'default'};position:absolute;" data-id="${res.id}" data-name="${res.name}">
                         <span class="bar-name">${res.name}</span>
                     </div>`;
                 });
@@ -527,7 +528,7 @@
                     const name = bar.getAttribute('data-name');
                     showCancelModal(async () => {
                         try {
-                            const res = await fetch(`/api/reservations/${id}/cancel`, { method: 'POST' });
+                            const res = await fetch(`/api/reservations/${id}/cancel`, { method: 'PATCH' });
                             if (res.ok) {
                                 showSuccessModal('예약이 강제 취소되었습니다.');
                                 await loadAndRenderGanttTimeline(selectedCategory);
