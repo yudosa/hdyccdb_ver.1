@@ -729,6 +729,14 @@
         // 각 공간별 row 생성
         spaces.forEach(space => {
             const details = space.details || [null];
+            
+            // 디버깅: spaces 배열 확인
+            if (space.name === '댄스연습실') {
+                console.log('=== 댄스연습실 space 객체 ===');
+                console.log('space:', space);
+                console.log('details:', details);
+            }
+            
             details.forEach(detail => {
                 html += '<div class="gantt-timeline-row">';
                 let label = detail || space.name;
@@ -743,18 +751,58 @@
                     }
                 }
                 // 해당 공간/세부시설의 예약만 추출
-                const rowReservations = reservations.filter(r =>
-                    (r.facility === space.name && (r.detail === detail || (!r.detail && (detail === '-' || !detail)))) ||
-                    (r.space === space.name && (r.detail === detail || (!r.detail && (detail === '-' || !detail))))
-                );
+                const rowReservations = reservations.filter(r => {
+                    const facilityMatch = (r.facility === space.name) || (r.space === space.name);
+                    
+                    // 디버깅: 각 예약의 필터링 과정 확인
+                    if (space.name === '댄스연습실') {
+                        console.log('예약 필터링:', {
+                            id: r.id,
+                            facility: r.facility,
+                            space: r.space,
+                            detail: r.detail,
+                            facilityMatch: facilityMatch,
+                            reservationDetail: r.detail || '-',
+                            currentDetail: detail || '-'
+                        });
+                    }
+                    
+                    if (!facilityMatch) return false;
+                    
+                    // detail 매칭 로직 개선
+                    const reservationDetail = r.detail || '-';
+                    const currentDetail = detail || '-';
+                    
+                    // detail이 '-'이거나 null이거나 빈 문자열이면 매칭
+                    if (reservationDetail === '-' && (currentDetail === '-' || !currentDetail || currentDetail === null)) {
+                        return true;
+                    }
+                    
+                    // detail이 정확히 일치하는 경우
+                    if (reservationDetail === currentDetail) {
+                        return true;
+                    }
+                    
+                    return false;
+                });
                 
                 // 디버깅: 댄스연습실 예약 확인
                 if (space.name === '댄스연습실') {
+                    console.log('=== 댄스연습실 디버깅 ===');
+                    console.log('전체 예약 데이터:', reservations);
                     console.log('댄스연습실 전체 예약:', reservations.filter(r => r.facility === '댄스연습실'));
-                    console.log('댄스연습실 rowReservations:', rowReservations);
+                    console.log('현재 space:', space);
                     console.log('현재 detail:', detail);
+                    console.log('필터링 조건:', `facility=${space.name}, detail=${detail}`);
+                    console.log('댄스연습실 rowReservations:', rowReservations);
+                    console.log('rowReservations.length:', rowReservations.length);
                 }
                 rowReservations.forEach((res, idx) => {
+                    // 디버깅: 댄스연습실 막대 생성 확인
+                    if (space.name === '댄스연습실') {
+                        console.log(`댄스연습실 막대 생성 ${idx + 1}:`, res);
+                    }
+                    
                     // 닌텐도1~9, 플레이스테이션1~2는 30분 단위 bar
                     const is30min = (detail && (detail.includes('닌텐도') || detail.includes('플레이스테이션')));
                     // start_time, end_time이 없으면 start/end 사용
@@ -771,7 +819,14 @@
                     if (isAdmin()) {
                         barContent += ` <button class=\"bar-cancel-btn\" data-id=\"${res.id}\" title=\"예약 취소\" style=\"background:none;border:none;color:#fff;font-weight:bold;font-size:1.1em;cursor:pointer;padding:0 4px;\">×</button>`;
                     }
-                    html += `<div class=\"gantt-timeline-bar ${colorClass}\" style=\"left:${left}%;width:${width}%;min-width:35px;white-space:nowrap;overflow:visible;position:relative;\" title=\"${res.name}\" data-id=\"${res.id}\">${barContent}</div>`;
+                    
+                    const barHtml = `<div class=\"gantt-timeline-bar ${colorClass}\" style=\"left:${left}%;width:${width}%;min-width:35px;white-space:nowrap;overflow:visible;position:relative;\" title=\"${res.name}\" data-id=\"${res.id}\">${barContent}</div>`;
+                    html += barHtml;
+                    
+                    // 디버깅: 댄스연습실 막대 HTML 확인
+                    if (space.name === '댄스연습실') {
+                        console.log(`댄스연습실 막대 HTML ${idx + 1}:`, barHtml);
+                    }
                 });
                 html += '</div></div>';
             });
