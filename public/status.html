@@ -516,7 +516,8 @@
                     const leftPx = ((startMin - startHour*60) / 60) * hourWidth + 160; // 160px(이름칸) 보정
                     const widthPx = ((endMin - startMin) / 60) * hourWidth;
                     const colorClass = colorClasses[(spaceIdx + detailIdx + idx) % colorClasses.length];
-                    html += `<div class=\"gantt-bar ${colorClass}\" style=\"left:${leftPx}px;width:${widthPx}px;cursor:${isAdmin() ? 'pointer' : 'default'};position:absolute;top:3px;z-index:2;height:38px;border-radius:14px;box-shadow:0 2px 8px #b2bec333;padding:0 16px;display:flex;align-items:center;justify-content:center;font-size:1.12rem;font-weight:700;background:linear-gradient(90deg,#a8edea 0%,#fed6e3 100%);color:#222;border:none;\" data-id=\"${res.id}\" data-name=\"${res.name}\"><span class=\"bar-name\" style=\"width:100%;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;\">${res.name}</span></div>`;
+                    const isNarrow = widthPx <= 60;
+                    html += `<div class="gantt-bar ${colorClass}" style="left:${leftPx}px;width:${widthPx}px;cursor:pointer;position:absolute;top:3px;z-index:2;height:38px;border-radius:14px;box-shadow:0 2px 8px #b2bec333;padding:0 16px;display:flex;align-items:center;justify-content:center;font-size:1.12rem;font-weight:700;background:linear-gradient(90deg,#a8edea 0%,#fed6e3 100%);color:#222;border:none;" data-id="${res.id}" data-name="${res.name}" data-fullname="${res.name}" data-narrow="${isNarrow}"><span class="bar-name" style="width:100%;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;${isNarrow ? 'font-size:0.85em;' : ''}">${res.name}</span></div>`;
                 });
                 html += '</div>';
             });
@@ -526,22 +527,30 @@
         if (isAdmin()) {
             container.querySelectorAll('.gantt-bar').forEach(bar => {
                 bar.onclick = function(e) {
-                    const id = bar.getAttribute('data-id');
-                    const name = bar.getAttribute('data-name');
-                    showCancelModal(async () => {
-                        try {
-                            const res = await fetch(`/api/reservations/${id}/cancel`, { method: 'PATCH' });
-                            if (res.ok) {
-                                showSuccessModal('예약이 강제 취소되었습니다.');
-                                await loadAndRenderGanttTimeline(selectedCategory);
-                            } else {
-                                alert('취소에 실패했습니다.');
+                    const isNarrow = bar.getAttribute('data-narrow') === 'true';
+                    if (isNarrow) {
+                        alert(bar.getAttribute('data-fullname'));
+                        e.stopPropagation();
+                        return;
+                    }
+                    if (isAdmin()) {
+                        const id = bar.getAttribute('data-id');
+                        const name = bar.getAttribute('data-name');
+                        showCancelModal(async () => {
+                            try {
+                                const res = await fetch(`/api/reservations/${id}/cancel`, { method: 'PATCH' });
+                                if (res.ok) {
+                                    showSuccessModal('예약이 강제 취소되었습니다.');
+                                    await loadAndRenderGanttTimeline(selectedCategory);
+                                } else {
+                                    alert('취소에 실패했습니다.');
+                                }
+                            } catch (err) {
+                                alert('취소 중 오류가 발생했습니다.');
                             }
-                        } catch (err) {
-                            alert('취소 중 오류가 발생했습니다.');
-                        }
-                    });
-                    e.stopPropagation();
+                        });
+                        e.stopPropagation();
+                    }
                 };
             });
         }

@@ -2014,11 +2014,9 @@ section h2 {
 
 .gantt-timeline-row .room-label,
 .gantt-timeline-header .room-label {
-    position: sticky;
-    left: 0;
-    z-index: 2;
-    background: #fff;
-    box-shadow: 2px 0 4px -2px #e0e0e0;
+    background: #fff !important;
+    box-shadow: none !important;
+    border-right: 1px solid #e0e0e0 !important;
 }
 
 .gantt-timeline-scroll-x,
@@ -2041,4 +2039,35 @@ section h2 {
     border-left: none !important;
     border-right: none !important;
     border-top: none !important;
+}
+
+.gantt-bar,
+.reservation-cell {
+    background: linear-gradient(90deg, #00c3ff 0%, #ffff1c 100%) !important;
+    color: #222 !important;
+    box-shadow: 0 2px 8px #00c3ff22;
+}
+.gantt-bar.bar-blue {
+    background: linear-gradient(90deg, #00c3ff 0%, #ffff1c 100%) !important;
+    color: #222 !important;
+}
+.gantt-bar.bar-pink {
+    background: linear-gradient(90deg, #ff6fd8 0%, #3813c2 100%) !important;
+    color: #fff !important;
+}
+.gantt-bar.bar-mint {
+    background: linear-gradient(90deg, #42e695 0%, #3bb2b8 100%) !important;
+    color: #fff !important;
+}
+.gantt-bar.bar-lavender {
+    background: linear-gradient(90deg, #b621fe 0%, #1fd1f9 100%) !important;
+    color: #fff !important;
+}
+.gantt-bar.bar-yellow {
+    background: linear-gradient(90deg, #f7971e 0%, #ffd200 100%) !important;
+    color: #222 !important;
+}
+.gantt-bar.bar-purple {
+    background: linear-gradient(90deg, #654ea3 0%, #eaafc8 100%) !important;
+    color: #fff !important;
 } 
