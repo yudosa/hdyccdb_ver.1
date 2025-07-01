@@ -206,6 +206,7 @@
             <div id="ganttTimelineWrap" style="margin-top:18px;">
                 <div class="gantt-timeline-scroll-x"></div>
             </div>
+            <div id="timelineWrap"></div>
             <div class="form-actions-centered" style="margin-top:32px;" id="timelineActions">
                 <button class="btn-secondary-centered" onclick="location.href='index.html'" style="color:#222;" id="btnBack">◀ 이전</button>
                 <button class="btn-secondary-centered" onclick="location.href='admin.html'" style="color:#222;" id="btnAdmin">🛠️ 관리자모드</button>
@@ -342,8 +343,8 @@
                 space.details.forEach(detail => {
                     html += `<tr><td class="space-label">${detail}</td>`;
                     hourSlots.forEach(hour => {
-                        // 닌텐도 시설이면 2분할
-                        if (/^닌텐도[1-9]$/.test(detail)) {
+                        // 닌텐도/플스 30분 단위 시설
+                        if (/^닌텐도[1-9]$/.test(detail) || /^플레이스테이션[1-9]$/.test(detail)) {
                             const ranges = get30MinRanges(hour.split(':')[0]);
                             html += '<td style="padding:0;">';
                             ranges.forEach((range, idx) => {
@@ -368,12 +369,11 @@
                             });
                             html += '</td>';
                         } else {
-                            // 기존 시설(1칸)
+                            // 1시간 단위 시설: 예약의 시작 시간에만 이름 표시
                             const res = reservations.find(r =>
                                 r.space === space.name &&
                                 r.detail === detail &&
-                                parseInt(r.start_time.split(':')[0]) <= parseInt(hour.split(':')[0]) &&
-                                parseInt(r.end_time.split(':')[0]) > parseInt(hour.split(':')[0]) &&
+                                r.start_time === hour &&
                                 (r.status === 'active' || !r.status)
                             );
                             let isPast = (date === todayStr && parseInt(hour.split(':')[0]) < currentHour);
@@ -395,8 +395,7 @@
                     const res = reservations.find(r =>
                         r.space === space.name &&
                         (!r.detail) &&
-                        parseInt(r.start_time.split(':')[0]) <= parseInt(hour.split(':')[0]) &&
-                        parseInt(r.end_time.split(':')[0]) > parseInt(hour.split(':')[0]) &&
+                        r.start_time === hour &&
                         (r.status === 'active' || !r.status)
                     );
                     let isPast = (date === todayStr && parseInt(hour.split(':')[0]) < currentHour);
