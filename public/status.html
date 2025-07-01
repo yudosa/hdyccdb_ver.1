@@ -744,8 +744,8 @@
                 }
                 // 해당 공간/세부시설의 예약만 추출
                 const rowReservations = reservations.filter(r =>
-                    (r.facility === space.name && (r.detail === detail || (!r.detail && !detail))) ||
-                    (r.space === space.name && (r.detail === detail || (!r.detail && !detail)))
+                    (r.facility === space.name && (r.detail === detail || (!r.detail && (detail === '-' || !detail)))) ||
+                    (r.space === space.name && (r.detail === detail || (!r.detail && (detail === '-' || !detail))))
                 );
                 rowReservations.forEach((res, idx) => {
                     // 닌텐도1~9, 플레이스테이션1~2는 30분 단위 bar
