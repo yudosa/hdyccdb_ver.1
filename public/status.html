@@ -762,19 +762,24 @@
             return []; // 오류 시 빈 배열 반환
         }
     }
-    // 간트차트/막대 없는 시간표 스타일 타임라인 렌더링 함수
+    // 30분 단위 간트차트 스타일 타임라인 렌더링 함수
     function renderGanttTimeline(reservations, spaces, startHour = 9, endHour = 20) {
         const container = document.getElementById('ganttTimelineWrap');
         if (!container) return;
-        // 1시간 단위 타임슬롯 생성
-        const hourSlots = [];
+        // 30분 단위 타임슬롯 생성
+        const slots = [];
         for (let h = startHour; h < endHour; h++) {
-            hourSlots.push(`${String(h).padStart(2, '0')}:00`);
+            slots.push(`${String(h).padStart(2, '0')}:00`);
+            slots.push(`${String(h).padStart(2, '0')}:30`);
         }
-        let html = '<div class="gantt-timeline-container"><table class="gantt-timeline-table" style="width:100%;border-collapse:collapse;">';
+        // 19:30 추가 보장
+        if (!slots.includes('19:30')) slots.push('19:30');
+        slots.push(`${endHour}:00`); // 마지막 칸
+
+        let html = '<div class="gantt-timeline-container"><table class="gantt-timeline-table" style="width:100%;border-collapse:separate;border-spacing:0 8px;">';
         // 헤더
         html += '<thead><tr><th class="room-label">공간명</th>';
-        hourSlots.forEach(t => {
+        slots.forEach(t => {
             html += `<th class="time-slot">${t}</th>`;
         });
         html += '</tr></thead><tbody>';
@@ -785,34 +790,66 @@
                 html += '<tr>';
                 let label = detail || space.name;
                 html += `<td class="room-label">${label}</td>`;
-                hourSlots.forEach((hour, idx) => {
-                    // 해당 시간에 예약된 사람(여러 명 가능)
-                    let names = [];
-                    reservations.forEach(r => {
-                        const facilityMatch = (r.facility === space.name) || (r.space === space.name);
-                        if (!facilityMatch) return;
-                        const reservationDetail = r.detail || '-';
-                        const currentDetail = detail || '-';
-                        if (reservationDetail !== currentDetail) return;
-                        const startTime = r.start_time || r.start;
-                        const endTime = r.end_time || r.end;
-                        const toMinutes = t => { const [h, m] = t.split(':').map(Number); return h*60 + m; };
-                        const startMin = toMinutes(startTime);
-                        const endMin = toMinutes(endTime);
-                        const slotMin = toMinutes(hour);
-                        if (startMin === slotMin) {
-                            names.push(r.name);
+                // bar를 겹치지 않게 쌓기 위한 배열
+                let barRows = [[]];
+                // 해당 시설/세부시설의 예약만 추출
+                const rowReservations = reservations.filter(r => {
+                    const facilityMatch = (r.facility === space.name) || (r.space === space.name);
+                    if (!facilityMatch) return false;
+                    const reservationDetail = r.detail || '-';
+                    const currentDetail = detail || '-';
+                    return reservationDetail === currentDetail;
+                });
+                // 예약을 시작시간 순으로 정렬
+                rowReservations.sort((a, b) => {
+                    const toMinutes = t => { const [h, m] = t.split(':').map(Number); return h*60 + m; };
+                    return toMinutes(a.start_time || a.start) - toMinutes(b.start_time || b.start);
+                });
+                // bar를 겹치지 않게 쌓기
+                rowReservations.forEach(res => {
+                    const toMinutes = t => { const [h, m] = t.split(':').map(Number); return h*60 + m; };
+                    const startMin = toMinutes(res.start_time || res.start);
+                    const endMin = toMinutes(res.end_time || res.end);
+                    const startIdx = Math.max(0, Math.floor((startMin - startHour*60)/30));
+                    const endIdx = Math.min(slots.length, Math.ceil((endMin - startHour*60)/30));
+                    // barRows에서 겹치지 않는 줄 찾기
+                    let placed = false;
+                    for (let row of barRows) {
+                        if (row.every(idx => idx < startIdx || idx >= endIdx)) {
+                            for (let i = startIdx; i < endIdx; i++) row.push(i);
+                            row.push({res, startIdx, endIdx});
+                            placed = true;
+                            break;
                         }
-                    });
-                    if (names.length > 0) {
-                        html += `<td class=\"gantt-cell\">` +
-                            names.map((n, i) => `<span class=\"gantt-bar ${['bar-blue','bar-pink','bar-green','bar-yellow'][i%4]}\">${n}</span>`).join('') +
-                            `</td>`;
-                    } else {
-                        html += '<td class=\"gantt-cell\"></td>';
+                    }
+                    if (!placed) {
+                        let newRow = [];
+                        for (let i = startIdx; i < endIdx; i++) newRow.push(i);
+                        newRow.push({res, startIdx, endIdx});
+                        barRows.push(newRow);
                     }
                 });
-                html += '</tr>';
+                // 각 칸에 bar 또는 빈칸 삽입
+                let maxBarRows = Math.max(1, barRows.length);
+                for (let barRowIdx = 0; barRowIdx < maxBarRows; barRowIdx++) {
+                    if (barRowIdx > 0) html += '<tr><td></td>';
+                    let barRow = barRows[barRowIdx] || [];
+                    for (let i = 0; i < slots.length-1; ) {
+                        // bar가 이 칸에서 시작하는지 확인
+                        const barObj = barRow.find(obj => obj && obj.startIdx === i);
+                        if (barObj && barObj.res) {
+                            const res = barObj.res;
+                            const colorClass = ['bar-blue','bar-pink','bar-green','bar-yellow'][barRowIdx % 4];
+                            const colSpan = barObj.endIdx - barObj.startIdx;
+                            html += `<td class="gantt-cell" colspan="${colSpan}"><div class="gantt-bar ${colorClass}">${res.name}</div></td>`;
+                            i += colSpan;
+                        } else {
+                            html += '<td class="gantt-cell"></td>';
+                            i++;
+                        }
+                    }
+                    html += '</tr>';
+                }
             });
         });
         html += '</tbody></table></div>';

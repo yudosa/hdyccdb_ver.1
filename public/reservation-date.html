@@ -522,6 +522,7 @@
                 slots.push(`${String(h).padStart(2, '0')}:00`);
                 if (h !== 19) slots.push(`${String(h).padStart(2, '0')}:30`);
             }
+            slots.push('19:30'); // 마지막 19:30 추가
             return slots;
         } else {
             return ['09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00'];
