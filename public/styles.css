@@ -2014,9 +2014,7 @@ section h2 {
 
 .gantt-timeline-row .room-label,
 .gantt-timeline-header .room-label {
-    position: sticky !important;
-    left: 0 !important;
-    z-index: 10 !important;
+    background: #fff !important;
 }
 
 .gantt-timeline-scroll-x,

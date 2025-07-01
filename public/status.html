@@ -336,6 +336,22 @@
             border-radius: 12px;
             padding: 8px 0;
         }
+        .bar-tooltip {
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #fff;
+            color: #222;
+            border: 1.5px solid #b0b8c1;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px #0002;
+            padding: 6px 14px;
+            font-size: 1.05em;
+            font-weight: 600;
+            z-index: 100;
+            white-space: nowrap;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
@@ -516,9 +532,9 @@
                     let leftPx = ((startMin - startHour*60) / 60) * hourWidth + hourWidth; // hourWidth(이름칸) 보정
                     let widthPx = ((endMin - startMin) / 60) * hourWidth;
                     // 30분 단위 예약은 최소 너비 강제하지 않음
-                    // 9:00~9:30, 9:30~10:00 등 정확히 반만 차지
+                    const isHalf = widthPx <= hourWidth * 0.6; // 30분 단위(반칸) 여부
                     const colorClass = colorClasses[(spaceIdx + detailIdx + idx) % colorClasses.length];
-                    html += `<div class=\"gantt-bar ${colorClass}\" style=\"left:${leftPx}px;width:${widthPx}px;cursor:${isAdmin() ? 'pointer' : 'default'};position:absolute;top:3px;z-index:2;height:38px;border-radius:0;box-shadow:0 2px 8px #b2bec333;padding:0 8px;display:flex;align-items:center;justify-content:center;font-size:1.12rem;font-weight:700;background:linear-gradient(90deg,#a8edea 0%,#fed6e3 100%);color:#222;border:none;\" data-id=\"${res.id}\" data-name=\"${res.name}\"><span class=\"bar-name\" style=\"width:100%;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;\">${res.name}</span></div>`;
+                    html += `<div class=\"gantt-bar ${colorClass}\" style=\"left:${leftPx}px;width:${widthPx}px;cursor:${isAdmin() ? 'pointer' : 'default'};position:absolute;top:3px;z-index:2;height:38px;border-radius:0;box-shadow:0 2px 8px #b2bec333;padding:0 4px;display:flex;align-items:center;justify-content:center;font-size:1.12rem;font-weight:700;background:linear-gradient(90deg,#a8edea 0%,#fed6e3 100%);color:#222;border:none;\" data-id=\"${res.id}\" data-name=\"${res.name}\" data-start=\"${res.start_time || res.start || ''}\" data-end=\"${res.end_time || res.end || ''}\"><span class=\"bar-name\" style=\"width:100%;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;${isHalf ? 'font-size:0.9em;' : ''}\">${res.name}</span></div>`;
                 });
                 html += '</div>';
             });
@@ -531,6 +547,17 @@
                     if (isAdmin()) {
                         const id = bar.getAttribute('data-id');
                         const name = bar.getAttribute('data-name');
+                        // 예약 정보 추출
+                        const reservationInfo = {
+                            name: bar.getAttribute('data-name'),
+                            facility: bar.closest('.gantt-timeline-row')?.querySelector('.room-label')?.textContent?.trim() || '',
+                            start_time: null,
+                            end_time: null
+                        };
+                        // 시간 정보 추출 (bar의 left, width로 계산 불가하므로 data-*로 전달 필요)
+                        // 아래는 예시: bar에 data-start, data-end 속성 추가 필요
+                        reservationInfo.start_time = bar.getAttribute('data-start') || '';
+                        reservationInfo.end_time = bar.getAttribute('data-end') || '';
                         showCancelModal(async () => {
                             try {
                                 const res = await fetch(`/api/reservations/${id}/cancel`, { method: 'PATCH' });
@@ -543,10 +570,45 @@
                             } catch (err) {
                                 alert('취소 중 오류가 발생했습니다.');
                             }
-                        });
+                        }, reservationInfo);
                         e.stopPropagation();
                         return;
                     }
+                    // 일반 모드: 이름 옆에 메모(툴팁) 표시
+                    // 기존 메모 제거
+                    document.querySelectorAll('.bar-tooltip').forEach(tip => tip.remove());
+                    // 이미 열려있는 경우 닫기
+                    if (bar.classList.contains('tooltip-open')) {
+                        bar.classList.remove('tooltip-open');
+                        return;
+                    }
+                    bar.classList.add('tooltip-open');
+                    // 툴팁 생성
+                    const tooltip = document.createElement('div');
+                    tooltip.className = 'bar-tooltip';
+                    tooltip.textContent = bar.getAttribute('data-name');
+                    tooltip.style.position = 'absolute';
+                    tooltip.style.left = (bar.offsetLeft + bar.offsetWidth + 6) + 'px';
+                    tooltip.style.top = (bar.offsetTop - 2) + 'px';
+                    tooltip.style.background = '#fff';
+                    tooltip.style.color = '#222';
+                    tooltip.style.border = '1.5px solid #b0b8c1';
+                    tooltip.style.borderRadius = '6px';
+                    tooltip.style.boxShadow = '0 2px 8px #0002';
+                    tooltip.style.padding = '6px 14px';
+                    tooltip.style.fontSize = '1.05em';
+                    tooltip.style.fontWeight = '600';
+                    tooltip.style.zIndex = 100;
+                    tooltip.style.whiteSpace = 'nowrap';
+                    tooltip.style.pointerEvents = 'none';
+                    // 툴팁 DOM 추가
+                    bar.parentElement.appendChild(tooltip);
+                    // 토글 닫기 지원
+                    bar.addEventListener('mouseleave', function removeTip() {
+                        tooltip.remove();
+                        bar.classList.remove('tooltip-open');
+                        bar.removeEventListener('mouseleave', removeTip);
+                    });
                 };
             });
         }
@@ -706,7 +768,7 @@
         await loadAndRenderGanttTimeline(selectedCategory);
     });
     // 중앙 모달 함수
-    function showCancelModal(onConfirm) {
+    function showCancelModal(onConfirm, reservationInfo) {
         let modal = document.createElement('div');
         modal.style.position = 'fixed';
         modal.style.left = 0;
@@ -718,10 +780,21 @@
         modal.style.alignItems = 'center';
         modal.style.justifyContent = 'center';
         modal.style.zIndex = 9999;
+        let infoHtml = '';
+        if (reservationInfo) {
+            infoHtml = `
+                <div style="background:#f8f9fa;padding:12px 10px 10px 10px;border-radius:8px;margin-bottom:18px;font-size:1.08em;color:#333;text-align:left;">
+                    <div><b>이름:</b> ${reservationInfo.name || ''}</div>
+                    <div><b>시설:</b> ${reservationInfo.facility || reservationInfo.space || ''}</div>
+                    <div><b>시간:</b> ${reservationInfo.start_time || reservationInfo.start || ''} ~ ${reservationInfo.end_time || reservationInfo.end || ''}</div>
+                </div>
+            `;
+        }
         modal.innerHTML = `
             <div style="background:#fff;padding:32px 28px;border-radius:18px;box-shadow:0 4px 24px #e74c3c22;font-size:1.15rem;font-weight:600;color:#e74c3c;text-align:center;min-width:280px;max-width:90vw;">
                 <div style="font-size:2rem;margin-bottom:16px;">❌</div>
                 <div style="margin-bottom:20px;color:#2c3e50;">정말로 이 예약을 강제 취소하시겠습니까?</div>
+                ${infoHtml}
                 <div style="display:flex;gap:12px;justify-content:center;">
                     <button style='padding:10px 24px;border-radius:12px;background:linear-gradient(90deg,#a8edea,#fed6e3);border:none;font-weight:700;font-size:1rem;color:#222;cursor:pointer;' id='modalConfirmBtn'>확인</button>
                     <button style='padding:10px 24px;border-radius:12px;background:linear-gradient(90deg,#a8edea,#fed6e3);border:none;font-weight:700;font-size:1rem;color:#222;cursor:pointer;' id='modalCancelBtn'>취소</button>
