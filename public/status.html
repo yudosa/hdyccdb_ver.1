@@ -451,7 +451,7 @@
                                 if (response.ok) {
                                     showSuccessModal('예약이 성공적으로 취소되었습니다.');
                                     // 타임라인 다시 렌더링
-                                    await renderTimeline();
+                                    await loadAndRenderGanttTimeline(selectedCategory);
                                 } else {
                                     const errorData = await response.json();
                                     alert('예약 취소 실패: ' + (errorData.error || '알 수 없는 오류'));
@@ -503,7 +503,7 @@
     updateFormattedDate();
     statusDateInput.onchange = async function() {
         updateFormattedDate();
-        await renderTimeline();
+        await loadAndRenderGanttTimeline(selectedCategory);
     };
     // 커스텀 달력 모달
     function showCalendarModal(selectedDateStr, onSelect) {
@@ -556,7 +556,7 @@
         showCalendarModal(statusDateInput.value, async function(dateStr){
             statusDateInput.value = dateStr;
             updateFormattedDate();
-            await renderTimeline();
+            await loadAndRenderGanttTimeline(selectedCategory);
         });
     };
     // 관리자 모드 시 기간/CSV UI 노출
