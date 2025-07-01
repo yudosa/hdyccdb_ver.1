@@ -379,7 +379,7 @@
                     slots.forEach((slot, idx) => {
                         // 예약이 이 칸(30분)에 걸쳐 있는지 확인
                         const res = reservations.find(r => {
-                            if (r.space !== space.name || r.detail !== detail) return false;
+                            if (r.space !== space.name || (r.detail || '-') !== (detail || '-')) return false;
                             // 예약의 모든 30분 구간을 구해서, 현재 slot이 포함되는지 체크
                             const resSlots = getReservedSlots(r.start_time, r.end_time);
                             return resSlots.includes(slot) && (r.status === 'active' || !r.status);
