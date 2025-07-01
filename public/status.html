@@ -515,9 +515,9 @@
                     const endMin = toMinutes(res.end_time || res.end);
                     let leftPx = ((startMin - startHour*60) / 60) * hourWidth + 160; // 160px(이름칸) 보정
                     let widthPx = ((endMin - startMin) / 60) * hourWidth;
-                    if (widthPx < 90) widthPx = 90; // 최소 너비 90px로 강제
+                    if (widthPx < 120) widthPx = 120; // 최소 너비 120px로 강제
                     const colorClass = colorClasses[(spaceIdx + detailIdx + idx) % colorClasses.length];
-                    html += `<div class="gantt-bar ${colorClass}" style="left:${leftPx}px;width:${widthPx}px;cursor:${isAdmin() ? 'pointer' : 'default'};position:absolute;top:3px;z-index:2;height:38px;border-radius:14px;box-shadow:0 2px 8px #b2bec333;padding:0 16px;display:flex;align-items:center;justify-content:center;font-size:1.12rem;font-weight:700;background:linear-gradient(90deg,#a8edea 0%,#fed6e3 100%);color:#222;border:none;" data-id="${res.id}" data-name="${res.name}"><span class="bar-name" style="width:100%;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${res.name}</span></div>`;
+                    html += `<div class="gantt-bar ${colorClass}" style="left:${leftPx}px;width:${widthPx}px;cursor:${isAdmin() ? 'pointer' : 'default'};position:absolute;top:3px;z-index:2;height:38px;border-radius:0;box-shadow:0 2px 8px #b2bec333;padding:0 16px;display:flex;align-items:center;justify-content:center;font-size:1.12rem;font-weight:700;background:linear-gradient(90deg,#a8edea 0%,#fed6e3 100%);color:#222;border:none;" data-id="${res.id}" data-name="${res.name}"><span class="bar-name" style="width:100%;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${res.name}</span></div>`;
                 });
                 html += '</div>';
             });

@@ -2014,9 +2014,9 @@ section h2 {
 
 .gantt-timeline-row .room-label,
 .gantt-timeline-header .room-label {
-    background: #fff !important;
-    box-shadow: none !important;
-    border-right: 1px solid #e0e0e0 !important;
+    position: sticky !important;
+    left: 0 !important;
+    z-index: 10 !important;
 }
 
 .gantt-timeline-scroll-x,
@@ -2070,4 +2070,16 @@ section h2 {
 .gantt-bar.bar-purple {
     background: linear-gradient(90deg, #654ea3 0%, #eaafc8 100%) !important;
     color: #fff !important;
+}
+
+.gantt-bar,
+.reservation-cell,
+.timeline-table th,
+.timeline-table td,
+.timeline-table,
+.gantt-timeline-row,
+.gantt-timeline-header,
+.gantt-timeline-row .room-label,
+.gantt-timeline-header .room-label {
+    border-radius: 0 !important;
 } 
