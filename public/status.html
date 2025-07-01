@@ -354,9 +354,8 @@
         }
         .gantt-bar.disabled {
             opacity: 0.5 !important;
-            pointer-events: none !important;
             filter: grayscale(0.3);
-            cursor: not-allowed !important;
+            /* pointer-events, cursor는 JS에서 동적으로 처리 */
         }
     </style>
 </head>
@@ -565,13 +564,9 @@
                         const reservationInfo = {
                             name: bar.getAttribute('data-name'),
                             facility: bar.closest('.gantt-timeline-row')?.querySelector('.room-label')?.textContent?.trim() || '',
-                            start_time: null,
-                            end_time: null
+                            start_time: bar.getAttribute('data-start') || '',
+                            end_time: bar.getAttribute('data-end') || ''
                         };
-                        // 시간 정보 추출 (bar의 left, width로 계산 불가하므로 data-*로 전달 필요)
-                        // 아래는 예시: bar에 data-start, data-end 속성 추가 필요
-                        reservationInfo.start_time = bar.getAttribute('data-start') || '';
-                        reservationInfo.end_time = bar.getAttribute('data-end') || '';
                         showCancelModal(async () => {
                             try {
                                 const res = await fetch(`/api/reservations/${id}/cancel`, { method: 'PATCH' });
@@ -588,7 +583,8 @@
                         e.stopPropagation();
                         return;
                     }
-                    // 일반 모드: 이름 옆에 메모(툴팁) 표시
+                    // 일반 모드: 지난 예약은 클릭 불가
+                    if (bar.classList.contains('disabled')) return;
                     // 기존 메모 제거
                     document.querySelectorAll('.bar-tooltip').forEach(tip => tip.remove());
                     // 이미 열려있는 경우 닫기
@@ -624,6 +620,11 @@
                         bar.removeEventListener('mouseleave', removeTip);
                     });
                 };
+                // 관리자 모드면 pointer-events, cursor 허용
+                if (isAdmin()) {
+                    bar.style.pointerEvents = 'auto';
+                    bar.style.cursor = 'pointer';
+                }
             });
         }
     }
