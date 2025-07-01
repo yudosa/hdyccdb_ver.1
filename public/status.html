@@ -716,22 +716,19 @@
             return []; // 오류 시 빈 배열 반환
         }
     }
-    // 간트차트 타임라인 렌더링 함수 (30분 단위 시간표+간트차트 스타일)
+    // 간트차트 타임라인 렌더링 함수 (1시간 칸 2분할, 30분 단위 bar)
     function renderGanttTimeline(reservations, spaces, startHour = 9, endHour = 20) {
         const container = document.getElementById('ganttTimelineWrap');
         if (!container) return;
-        // 30분 단위 타임슬롯 생성
-        const slots = [];
+        // 1시간 단위 타임슬롯 생성
+        const hourSlots = [];
         for (let h = startHour; h < endHour; h++) {
-            slots.push(`${String(h).padStart(2, '0')}:00`);
-            slots.push(`${String(h).padStart(2, '0')}:30`);
+            hourSlots.push(`${String(h).padStart(2, '0')}:00`);
         }
-        slots.push(`${endHour}:00`); // 마지막 칸
-
         let html = '<div class="gantt-timeline-container"><table class="gantt-timeline-table" style="width:100%;border-collapse:collapse;">';
         // 헤더
         html += '<thead><tr><th class="room-label">공간명</th>';
-        slots.forEach(t => {
+        hourSlots.forEach(t => {
             html += `<th class="time-slot">${t}</th>`;
         });
         html += '</tr></thead><tbody>';
@@ -742,45 +739,81 @@
                 html += '<tr>';
                 let label = detail || space.name;
                 html += `<td class="room-label">${label}</td>`;
-                // 30분 칸별로 예약 표시
-                slots.forEach((slot, idx) => {
-                    // 해당 칸에 들어갈 예약 찾기
-                    const res = reservations.find(r => {
+                // 1시간 칸별로 2분할(상/하) bar 표시
+                hourSlots.forEach((hour, idx) => {
+                    html += '<td class="td-half">';
+                    // 상단(00~30)
+                    const resTop = reservations.find(r => {
                         const facilityMatch = (r.facility === space.name) || (r.space === space.name);
                         if (!facilityMatch) return false;
                         const reservationDetail = r.detail || '-';
                         const currentDetail = detail || '-';
                         if (reservationDetail !== currentDetail) return false;
-                        // 예약이 이 칸의 시작시간과 일치
-                        return r.start_time === slot;
+                        return r.start_time === hour;
                     });
-                    if (res) {
-                        // bar 스타일 적용
+                    let barTop = '';
+                    if (resTop) {
                         const colorClass = ['bar-blue','bar-pink','bar-green','bar-yellow'][idx % 4];
-                        const startTime = res.start_time || res.start;
-                        const endTime = res.end_time || res.end;
-                        // 남은 시간 계산
-                        let barContent = '';
+                        const startTime = resTop.start_time || resTop.start;
+                        const endTime = resTop.end_time || resTop.end;
+                        let barContent = resTop.name;
                         const now = new Date();
                         const todayStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
-                        if (res.date === todayStr) {
-                            // HH:mm -> 분 변환
+                        if (resTop.date === todayStr) {
                             const toMinutes = t => { const [h, m] = t.split(':').map(Number); return h*60 + m; };
                             const nowMinutes = now.getHours()*60 + now.getMinutes();
                             const startMinutes = toMinutes(startTime);
                             const endMinutes = toMinutes(endTime);
                             if (nowMinutes < startMinutes) {
-                                barContent = '';
+                                // barContent = resTop.name;
                             } else if (nowMinutes >= endMinutes) {
-                                barContent = '종료';
+                                barContent = `${resTop.name} (종료)`;
                             } else {
-                                barContent = `남은 ${endMinutes-nowMinutes}분`;
+                                barContent = `${resTop.name} (-${endMinutes-nowMinutes}분)`;
                             }
                         }
-                        html += `<td class="gantt-cell"><div class="gantt-timeline-bar ${colorClass}" style="position:relative;min-width:0;width:100%;height:32px;display:flex;align-items:center;justify-content:center;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;">${barContent}</div></td>`;
+                        barTop = `<div class="half-cell top gantt-timeline-bar ${colorClass}" data-id="${resTop.id}" style="min-width:0;width:100%;height:50%;display:flex;align-items:center;justify-content:center;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;">${barContent}</div>`;
                     } else {
-                        html += '<td class="gantt-cell"></td>';
+                        barTop = '<div class="half-cell top empty-cell"></div>';
                     }
+                    // 하단(30~00)
+                    const nextHalf = hour.split(':');
+                    const h = Number(nextHalf[0]);
+                    const nextSlot = `${String(h).padStart(2,'0')}:30`;
+                    const resBottom = reservations.find(r => {
+                        const facilityMatch = (r.facility === space.name) || (r.space === space.name);
+                        if (!facilityMatch) return false;
+                        const reservationDetail = r.detail || '-';
+                        const currentDetail = detail || '-';
+                        if (reservationDetail !== currentDetail) return false;
+                        return r.start_time === nextSlot;
+                    });
+                    let barBottom = '';
+                    if (resBottom) {
+                        const colorClass = ['bar-blue','bar-pink','bar-green','bar-yellow'][idx % 4];
+                        const startTime = resBottom.start_time || resBottom.start;
+                        const endTime = resBottom.end_time || resBottom.end;
+                        let barContent = resBottom.name;
+                        const now = new Date();
+                        const todayStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+                        if (resBottom.date === todayStr) {
+                            const toMinutes = t => { const [h, m] = t.split(':').map(Number); return h*60 + m; };
+                            const nowMinutes = now.getHours()*60 + now.getMinutes();
+                            const startMinutes = toMinutes(startTime);
+                            const endMinutes = toMinutes(endTime);
+                            if (nowMinutes < startMinutes) {
+                                // barContent = resBottom.name;
+                            } else if (nowMinutes >= endMinutes) {
+                                barContent = `${resBottom.name} (종료)`;
+                            } else {
+                                barContent = `${resBottom.name} (-${endMinutes-nowMinutes}분)`;
+                            }
+                        }
+                        barBottom = `<div class="half-cell bottom gantt-timeline-bar ${colorClass}" data-id="${resBottom.id}" style="min-width:0;width:100%;height:50%;display:flex;align-items:center;justify-content:center;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;">${barContent}</div>`;
+                    } else {
+                        barBottom = '<div class="half-cell bottom empty-cell"></div>';
+                    }
+                    html += barTop + barBottom + '</td>';
                 });
                 html += '</tr>';
             });
@@ -789,7 +822,7 @@
         // 삽입
         const scrollDiv = container.querySelector('.gantt-timeline-scroll-x');
         if (scrollDiv) scrollDiv.innerHTML = html;
-        else container.innerHTML = `<div class="gantt-timeline-scroll-x">${html}</div>`;
+        else container.innerHTML = `<div class=\"gantt-timeline-scroll-x\">${html}</div>`;
     }
     // 시간 문자열(HH:mm) → 분 변환
     function parseTimeToMinutes(t) {
