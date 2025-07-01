@@ -136,6 +136,7 @@
             display: flex;
             position: relative;
             height: 100%;
+            overflow: hidden;
         }
         .gantt-timeline-bar-bg.thirtymin-bg {
             position: relative;
@@ -715,128 +716,77 @@
             return []; // 오류 시 빈 배열 반환
         }
     }
-    // 간트차트 타임라인 렌더링 함수
+    // 간트차트 타임라인 렌더링 함수 (30분 단위 시간표+간트차트 스타일)
     function renderGanttTimeline(reservations, spaces, startHour = 9, endHour = 20) {
-        console.log('=== renderGanttTimeline 호출됨 ===');
-        console.log('reservations:', reservations);
-        console.log('spaces:', spaces);
-        
         const container = document.getElementById('ganttTimelineWrap');
         if (!container) return;
-        let html = '<div class="gantt-timeline-container">';
-        html += '<div class="gantt-timeline-header">';
-        html += '<div class="room-label"></div>';
+        // 30분 단위 타임슬롯 생성
+        const slots = [];
         for (let h = startHour; h < endHour; h++) {
-            html += `<div class="time-slot">${h.toString().padStart(2,'0')}:00</div>`;
+            slots.push(`${String(h).padStart(2, '0')}:00`);
+            slots.push(`${String(h).padStart(2, '0')}:30`);
         }
-        html += '</div>';
+        slots.push(`${endHour}:00`); // 마지막 칸
+
+        let html = '<div class="gantt-timeline-container"><table class="gantt-timeline-table" style="width:100%;border-collapse:collapse;">';
+        // 헤더
+        html += '<thead><tr><th class="room-label">공간명</th>';
+        slots.forEach(t => {
+            html += `<th class="time-slot">${t}</th>`;
+        });
+        html += '</tr></thead><tbody>';
         // 각 공간별 row 생성
         spaces.forEach(space => {
             const details = space.details || [null];
-            
-            // 디버깅: spaces 배열 확인
-            if (space.name === '댄스연습실') {
-                console.log('=== 댄스연습실 space 객체 ===');
-                console.log('space:', space);
-                console.log('details:', details);
-            }
-            
             details.forEach(detail => {
-                html += '<div class="gantt-timeline-row">';
+                html += '<tr>';
                 let label = detail || space.name;
-                if (label === '닌텐도9') label += ' ♿';
-                html += `<div class="room-label">${label}</div>`;
-                const is30min = detail && (detail.includes('닌텐도') || detail.includes('플레이스테이션'));
-                html += `<div class="gantt-timeline-bar-bg${is30min ? ' thirtymin-bg' : ''}" style="position:relative;">`;
-                if (is30min) {
-                    for (let i = 1; i < 22; i += 2) { // 09:30~19:30, 30분 단위 11개
-                        const left = (i * 100 / 22).toFixed(2) + '%';
-                        html += `<div class="thirtymin-line" style="left:${left};"></div>`;
-                    }
-                }
-                // 해당 공간/세부시설의 예약만 추출
-                const rowReservations = reservations.filter(r => {
-                    const facilityMatch = (r.facility === space.name) || (r.space === space.name);
-                    
-                    // 디버깅: 각 예약의 필터링 과정 확인
-                    if (space.name === '댄스연습실') {
-                        console.log('예약 필터링:', {
-                            id: r.id,
-                            facility: r.facility,
-                            space: r.space,
-                            detail: r.detail,
-                            facilityMatch: facilityMatch,
-                            reservationDetail: r.detail || '-',
-                            currentDetail: detail || '-'
-                        });
-                    }
-                    
-                    if (!facilityMatch) return false;
-                    
-                    // detail 매칭 로직 개선
-                    const reservationDetail = r.detail || '-';
-                    const currentDetail = detail || '-';
-                    
-                    // detail이 '-'이거나 null이거나 빈 문자열이면 매칭
-                    if (reservationDetail === '-' && (currentDetail === '-' || !currentDetail || currentDetail === null)) {
-                        return true;
-                    }
-                    
-                    // detail이 정확히 일치하는 경우
-                    if (reservationDetail === currentDetail) {
-                        return true;
-                    }
-                    
-                    return false;
-                });
-                
-                // 디버깅: 댄스연습실 예약 확인
-                if (space.name === '댄스연습실') {
-                    console.log('=== 댄스연습실 디버깅 ===');
-                    console.log('전체 예약 데이터:', reservations);
-                    console.log('댄스연습실 전체 예약:', reservations.filter(r => r.facility === '댄스연습실'));
-                    console.log('현재 space:', space);
-                    console.log('현재 detail:', detail);
-                    console.log('필터링 조건:', `facility=${space.name}, detail=${detail}`);
-                    console.log('댄스연습실 rowReservations:', rowReservations);
-                    console.log('rowReservations.length:', rowReservations.length);
-                }
-                rowReservations.forEach((res, idx) => {
-                    // 디버깅: 댄스연습실 막대 생성 확인
-                    if (space.name === '댄스연습실') {
-                        console.log(`댄스연습실 막대 생성 ${idx + 1}:`, res);
-                    }
-                    
-                    // 닌텐도1~9, 플레이스테이션1~2는 30분 단위 bar
-                    const is30min = (detail && (detail.includes('닌텐도') || detail.includes('플레이스테이션')));
-                    // start_time, end_time이 없으면 start/end 사용
-                    const startTime = res.start_time || res.start;
-                    const endTime = res.end_time || res.end;
-                    const start = parseTimeToMinutes(startTime);
-                    const end = parseTimeToMinutes(endTime);
-                    const totalMinutes = (endHour - startHour) * 60;
-                    const left = ((start - startHour * 60) / totalMinutes) * 100;
-                    const width = ((end - start) / totalMinutes) * 100;
-                    const colorClass = ['bar-blue','bar-pink','bar-green','bar-yellow'][idx % 4];
-                    let barContent = `${res.name}${res.extra ? ' 외 ' + res.extra + '명' : ''}`;
-                    // 관리자 모드일 때 x 버튼 추가
-                    if (isAdmin()) {
-                        barContent += ` <button class=\"bar-cancel-btn\" data-id=\"${res.id}\" title=\"예약 취소\" style=\"background:none;border:none;color:#fff;font-weight:bold;font-size:1.1em;cursor:pointer;padding:0 4px;\">×</button>`;
-                    }
-                    
-                    const barHtml = `<div class=\"gantt-timeline-bar ${colorClass}\" style=\"left:${left}%;width:${width}%;min-width:35px;white-space:nowrap;overflow:visible;position:relative;\" title=\"${res.name}\" data-id=\"${res.id}\">${barContent}</div>`;
-                    html += barHtml;
-                    
-                    // 디버깅: 댄스연습실 막대 HTML 확인
-                    if (space.name === '댄스연습실') {
-                        console.log(`댄스연습실 막대 HTML ${idx + 1}:`, barHtml);
+                html += `<td class="room-label">${label}</td>`;
+                // 30분 칸별로 예약 표시
+                slots.forEach((slot, idx) => {
+                    // 해당 칸에 들어갈 예약 찾기
+                    const res = reservations.find(r => {
+                        const facilityMatch = (r.facility === space.name) || (r.space === space.name);
+                        if (!facilityMatch) return false;
+                        const reservationDetail = r.detail || '-';
+                        const currentDetail = detail || '-';
+                        if (reservationDetail !== currentDetail) return false;
+                        // 예약이 이 칸의 시작시간과 일치
+                        return r.start_time === slot;
+                    });
+                    if (res) {
+                        // bar 스타일 적용
+                        const colorClass = ['bar-blue','bar-pink','bar-green','bar-yellow'][idx % 4];
+                        const startTime = res.start_time || res.start;
+                        const endTime = res.end_time || res.end;
+                        // 남은 시간 계산
+                        let barContent = '';
+                        const now = new Date();
+                        const todayStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+                        if (res.date === todayStr) {
+                            // HH:mm -> 분 변환
+                            const toMinutes = t => { const [h, m] = t.split(':').map(Number); return h*60 + m; };
+                            const nowMinutes = now.getHours()*60 + now.getMinutes();
+                            const startMinutes = toMinutes(startTime);
+                            const endMinutes = toMinutes(endTime);
+                            if (nowMinutes < startMinutes) {
+                                barContent = '';
+                            } else if (nowMinutes >= endMinutes) {
+                                barContent = '종료';
+                            } else {
+                                barContent = `남은 ${endMinutes-nowMinutes}분`;
+                            }
+                        }
+                        html += `<td class="gantt-cell"><div class="gantt-timeline-bar ${colorClass}" style="position:relative;min-width:0;width:100%;height:32px;display:flex;align-items:center;justify-content:center;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;">${barContent}</div></td>`;
+                    } else {
+                        html += '<td class="gantt-cell"></td>';
                     }
                 });
-                html += '</div></div>';
+                html += '</tr>';
             });
         });
-        html += '</div>';
-        // 스크롤 래퍼에 표 삽입
+        html += '</tbody></table></div>';
+        // 삽입
         const scrollDiv = container.querySelector('.gantt-timeline-scroll-x');
         if (scrollDiv) scrollDiv.innerHTML = html;
         else container.innerHTML = `<div class="gantt-timeline-scroll-x">${html}</div>`;
