@@ -482,23 +482,23 @@
             hourSlots.push(`${String(h).padStart(2, '0')}:00`);
         }
         // 헤더 (flex)
-        let html = `<div class=\"gantt-timeline-header\" style=\"display:flex;min-width:${totalHours*hourWidth+160}px;\">`;
-        html += '<div class=\"room-label\" style=\"width:160px;min-width:160px;max-width:160px;\"></div>';
+        let html = `<div class=\"gantt-timeline-header\" style=\"display:flex;min-width:${totalHours*hourWidth+160}px;background:#fff;\">`;
+        html += '<div class=\"room-label\" style=\"width:160px;min-width:160px;max-width:160px;background:#f3f6fa;font-weight:700;color:#444;display:flex;align-items:center;justify-content:center;\"></div>';
         hourSlots.forEach((t, i) => {
-            html += `<div class=\"time-slot\" style=\"width:${hourWidth}px;min-width:${hourWidth}px;max-width:${hourWidth}px;${i!==0?'border-left:2px solid #222;':''}\">${t}</div>`;
+            html += `<div class=\"time-slot\" style=\"width:${hourWidth}px;min-width:${hourWidth}px;max-width:${hourWidth}px;border-left:${i===0?'2px solid #b0b8c1':'1px solid #e0e7ef'};background:transparent;text-align:center;font-size:1.05rem;color:#888;font-weight:700;display:flex;align-items:center;justify-content:center;\">${t}</div>`;
         });
         html += '</div>';
-        // row (flex)
+        // row (flex, no zebra)
         const colorClasses = ['bar-blue','bar-mint','bar-pink','bar-yellow','bar-purple'];
         spaces.forEach((space, spaceIdx) => {
             const details = space.details || [null];
             details.forEach((detail, detailIdx) => {
-                html += `<div class=\"gantt-timeline-row\" style=\"display:flex;position:relative;min-width:${totalHours*hourWidth+160}px;min-height:56px;align-items:center;\">`;
+                html += `<div class=\"gantt-timeline-row\" style=\"display:flex;position:relative;min-width:${totalHours*hourWidth+160}px;min-height:44px;align-items:center;background:#fff;border-bottom:1px dashed #e0e7ef;\">`;
                 let label = detail || space.name;
-                html += `<div class=\"room-label\" style=\"width:160px;min-width:160px;max-width:160px;\">${label}</div>`;
+                html += `<div class=\"room-label\" style=\"width:160px;min-width:160px;max-width:160px;background:#f3f6fa;font-weight:700;color:#444;display:flex;align-items:center;justify-content:center;\">${label}</div>`;
                 // 시간 칸 (세로선)
                 for (let h = 0; h < totalHours; h++) {
-                    html += `<div class=\"gantt-cell\" style=\"width:${hourWidth}px;min-width:${hourWidth}px;max-width:${hourWidth}px;${h!==0?'border-left:2px solid #222;':''}\"></div>`;
+                    html += `<div class=\"gantt-cell\" style=\"width:${hourWidth}px;min-width:${hourWidth}px;max-width:${hourWidth}px;border-left:${h===0?'2px solid #b0b8c1':'1px solid #e0e7ef'};background:transparent;\"></div>`;
                 }
                 // bar 계산: px 단위
                 const rowReservations = reservations.filter(r => {
@@ -516,12 +516,12 @@
                     const leftPx = ((startMin - startHour*60) / 60) * hourWidth + 160; // 160px(이름칸) 보정
                     const widthPx = ((endMin - startMin) / 60) * hourWidth;
                     const colorClass = colorClasses[(spaceIdx + detailIdx + idx) % colorClasses.length];
-                    html += `<div class=\"gantt-bar ${colorClass}\" style=\"left:${leftPx}px;width:${widthPx}px;cursor:${isAdmin() ? 'pointer' : 'default'};position:absolute;top:6px;z-index:2;height:44px;border-radius:16px;box-shadow:0 4px 16px #0002;padding:0 22px;display:flex;align-items:center;justify-content:center;font-size:1.18rem;font-weight:700;\" data-id=\"${res.id}\" data-name=\"${res.name}\"><span class=\"bar-name\" style=\"width:100%;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;\">${res.name}</span></div>`;
+                    html += `<div class=\"gantt-bar ${colorClass}\" style=\"left:${leftPx}px;width:${widthPx}px;cursor:${isAdmin() ? 'pointer' : 'default'};position:absolute;top:3px;z-index:2;height:38px;border-radius:14px;box-shadow:0 2px 8px #b2bec333;padding:0 16px;display:flex;align-items:center;justify-content:center;font-size:1.12rem;font-weight:700;background:linear-gradient(90deg,#a8edea 0%,#fed6e3 100%);color:#222;border:none;\" data-id=\"${res.id}\" data-name=\"${res.name}\"><span class=\"bar-name\" style=\"width:100%;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;\">${res.name}</span></div>`;
                 });
                 html += '</div>';
             });
         });
-        container.innerHTML = `<div class='gantt-timeline-scroll-x'>${html}</div>`;
+        container.innerHTML = `<div class='gantt-timeline-scroll-x' style='background:#fff;'>${html}</div>`;
         // 관리자 모드에서만 bar 클릭 시 강제취소
         if (isAdmin()) {
             container.querySelectorAll('.gantt-bar').forEach(bar => {
