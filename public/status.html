@@ -111,71 +111,100 @@
             background-color: #f5c6cb !important;
         }
         /* 간트차트 스타일 추가 */
-        .gantt-timeline-scroll-x { overflow-x: auto; width: 100%; }
-        .gantt-timeline-container {
-            background: #fff;
-            border-radius: 24px;
-            box-shadow: 0 4px 24px #a8edea33;
-            padding: 32px;
-            margin: 0 auto;
+        .gantt-timeline-scroll-x {
+            overflow-x: auto;
+            width: 100%;
+            min-width: 0;
+            white-space: nowrap;
         }
-        .gantt-timeline-header { display: flex; margin-bottom: 12px; }
-        .gantt-timeline-header .room-label { width: 120px; }
+        .gantt-timeline-container {
+            background: #f7fafd;
+            border-radius: 18px;
+            padding: 18px 0 18px 0;
+            box-shadow: 0 4px 24px #e0e7ef22;
+            min-width: 1200px;
+        }
+        .gantt-timeline-header {
+            display: flex;
+            margin-bottom: 8px;
+            align-items: center;
+            min-width: 1200px;
+        }
+        .gantt-timeline-header .room-label {
+            width: 120px;
+            font-weight: 700;
+            color: #444;
+            background: #f3f6fa;
+            border-radius: 12px;
+            padding: 8px 0;
+            text-align: center;
+        }
         .gantt-timeline-header .time-slot {
             flex: 1;
             text-align: center;
+            font-size: 1.05rem;
             color: #888;
-            font-weight: 600;
-            min-width: 90px;
-            max-width: 160px;
-        }
-        .gantt-timeline-row { display: flex; align-items: center; height: 48px; position: relative; }
-        .room-label {
-            background: #f3f6fa;
             font-weight: 700;
-            border-radius: 12px;
-            color: #222;
-        }
-        .gantt-timeline-bar-bg {
-            flex: 1;
-            display: flex;
-            position: relative;
-            height: 100%;
-            overflow: hidden;
-        }
-        .gantt-timeline-bar-bg.thirtymin-bg {
+            border-right: 2px solid #e0e7ef;
             position: relative;
         }
-        /* 09:00~20:00, 30분 단위(11개) 점선 구분선 */
-        .gantt-timeline-bar-bg.thirtymin-bg::before,
-        .gantt-timeline-bar-bg.thirtymin-bg::after,
-        .gantt-timeline-bar-bg.thirtymin-bg .thirtymin-line {
+        .gantt-timeline-header .time-slot:not(:last-child)::after {
             content: '';
             position: absolute;
+            right: 50%;
             top: 0; bottom: 0;
-            width: 0; border-left: 1px dashed #bbb; z-index: 1;
+            width: 0;
+            border-right: 1px dashed #e0e7ef;
+            opacity: 0.7;
         }
-        .gantt-timeline-bar-bg.thirtymin-bg .thirtymin-line { left: 0; }
-        .gantt-timeline-bar {
-            position: absolute;
-            height: 32px;
-            border-radius: 8px;
-            color: #fff;
-            font-weight: 600;
+        .gantt-timeline-row {
             display: flex;
             align-items: center;
-            padding: 0 16px;
-            font-size: 1rem;
-            box-shadow: 0 2px 8px #0002;
-            min-width: 70px;
-            white-space: nowrap;
-            overflow: visible;
+            height: 48px;
+            position: relative;
+            background: #fff;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 8px #e0e7ef33;
+            min-width: 1200px;
         }
-        .bar-blue { background: linear-gradient(90deg, #4fc3f7, #1976d2); }
-        .bar-pink { background: linear-gradient(90deg, #f48fb1, #d81b60); }
-        .bar-green { background: linear-gradient(90deg, #81c784, #388e3c); }
-        .bar-yellow { background: linear-gradient(90deg, #fff176, #fbc02d); color: #222; }
-        .current-time-line { position: absolute; top: 0; bottom: 0; width: 2px; background: orange; z-index: 10; }
+        .gantt-timeline-row .room-label {
+            width: 120px;
+            font-weight: 700;
+            color: #444;
+            background: #f3f6fa;
+            border-radius: 12px;
+            padding: 8px 0;
+            text-align: center;
+            z-index: 2;
+        }
+        .gantt-timeline-row .gantt-bar {
+            position: absolute;
+            top: 6px;
+            height: 36px;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px #b2bec333;
+            font-weight: 700;
+            font-size: 1.08rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 0 18px;
+            z-index: 1;
+            transition: left 0.2s, width 0.2s;
+        }
+        .gantt-bar.bar-blue    { background: #1da1f2; color: #fff; }
+        .gantt-bar.bar-pink    { background: #ff4f81; color: #fff; }
+        .gantt-bar.bar-mint    { background: #00e6d3; color: #fff; }
+        .gantt-bar.bar-lavender{ background: #c3b6f7; color: #5e548e; }
+        .gantt-bar.bar-yellow  { background: #ffe156; color: #222; }
+        .gantt-bar.bar-purple  { background: #7c5fff; color: #fff; }
+        .gantt-timeline-row .gantt-bar:not(:last-child) { margin-right: 6px; }
+        .gantt-timeline-row .gantt-bar .bar-time { font-size: 0.98em; font-weight: 400; margin-left: 8px; color: #555; }
+        .gantt-timeline-row .gantt-bar .bar-name { font-weight: 700; }
         .main-card {
             overflow-x: auto;
         }
@@ -224,11 +253,12 @@
             background: linear-gradient(90deg, #a8edea 0%, #fed6e3 100%);
             font-size: 1rem;
         }
-        .gantt-bar.bar-blue    { background: #7ecbff; color: #226699; }
-        .gantt-bar.bar-pink    { background: #ffb6b9; color: #a94442; }
-        .gantt-bar.bar-mint    { background: #b2f7ef; color: #229954; }
+        .gantt-bar.bar-blue    { background: #1da1f2; color: #fff; }
+        .gantt-bar.bar-pink    { background: #ff4f81; color: #fff; }
+        .gantt-bar.bar-mint    { background: #00e6d3; color: #fff; }
         .gantt-bar.bar-lavender{ background: #c3b6f7; color: #5e548e; }
-        .gantt-bar.bar-yellow  { background: #fff6b7; color: #b9770e; }
+        .gantt-bar.bar-yellow  { background: #ffe156; color: #222; }
+        .gantt-bar.bar-purple  { background: #7c5fff; color: #fff; }
         .gantt-bar {
             border-radius: 16px;
             box-shadow: 0 2px 12px #b2bec333;
@@ -433,74 +463,52 @@
     function renderGanttTimeline(reservations, spaces, startHour = 9, endHour = 20) {
         const container = document.getElementById('ganttTimelineWrap');
         if (!container) return;
-        const hourSlots = getHourSlots(startHour, endHour);
-        let html = '<div class="gantt-timeline-container"><table class="gantt-timeline-table" style="width:100%;border-collapse:separate;border-spacing:0 8px;">';
+        // 1시간 단위 헤더
+        const hourSlots = [];
+        for (let h = startHour; h < endHour; h++) {
+            hourSlots.push(`${String(h).padStart(2, '0')}:00`);
+        }
         // 헤더
-        html += '<thead><tr><th class="room-label">공간명</th>';
+        let html = '<div class="gantt-timeline-header">';
+        html += '<div class="room-label"></div>';
         hourSlots.forEach(t => {
-            html += `<th class="time-slot">${t}</th>`;
+            html += `<div class="time-slot">${t}</div>`;
         });
-        html += '</tr></thead><tbody>';
-        const colorClasses = ['bar-blue','bar-pink','bar-mint','bar-lavender','bar-yellow'];
+        html += '</div>';
+        // row
+        const colorClasses = ['bar-blue','bar-pink','bar-mint','bar-lavender','bar-yellow','bar-purple'];
         spaces.forEach((space, spaceIdx) => {
             const details = space.details || [null];
             details.forEach((detail, detailIdx) => {
-                html += '<tr>';
+                html += '<div class="gantt-timeline-row">';
                 let label = detail || space.name;
-                html += `<td class="room-label">${label}</td>`;
-                hourSlots.forEach((hour, hourIdx) => {
-                    html += '<td class="gantt-cell" style="position:relative;min-width:60px;height:48px;">';
-                    const ranges = get30MinRanges(parseInt(hour));
-                    // 색상 순환 인덱스
-                    const colorIdx = (spaceIdx + detailIdx + hourIdx) % colorClasses.length;
-                    const colorClass = colorClasses[colorIdx];
-                    // 00~30 bar
-                    const resLeft = reservations.find(r => {
-                        const facilityMatch = (r.facility === space.name) || (r.space === space.name);
-                        if (!facilityMatch) return false;
-                        const reservationDetail = r.detail || '-';
-                        const currentDetail = detail || '-';
-                        if (reservationDetail !== currentDetail) return false;
-                        return (r.start_time === ranges[0].start && r.end_time === ranges[0].end) // 30분 예약(왼쪽)
-                            || (r.start_time === ranges[0].start && r.end_time === ranges[1].end); // 1시간 예약(전체)
-                    });
-                    // 30~00 bar
-                    const resRight = reservations.find(r => {
-                        const facilityMatch = (r.facility === space.name) || (r.space === space.name);
-                        if (!facilityMatch) return false;
-                        const reservationDetail = r.detail || '-';
-                        const currentDetail = detail || '-';
-                        if (reservationDetail !== currentDetail) return false;
-                        return (r.start_time === ranges[1].start && r.end_time === ranges[1].end);
-                    });
-                    // 1시간 bar(00~00)
-                    const resFull = reservations.find(r => {
-                        const facilityMatch = (r.facility === space.name) || (r.space === space.name);
-                        if (!facilityMatch) return false;
-                        const reservationDetail = r.detail || '-';
-                        const currentDetail = detail || '-';
-                        if (reservationDetail !== currentDetail) return false;
-                        return (r.start_time === ranges[0].start && r.end_time === ranges[1].end);
-                    });
-                    if (resLeft && !resFull) {
-                        html += `<div class="gantt-bar bar-half-left ${colorClass}">${resLeft.name}</div>`;
-                    }
-                    if (resRight) {
-                        html += `<div class="gantt-bar bar-half-right ${colorClass}">${resRight.name}</div>`;
-                    }
-                    if (resFull) {
-                        html += `<div class="gantt-bar bar-full ${colorClass}">${resFull.name}</div>`;
-                    }
-                    html += '</td>';
+                html += `<div class="room-label">${label}</div>`;
+                // bar 계산: 예약의 시작~끝 시간에 맞춰 left/width %
+                const rowReservations = reservations.filter(r => {
+                    const facilityMatch = (r.facility === space.name) || (r.space === space.name);
+                    if (!facilityMatch) return false;
+                    const reservationDetail = r.detail || '-';
+                    const currentDetail = detail || '-';
+                    return reservationDetail === currentDetail;
                 });
-                html += '</tr>';
+                rowReservations.forEach((res, idx) => {
+                    // left/width 계산
+                    const toMinutes = t => { const [h, m] = t.split(':').map(Number); return h*60 + m; };
+                    const startMin = toMinutes(res.start_time || res.start);
+                    const endMin = toMinutes(res.end_time || res.end);
+                    const totalMin = (endHour - startHour) * 60;
+                    const left = ((startMin - startHour*60) / totalMin) * 100;
+                    const width = ((endMin - startMin) / totalMin) * 100;
+                    const colorClass = colorClasses[(spaceIdx + detailIdx + idx) % colorClasses.length];
+                    html += `<div class="gantt-bar ${colorClass}" style="left:${left}%;width:${width}%;">
+                        <span class="bar-name">${res.name}</span>
+                        <span class="bar-time">${res.start_time || res.start}~${res.end_time || res.end}</span>
+                    </div>`;
+                });
+                html += '</div>';
             });
         });
-        html += '</tbody></table></div>';
-        // 삽입
-        const scrollDiv = container.querySelector('.gantt-timeline-scroll-x');
-        if (scrollDiv) scrollDiv.innerHTML = html;
-        else container.innerHTML = `<div class=\"gantt-timeline-scroll-x\">${html}</div>`;
+        container.innerHTML = `<div class='gantt-timeline-scroll-x'>${html}</div>`;
     }
     // 날짜 포맷 함수 (한국어 형식)
     function formatDateKorean(dateStr) {
