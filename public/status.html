@@ -747,6 +747,13 @@
                     (r.facility === space.name && (r.detail === detail || (!r.detail && (detail === '-' || !detail)))) ||
                     (r.space === space.name && (r.detail === detail || (!r.detail && (detail === '-' || !detail))))
                 );
+                
+                // 디버깅: 댄스연습실 예약 확인
+                if (space.name === '댄스연습실') {
+                    console.log('댄스연습실 전체 예약:', reservations.filter(r => r.facility === '댄스연습실'));
+                    console.log('댄스연습실 rowReservations:', rowReservations);
+                    console.log('현재 detail:', detail);
+                }
                 rowReservations.forEach((res, idx) => {
                     // 닌텐도1~9, 플레이스테이션1~2는 30분 단위 bar
                     const is30min = (detail && (detail.includes('닌텐도') || detail.includes('플레이스테이션')));
