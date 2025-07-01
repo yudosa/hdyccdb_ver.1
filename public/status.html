@@ -355,7 +355,6 @@
         .gantt-bar.disabled {
             opacity: 0.5 !important;
             filter: grayscale(0.3);
-            /* pointer-events, cursor는 JS에서 동적으로 처리 */
         }
     </style>
 </head>
@@ -547,7 +546,7 @@
                         let endDateTime = new Date(resDate + 'T' + (endTimeStr.length === 5 ? endTimeStr : (String(endTimeStr).padStart(2, '0') + ':00')));
                         isPast = endDateTime < today;
                     }
-                    html += `<div class=\"gantt-bar ${colorClass}${isPast ? ' disabled' : ''}\" style=\"left:${leftPx}px;width:${widthPx}px;cursor:${isPast ? 'not-allowed' : (isAdmin() ? 'pointer' : 'default')};position:absolute;top:3px;z-index:2;height:38px;border-radius:0;box-shadow:0 2px 8px #b2bec333;padding:0 4px;display:flex;align-items:center;justify-content:center;font-size:1.12rem;font-weight:700;background:linear-gradient(90deg,#a8edea 0%,#fed6e3 100%);color:#222;border:none;opacity:${isPast ? '0.5' : '1'};pointer-events:${isPast ? 'none' : 'auto'};\" data-id=\"${res.id}\" data-name=\"${res.name}\" data-start=\"${res.start_time || res.start || ''}\" data-end=\"${res.end_time || res.end || ''}\"><span class=\"bar-name\" style=\"width:100%;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;${isHalf ? 'font-size:0.9em;' : ''}\">${res.name}</span></div>`;
+                    html += `<div class=\"gantt-bar ${colorClass}${isPast ? ' disabled' : ''}\" style=\"left:${leftPx}px;width:${widthPx}px;position:absolute;top:3px;z-index:2;height:38px;border-radius:0;box-shadow:0 2px 8px #b2bec333;padding:0 4px;display:flex;align-items:center;justify-content:center;font-size:1.12rem;font-weight:700;background:linear-gradient(90deg,#a8edea 0%,#fed6e3 100%);color:#222;border:none;opacity:${isPast ? '0.5' : '1'};\" data-id=\"${res.id}\" data-name=\"${res.name}\" data-start=\"${res.start_time || res.start || ''}\" data-end=\"${res.end_time || res.end || ''}\"><span class=\"bar-name\" style=\"width:100%;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;${isHalf ? 'font-size:0.9em;' : ''}\">${res.name}</span></div>`;
                 });
                 html += '</div>';
             });
