@@ -360,6 +360,7 @@
         const reservations = isAdmin() 
             ? await getAllReservationsForAdmin(date)
             : await getSampleReservations(date);
+        console.log('타임라인 예약 데이터', reservations); // 디버깅용
         let filteredSpaces = selectedCategory === '전체'
             ? spaces
             : spaces.filter(s => s.name === selectedCategory);
