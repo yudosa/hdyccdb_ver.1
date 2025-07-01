@@ -2080,4 +2080,19 @@ section h2 {
 .gantt-timeline-row .room-label,
 .gantt-timeline-header .room-label {
     border-radius: 0 !important;
+}
+
+.timeline-table th,
+.timeline-table td,
+.timeline-table,
+.gantt-timeline-row,
+.gantt-timeline-header,
+.gantt-timeline-row .room-label,
+.gantt-timeline-header .room-label,
+.gantt-bar,
+.reservation-cell,
+.gantt-cell,
+.space-label,
+.bar-tooltip {
+    border-radius: 0 !important;
 } 
