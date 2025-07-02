@@ -546,7 +546,12 @@
                         let endDateTime = new Date(resDate + 'T' + (endTimeStr.length === 5 ? endTimeStr : (String(endTimeStr).padStart(2, '0') + ':00')));
                         isPast = endDateTime < today;
                     }
-                    html += `<div class=\"gantt-bar ${colorClass}${isPast ? ' disabled' : ''}\" style=\"left:${leftPx}px;width:${widthPx}px;position:absolute;top:3px;z-index:2;height:38px;border-radius:0;box-shadow:0 2px 8px #b2bec333;padding:0 4px;display:flex;align-items:center;justify-content:center;font-size:1.12rem;font-weight:700;background:linear-gradient(90deg,#a8edea 0%,#fed6e3 100%);color:#222;border:none;opacity:${isPast ? '0.5' : '1'};\" data-id=\"${res.id}\" data-name=\"${res.name}\" data-start=\"${res.start_time || res.start || ''}\" data-end=\"${res.end_time || res.end || ''}\"><span class=\"bar-name\" style=\"width:100%;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;${isHalf ? 'font-size:0.9em;' : ''}\">${res.name}</span></div>`;
+                    // 취소된 예약 스타일
+                    let cancelledStyle = '';
+                    if (res.status === 'cancelled') {
+                        cancelledStyle = 'background:#ccc !important;color:#888 !important;opacity:0.4;text-decoration:line-through;';
+                    }
+                    html += `<div class=\"gantt-bar ${colorClass}${isPast ? ' disabled' : ''}\" style=\"left:${leftPx}px;width:${widthPx}px;position:absolute;top:3px;z-index:2;height:38px;border-radius:0;box-shadow:0 2px 8px #b2bec333;padding:0 4px;display:flex;align-items:center;justify-content:center;font-size:1.12rem;font-weight:700;background:linear-gradient(90deg,#a8edea 0%,#fed6e3 100%);color:#222;border:none;opacity:${isPast ? '0.5' : '1'};${cancelledStyle}\" data-id=\"${res.id}\" data-name=\"${res.name}\" data-start=\"${res.start_time || res.start || ''}\" data-end=\"${res.end_time || res.end || ''}\"><span class=\"bar-name\" style=\"width:100%;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;${isHalf ? 'font-size:0.9em;' : ''}\">${res.name}</span></div>`;
                 });
                 html += '</div>';
             });
@@ -908,8 +913,7 @@
         const response = await fetch(`/api/reservations/date/${date}?_=${Date.now()}`, { cache: 'no-store' });
         let reservations = await response.json();
         let filteredSpaces = (category === '전체' || !category) ? spaces : spaces.filter(s => s.name === category);
-        // status === 'active'만 표시 (과거/미래 구분 없이)
-        reservations = reservations.filter(r => r.status === 'active');
+        // status 관계없이 모든 예약 표시
         renderGanttTimeline(reservations, filteredSpaces, 9, 20);
     }
     document.addEventListener('DOMContentLoaded', () => loadAndRenderGanttTimeline(selectedCategory));

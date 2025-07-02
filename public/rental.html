@@ -133,77 +133,39 @@
             modal.style.justifyContent = 'center';
             modal.style.zIndex = 9999;
             modal.innerHTML = `
-              <style>
-                .agree-radio {
-                  appearance: none;
-                  width: 16px; height: 16px;
-                  border: 2px solid #e0e7ef;
-                  border-radius: 50%;
-                  outline: none;
-                  margin-right: 4px;
-                  background: #fff;
-                  transition: border-color 0.2s, box-shadow 0.2s;
-                }
-                .agree-radio:checked.agree-yes {
-                  border-color: #e74c3c;
-                  background: radial-gradient(circle at 50% 50%, #e74c3c 60%, #fff 61%);
-                }
-                .agree-radio:checked.agree-no {
-                  border-color: #636e72;
-                  background: radial-gradient(circle at 50% 50%, #636e72 60%, #fff 61%);
-                }
-                .agree-label {
-                  display: flex; align-items: center; gap: 4px; cursor: pointer; font-weight: 700;
-                  font-size: 0.98em;
-                }
-                .agree-label.yes { color: #e74c3c; }
-                .agree-label.no { color: #636e72; }
-                .modal-btn {
-                  padding: 7px 0; width: 70px; border-radius: 10px; border: none; font-weight: 700; font-size: 0.98rem; cursor: pointer;
-                  box-shadow: 0 2px 8px #e0e7ef22; transition: background 0.2s, color 0.2s;
-                }
-                .modal-btn.confirm {
-                  background: linear-gradient(90deg,#e74c3c,#c0392b); color: #fff;
-                }
-                .modal-btn.confirm:hover { background: linear-gradient(90deg,#c0392b,#e74c3c); }
-                .modal-btn.cancel {
-                  background: linear-gradient(90deg,#e0e7ef,#fed6e3); color: #222; border: 2px solid #e0e7ef;
-                }
-                .modal-btn.cancel:hover { background: linear-gradient(90deg,#fed6e3,#e0e7ef); color: #e74c3c; border-color: #e74c3c; }
-              </style>
-              <div style="background:#fff;max-width:95vw;width:100%;max-width:220px;border-radius:14px;box-shadow:0 8px 32px #e74c3c33, 0 1.5px 8px #0001;font-size:0.92rem;font-weight:500;color:#222;text-align:left;overflow:hidden;">
-                <div style="background:linear-gradient(90deg,#fbc2eb 0%,#a6c1ee 100%);padding:10px 0 7px 0;text-align:center;">
-                  <span style="font-size:1.01rem;font-weight:800;color:#e74c3c;letter-spacing:-1px;">개인정보 동의</span>
+              <div style="background:#fff;max-width:350px;width:92vw;min-width:0;border-radius:14px;box-shadow:0 4px 24px #e74c3c33;font-size:0.97rem;font-weight:500;color:#222;text-align:left;overflow:hidden;display:flex;flex-direction:column;">
+                <div style="background:linear-gradient(90deg,#fbc2eb 0%,#a6c1ee 100%);padding:14px 0 10px 0;text-align:center;">
+                  <span style="font-size:1.08rem;font-weight:700;color:#e74c3c;letter-spacing:-1px;">개인정보 동의</span>
                 </div>
-                <div style="padding:10px 10px 6px 10px;">
-                  <div style="margin-bottom:8px;line-height:1.5;">
+                <div style="flex:1;max-height:220px;overflow-y:auto;padding:14px 14px 0 14px;">
+                  <div style="margin-bottom:10px;line-height:1.5;font-size:0.97rem;">
                     <span style="font-weight:600;">흥덕청소년문화의집</span>은 개인정보보호법 등 관련법령에 따라 아래와 같이 개인정보를 수집·이용 및 제3자 제공하고자 합니다.<br><br>
-                    <b style="color:#3498db;">□ 수집‧이용</b><br>
+                    <b style="color:#3498db;">□ 개인정보 수집‧이용 내역</b><br>
                     <span style="color:#555;">항목</span>: 성명, 성별, 나이, 전화번호<br>
-                    <span style="color:#555;">목적</span>: 이용현황 통계<br>
-                    <span style="color:#555;">보유</span>: 3년<br>
-                    <span style="color:#888;font-size:0.89em;display:block;margin-top:2px;">※ 동의 거부 시 사업 참여 제한</span>
-                    <div style="margin-top:6px;display:flex;gap:10px;align-items:center;">
-                      <label class="agree-label yes"><input type="radio" name="agree1" value="yes" class="agree-radio agree-yes"> 동의</label>
-                      <label class="agree-label no"><input type="radio" name="agree1" value="no" class="agree-radio agree-no"> 미동의</label>
+                    <span style="color:#555;">수집목적</span>: 이용현황 통계 작성<br>
+                    <span style="color:#555;">보유기간</span>: 3년<br>
+                    <span style="color:#888;font-size:0.89em;display:block;margin-top:2px;">※ 위의 개인정보 수집‧이용에 대한 동의를 거부할 권리가 있습니다.<br>그러나 동의를 거부할 경우 사업 참여가 제한될 수 있습니다.</span>
+                    <div style="margin-top:8px;display:flex;gap:14px;align-items:center;">
+                      <label style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:0.97rem;font-weight:700;color:#e74c3c;"><input type="radio" name="agree1" value="yes" style="appearance:none;width:15px;height:15px;border:2px solid #e0e7ef;border-radius:50%;outline:none;margin-right:2px;background:#fff;vertical-align:middle;"> 동의</label>
+                      <label style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:0.97rem;font-weight:700;color:#636e72;"><input type="radio" name="agree1" value="no" style="appearance:none;width:15px;height:15px;border:2px solid #e0e7ef;border-radius:50%;outline:none;margin-right:2px;background:#fff;vertical-align:middle;"> 미동의</label>
                     </div>
                   </div>
-                  <div style="margin-bottom:6px;line-height:1.5;">
-                    <b style="color:#3498db;">□ 제3자 제공</b><br>
-                    <span style="color:#555;">기관</span>: 용인시청소년미래재단 등<br>
-                    <span style="color:#555;">목적</span>: 시설 이용 현황<br>
-                    <span style="color:#555;">항목</span>: 성명, 성별, 나이, 전화번호<br>
-                    <span style="color:#555;">보유</span>: 3년<br>
-                    <span style="color:#888;font-size:0.89em;display:block;margin-top:2px;">※ 동의 거부 시 사업 참여 및 안내 제한<br>제공 동의하십니까?</span>
-                    <div style="margin-top:6px;display:flex;gap:10px;align-items:center;">
-                      <label class="agree-label yes"><input type="radio" name="agree2" value="yes" class="agree-radio agree-yes"> 동의</label>
-                      <label class="agree-label no"><input type="radio" name="agree2" value="no" class="agree-radio agree-no"> 미동의</label>
+                  <div style="margin-bottom:10px;line-height:1.5;font-size:0.97rem;">
+                    <b style="color:#3498db;">□ 개인정보 제3자 제공 내역</b><br>
+                    <span style="color:#555;">제공받는 기관</span>: 용인시청소년미래재단, 지자체, 관련 업무 상위 기관 ·부서<br>
+                    <span style="color:#555;">제공목적</span>: 시설 이용 현황<br>
+                    <span style="color:#555;">제공하는 항목</span>: 성명, 성별, 나이, 전화번호<br>
+                    <span style="color:#555;">보유기간</span>: 3년<br>
+                    <span style="color:#888;font-size:0.89em;display:block;margin-top:2px;">※ 위의 개인정보 제공에 대한 동의를 거부할 권리가 있습니다.<br>그러나 동의를 거부할 경우 사업 참여 및 중요사항 전달에 제한을 받을 수 있습니다.<br>위와 같이 개인정보를 제3자 제공하는데 동의하십니까?</span>
+                    <div style="margin-top:8px;display:flex;gap:14px;align-items:center;">
+                      <label style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:0.97rem;font-weight:700;color:#e74c3c;"><input type="radio" name="agree2" value="yes" style="appearance:none;width:15px;height:15px;border:2px solid #e0e7ef;border-radius:50%;outline:none;margin-right:2px;background:#fff;vertical-align:middle;"> 동의</label>
+                      <label style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:0.97rem;font-weight:700;color:#636e72;"><input type="radio" name="agree2" value="no" style="appearance:none;width:15px;height:15px;border:2px solid #e0e7ef;border-radius:50%;outline:none;margin-right:2px;background:#fff;vertical-align:middle;"> 미동의</label>
                     </div>
                   </div>
-                  <div style="text-align:center; margin-top:8px;display:flex;gap:8px;justify-content:center;">
-                    <button id="agreement-confirm" class="modal-btn confirm">확인</button>
-                    <button id="agreement-cancel" class="modal-btn cancel">취소</button>
-                  </div>
+                </div>
+                <div style="padding:10px 14px 14px 14px;display:flex;gap:10px;justify-content:center;background:#fff;box-shadow:0 -2px 8px #e0e7ef22;">
+                  <button id="agreement-confirm" style="padding:8px 0;width:80px;border-radius:10px;background:linear-gradient(90deg,#e74c3c,#c0392b);border:none;font-weight:700;font-size:1.01rem;color:#fff;cursor:pointer;">확인</button>
+                  <button id="agreement-cancel" style="padding:8px 0;width:80px;border-radius:10px;background:linear-gradient(90deg,#e0e7ef,#fed6e3);color:#222;border:none;font-weight:700;font-size:1.01rem;cursor:pointer;">취소</button>
                 </div>
               </div>
             `;
