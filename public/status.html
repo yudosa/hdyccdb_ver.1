@@ -692,11 +692,10 @@
                 for(let j=0;j<7;j++){
                     let d = new Date(startDate); d.setDate(startDate.getDate()+i*7+j);
                     let isThisMonth = d.getMonth()===month;
-                    let isPast = d < today;
                     let dateStr = formatDateToYYYYMMDD(d);
                     let td = document.createElement('td');
                     if(isThisMonth){
-                        td.innerHTML = `<div class='calendar-day${isPast?' disabled':''}${selected===dateStr?' selected':''}' data-date='${dateStr}'>${d.getDate()}</div>`;
+                        td.innerHTML = `<div class='calendar-day${selected===dateStr?' selected':''}' data-date='${dateStr}'>${d.getDate()}</div>`;
                     }
                     row.appendChild(td);
                 }
