@@ -256,6 +256,31 @@
             e.target.value = value;
         });
 
+        // 전화번호 4자리 미입력 시 모달 (예약 신청과 동일)
+        function showPhoneErrorModal() {
+            let modal = document.createElement('div');
+            modal.style.position = 'fixed';
+            modal.style.left = 0;
+            modal.style.top = 0;
+            modal.style.width = '100vw';
+            modal.style.height = '100vh';
+            modal.style.background = 'rgba(0,0,0,0.35)';
+            modal.style.display = 'flex';
+            modal.style.alignItems = 'center';
+            modal.style.justifyContent = 'center';
+            modal.style.zIndex = 9999;
+            modal.innerHTML = `<div style="background:#fff;padding:22px 18px;border-radius:14px;box-shadow:0 4px 24px #e74c3c22;font-size:1.05rem;font-weight:600;color:#e74c3c;text-align:center;min-width:180px;max-width:90vw;">
+                전화번호 형식이 올바르지 않습니다.<br><br>
+                <button style='margin-top:12px;padding:7px 22px;border-radius:10px;background:linear-gradient(90deg,#e74c3c,#c0392b);border:none;font-weight:700;font-size:1.01rem;color:#fff;cursor:pointer;' onclick='this.parentElement.parentElement.remove()'>확인</button>
+            </div>`;
+            document.body.appendChild(modal);
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+        }
+
         // 예약 조회 폼 제출
         document.getElementById('searchForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -269,7 +294,7 @@
             }
             
             if (!/^\d{4}$/.test(phone)) {
-                showModal('전화번호 끝 4자리를 입력해주세요.');
+                showPhoneErrorModal();
                 document.getElementById('searchPhone').focus();
                 return;
             }
