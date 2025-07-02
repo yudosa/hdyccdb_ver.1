@@ -615,7 +615,8 @@
                 end_time: getEndTime(selectedTime),
                 purpose: '',
                 gender: userGender,
-                age: userAge
+                age: userAge,
+                agreedPersonalInfo: sessionStorage.getItem('agreedPersonalInfo') === 'y' ? '동의' : '미동의'
             };
             
             console.log('예약 데이터:', reservationData); // 디버깅
