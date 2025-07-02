@@ -382,7 +382,7 @@
                     <button id="csvStartBtn" class="btn-secondary-centered" style="padding:6px 18px; font-size:1rem; color:#222; min-width:120px;"></button>
                     ~
                     <button id="csvEndBtn" class="btn-secondary-centered" style="padding:6px 18px; font-size:1rem; color:#222; min-width:120px;"></button>
-                    <button id="csvDownloadBtn" class="btn-secondary-centered" style="margin-left:8px; color:#222; font-size:1rem;">CSV 다운로드</button>
+                    <button id="csvDownloadBtn" class="btn-secondary-centered" style="margin-left:8px; color:#222; font-size:1rem;"><span style="font-size:1.15em;margin-right:6px;">📥</span>자료 받기</button>
                 </div>
             </div>
             <div class="category-row" id="categoryRow" style="margin-top:18px;"></div>
@@ -737,37 +737,75 @@
     document.getElementById('csvEndBtn').onclick = function() {
         showCalendarModal(csvEnd, function(dateStr){ csvEnd = dateStr; updateCsvRangeBtns(); });
     };
+    // SheetJS 라이브러리 추가
+    if (!window.XLSX) {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
+        document.head.appendChild(script);
+    }
     // CSV 다운로드
     const csvBtn = document.getElementById('csvDownloadBtn');
     csvBtn.onclick = async function() {
         if(!csvStart || !csvEnd) { alert('기간을 모두 선택하세요.'); return; }
-        // 실제 예약 데이터 fetch
         try {
             const res = await fetch(`/api/reservations/range?start=${csvStart}&end=${csvEnd}`);
             if (!res.ok) throw new Error('데이터를 불러올 수 없습니다.');
             const data = await res.json();
-            let csv = '이용날짜,이용시간,이용자이름,이용자 나이,이용자 성별,이용시설,세부내역,전화번호,개인정보동의\n';
-            data.forEach(r => {
-                function hourStr(t) {
-                    if (!t) return '';
-                    if (typeof t === 'string' && t.length === 5) return t;
-                    if (typeof t === 'string' && t.length === 4) return '0' + t;
-                    if (typeof t === 'number') return (t<10?'0':'')+t+':00';
-                    return '';
+            // 헤더 및 데이터 준비
+            const ws_data = [
+                ['연번','이용날짜','이용시간','이름','나이','성별','이용시설','세부내역','휴대폰번호 끝 4자리','개인정보동의'],
+                ...data.map((r, idx) => [
+                    idx+1,
+                    r.date||'',
+                    `${(function(t){if(!t)return '';if(typeof t==='string'&&t.length===5)return t;if(typeof t==='string'&&t.length===4)return '0'+t;if(typeof t==='number')return (t<10?'0':'')+t+':00';return '';})(r.start_time||r.start)} ~ ${(function(t){if(!t)return '';if(typeof t==='string'&&t.length===5)return t;if(typeof t==='string'&&t.length===4)return '0'+t;if(typeof t==='number')return (t<10?'0':'')+t+':00';return '';})(r.end_time||r.end)}`,
+                    r.name||'',
+                    r.age||'',
+                    r.gender||'',
+                    r.facility||r.space||'',
+                    r.detail||'',
+                    r.phone||'',
+                    r.agreedPersonalInfo||''
+                ])
+            ];
+            // 워크시트 생성
+            const ws = XLSX.utils.aoa_to_sheet(ws_data);
+            // 스타일 정의
+            const headerStyle = {
+                fill: { patternType: 'solid', fgColor: { rgb: 'E0E0E0' } },
+                font: { bold: true },
+                border: {
+                    top: { style: 'thin', color: { rgb: '888888' } },
+                    bottom: { style: 'double', color: { rgb: '888888' } },
+                    left: { style: 'thin', color: { rgb: '888888' } },
+                    right: { style: 'thin', color: { rgb: '888888' } }
                 }
-                const timeStr = `${hourStr(r.start_time||r.start)} ~ ${hourStr(r.end_time||r.end)}`;
-                csv += `${r.date||''},${timeStr},${r.name||''},${r.age||''},${r.gender||''},${r.facility||r.space||''},${r.detail||''},${r.phone||''},${r.agreedPersonalInfo||''}\n`;
-            });
-            // UTF-8 BOM 추가
-            const BOM = '\uFEFF';
-            const blob = new Blob([BOM + csv], {type:'text/csv'});
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url; a.download = 'reservations.csv';
-            document.body.appendChild(a); a.click(); document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+            };
+            const cellBorder = {
+                border: {
+                    top: { style: 'thin', color: { rgb: '888888' } },
+                    bottom: { style: 'thin', color: { rgb: '888888' } },
+                    left: { style: 'thin', color: { rgb: '888888' } },
+                    right: { style: 'thin', color: { rgb: '888888' } }
+                }
+            };
+            // 셀 스타일 적용
+            const range = XLSX.utils.decode_range(ws['!ref']);
+            for (let C = range.s.c; C <= range.e.c; ++C) {
+                const cellAddress = XLSX.utils.encode_cell({ r: 0, c: C });
+                if (ws[cellAddress]) ws[cellAddress].s = headerStyle;
+            }
+            for (let R = 1; R <= range.e.r; ++R) {
+                for (let C = range.s.c; C <= range.e.c; ++C) {
+                    const cellAddress = XLSX.utils.encode_cell({ r: R, c: C });
+                    if (ws[cellAddress]) ws[cellAddress].s = cellBorder;
+                }
+            }
+            // 워크북 생성 및 시트 추가
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, '예약내역');
+            XLSX.writeFile(wb, 'reservations.xlsx');
         } catch (e) {
-            alert('CSV 다운로드 중 오류가 발생했습니다.');
+            alert('엑셀 다운로드 중 오류가 발생했습니다.');
         }
     };
     // 기존 코드
