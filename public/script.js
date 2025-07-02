@@ -325,7 +325,7 @@ function validateForm(formData) {
     }
     
     if (!validatePhone(formData.get('phone'))) {
-        errors.push('올바른 전화번호 끝 4자리를 입력해주세요. (예: 1234)');
+        errors.push('올바른 휴대폰번호 끝 4자리를 입력해주세요. (예: 1234)');
     }
     
     if (!formData.get('facility')) {
