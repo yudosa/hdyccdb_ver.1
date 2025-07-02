@@ -48,8 +48,8 @@
                             </select>
                         </div>
                         <div style="text-align:left;">
-                            <label for="user-phone" style="font-weight:700; font-size:1.2rem; color:#222; margin-bottom:8px; display:block;">핸드폰번호</label>
-                            <input type="tel" id="user-phone" name="user-phone" placeholder="예: 010-1234-5678" required style="width:100%; padding:16px 20px; border:2px solid #e0e7ef; border-radius:16px; font-size:1.12rem; font-weight:600; color:#222; background:#fff;">
+                            <label for="user-phone" style="font-weight:700; font-size:1.2rem; color:#222; margin-bottom:8px; display:block;">핸드폰번호 끝 4자리</label>
+                            <input type="tel" id="user-phone" name="user-phone" placeholder="예: 1234" maxlength="4" required style="width:100%; padding:16px 20px; border:2px solid #e0e7ef; border-radius:16px; font-size:1.12rem; font-weight:600; color:#222; background:#fff;">
                         </div>
                     </div>
                     <div style="display:flex; gap:24px; margin-top:8px;">
@@ -67,15 +67,12 @@
         // 폼 제출 처리
         document.querySelector('.rental-form-centered').addEventListener('submit', function(e) {
             e.preventDefault();
-            // 전화번호 유효성 검사
             const userPhone = document.getElementById('user-phone').value;
-            const phoneDigits = userPhone.replace(/[^0-9]/g, '');
-            if (phoneDigits.length !== 11) {
-                showModal('전화번호 형식이 잘못되었습니다.');
+            if (!/^\d{4}$/.test(userPhone)) {
+                showModal('핸드폰번호 끝 4자리를 입력해주세요.');
                 document.getElementById('user-phone').focus();
                 return;
             }
-            // 사용자 정보를 localStorage에 저장
             const userName = document.getElementById('user-name').value;
             if (userName) {
                 localStorage.setItem('userName', userName);
@@ -83,20 +80,13 @@
             if (userPhone) {
                 localStorage.setItem('userPhone', userPhone);
             }
-            // 시설 선택 페이지로 이동
             window.location.href = 'select-facility.html';
         });
 
         // 전화번호 자동 포맷팅
         document.getElementById('user-phone').addEventListener('input', function(e) {
             let value = e.target.value.replace(/[^0-9]/g, '');
-            
-            if (value.length >= 3 && value.length <= 6) {
-                value = value.replace(/(\d{3})(\d{0,3})/, '$1-$2');
-            } else if (value.length >= 7) {
-                value = value.replace(/(\d{3})(\d{3,4})(\d{0,4})/, '$1-$2-$3');
-            }
-            
+            if (value.length > 4) value = value.slice(0, 4);
             e.target.value = value;
         });
 
@@ -126,6 +116,77 @@
                 }
             });
         }
+
+        // 개인정보 동의 모달 생성 함수 (index.html과 동일)
+        function showAgreementModal(onAgree, onCancel) {
+            if (document.getElementById('agreement-modal')) return;
+            const modal = document.createElement('div');
+            modal.id = 'agreement-modal';
+            modal.style.position = 'fixed';
+            modal.style.left = 0;
+            modal.style.top = 0;
+            modal.style.width = '100vw';
+            modal.style.height = '100vh';
+            modal.style.background = 'rgba(0,0,0,0.35)';
+            modal.style.display = 'flex';
+            modal.style.alignItems = 'center';
+            modal.style.justifyContent = 'center';
+            modal.style.zIndex = 9999;
+            modal.innerHTML = `
+              <div style="background:#fff;padding:32px 28px;border-radius:18px;box-shadow:0 4px 24px #e74c3c22;font-size:1.08rem;font-weight:500;color:#222;text-align:left;min-width:320px;max-width:95vw;">
+                <div style="font-size:1.18rem;font-weight:700;color:#e74c3c;text-align:center;margin-bottom:12px;">개인정보 수집‧이용 및 제3자 제공 동의서</div>
+                <div style="margin-bottom:18px;">
+                  흥덕청소년문화의집은 개인정보보호법 등 관련법령에 따라 문화의집 이용자를 대상으로 아래와 같이 개인정보를 수집·이용 및 제3자 제공하고자 합니다.<br><br>
+                  <b>□ 개인정보 수집‧이용 내역</b><br>
+                  항목 : 성명, 성별, 나이, 전화번호<br>
+                  수집목적 : 이용현황 통계 작성<br>
+                  보유기간 : 3년<br>
+                  <span style="color:#888;font-size:0.98em;">※ 위의 개인정보 수집‧이용에 대한 동의를 거부할 권리가 있습니다.<br>그러나 동의를 거부할 경우 사업 참여가 제한될 수 있습니다.</span>
+                  <div style="margin-top:8px;">
+                    <label><input type="radio" name="agree1" value="yes"> 동의</label>
+                    <label style="margin-left:18px;"><input type="radio" name="agree1" value="no"> 미동의</label>
+                  </div>
+                </div>
+                <div style="margin-bottom:18px;">
+                  <b>□ 개인정보 제3자 제공 내역</b><br>
+                  제공받는 기관 : 용인시청소년미래재단, 지자체, 관련 업무 상위 기관 ·부서<br>
+                  제공목적 : 시설 이용 현황<br>
+                  제공하는 항목 : 성명, 성별, 나이, 전화번호<br>
+                  보유기간 : 3년<br>
+                  <span style="color:#888;font-size:0.98em;">※ 위의 개인정보 제공에 대한 동의를 거부할 권리가 있습니다.<br>그러나 동의를 거부할 경우 사업 참여 및 중요사항 전달에 제한을 받을 수 있습니다.<br>위와 같이 개인정보를 제3자 제공하는데 동의하십니까?</span>
+                  <div style="margin-top:8px;">
+                    <label><input type="radio" name="agree2" value="yes"> 동의</label>
+                    <label style="margin-left:18px;"><input type="radio" name="agree2" value="no"> 미동의</label>
+                  </div>
+                </div>
+                <div style="text-align:center; margin-top:18px;">
+                  <button id="agreement-confirm" style="padding:10px 28px;border-radius:12px;background:linear-gradient(90deg,#e74c3c,#c0392b);border:none;font-weight:700;font-size:1.08rem;color:#fff;cursor:pointer;">확인</button>
+                  <button id="agreement-cancel" style="margin-left:18px;padding:10px 28px;border-radius:12px;background:linear-gradient(90deg,#e0e7ef,#fed6e3);color:#222;border:none;font-weight:700;font-size:1.08rem;cursor:pointer;">취소</button>
+                </div>
+              </div>
+            `;
+            document.body.appendChild(modal);
+            document.getElementById('agreement-confirm').onclick = function() {
+              const agree1 = document.querySelector('input[name="agree1"]:checked');
+              const agree2 = document.querySelector('input[name="agree2"]:checked');
+              if (!agree1 || !agree2 || agree1.value !== 'yes' || agree2.value !== 'yes') {
+                alert('개인정보 수집‧이용 및 제3자 제공에 동의하지 않을 경우 시설 이용에 제한이 있습니다');
+                return;
+              }
+              document.getElementById('agreement-modal').remove();
+              document.querySelector('.main-card:nth-of-type(2)').style.display = '';
+            };
+            document.getElementById('agreement-cancel').onclick = function() {
+              document.getElementById('agreement-modal').remove();
+              window.location.href = 'index.html';
+            };
+        }
+        // 페이지 진입 시 동의 모달 먼저 띄우고, 동의 전까지 개인정보 입력 폼 숨김
+        window.addEventListener('DOMContentLoaded', function() {
+            const formCard = document.querySelector('.main-card:nth-of-type(2)');
+            if (formCard) formCard.style.display = 'none';
+            showAgreementModal();
+        });
     </script>
 </body>
 </html> 

@@ -313,8 +313,7 @@ function showNotification(message, type = 'info') {
 
 // 전화번호 형식 검증
 function validatePhone(phone) {
-    const phoneRegex = /^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}$/;
-    return phoneRegex.test(phone);
+    return /^\d{4}$/.test(phone);
 }
 
 // 폼 유효성 검사
@@ -326,7 +325,7 @@ function validateForm(formData) {
     }
     
     if (!validatePhone(formData.get('phone'))) {
-        errors.push('올바른 전화번호 형식을 입력해주세요. (예: 010-1234-5678)');
+        errors.push('올바른 전화번호 끝 4자리를 입력해주세요. (예: 1234)');
     }
     
     if (!formData.get('facility')) {
@@ -347,13 +346,7 @@ function validateForm(formData) {
 // 전화번호 자동 포맷팅
 document.getElementById('phone').addEventListener('input', function(e) {
     let value = e.target.value.replace(/[^0-9]/g, '');
-    
-    if (value.length >= 3 && value.length <= 6) {
-        value = value.replace(/(\d{3})(\d{0,3})/, '$1-$2');
-    } else if (value.length >= 7) {
-        value = value.replace(/(\d{3})(\d{3,4})(\d{0,4})/, '$1-$2-$3');
-    }
-    
+    if (value.length > 4) value = value.slice(0, 4);
     e.target.value = value;
 });
 

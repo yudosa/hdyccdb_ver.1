@@ -227,8 +227,8 @@
                             <input type="text" id="searchName" name="searchName" placeholder="이름을 입력하세요" required>
                         </div>
                         <div class="form-group">
-                            <label for="searchPhone">전화번호</label>
-                            <input type="tel" id="searchPhone" name="searchPhone" placeholder="예: 010-1234-5678" required>
+                            <label for="searchPhone">전화번호 끝 4자리</label>
+                            <input type="tel" id="searchPhone" name="searchPhone" placeholder="예: 1234" maxlength="4" required>
                         </div>
                         <button type="submit" class="search-btn">예약 내역 조회</button>
                     </form>
@@ -252,13 +252,7 @@
         // 전화번호 자동 포맷팅
         document.getElementById('searchPhone').addEventListener('input', function(e) {
             let value = e.target.value.replace(/[^0-9]/g, '');
-            
-            if (value.length >= 3 && value.length <= 6) {
-                value = value.replace(/(\d{3})(\d{0,3})/, '$1-$2');
-            } else if (value.length >= 7) {
-                value = value.replace(/(\d{3})(\d{3,4})(\d{0,4})/, '$1-$2-$3');
-            }
-            
+            if (value.length > 4) value = value.slice(0, 4);
             e.target.value = value;
         });
 
@@ -270,15 +264,12 @@
             const phone = document.getElementById('searchPhone').value.trim();
             
             if (!name || !phone) {
-                showModal('이름과 전화번호를 모두 입력해주세요.');
+                showModal('이름과 전화번호 끝 4자리를 모두 입력해주세요.');
                 return;
             }
             
-            // 전화번호 유효성 검사
-            const phoneDigits = phone.replace(/[^0-9]/g, '');
-            
-            if (phoneDigits.length !== 11) {
-                showModal('전화번호 형식이 잘못되었습니다.\n11자리 전화번호를 모두 입력해주세요.');
+            if (!/^\d{4}$/.test(phone)) {
+                showModal('전화번호 끝 4자리를 입력해주세요.');
                 document.getElementById('searchPhone').focus();
                 return;
             }

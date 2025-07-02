@@ -45,7 +45,11 @@ router.post('/', async (req, res) => {
     }
     
     // 전화번호가 없으면 기본값 설정
-    const phoneNumber = phone || '미입력';
+    let phoneNumber = phone || '미입력';
+    // phone이 4자리가 아니면 에러
+    if (!/^\d{4}$/.test(phoneNumber)) {
+        return res.status(400).json({ error: '핸드폰번호 끝 4자리를 입력해주세요.' });
+    }
     
     // 날짜 형식 검증
     if (!moment(date, 'YYYY-MM-DD', true).isValid()) {
