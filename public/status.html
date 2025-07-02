@@ -908,7 +908,7 @@
         const response = await fetch(`/api/reservations/date/${date}?_=${Date.now()}`, { cache: 'no-store' });
         let reservations = await response.json();
         let filteredSpaces = (category === '전체' || !category) ? spaces : spaces.filter(s => s.name === category);
-        // 관리자/일반 모드 모두 status === 'active'만 표시
+        // status === 'active'만 표시 (과거/미래 구분 없이)
         reservations = reservations.filter(r => r.status === 'active');
         renderGanttTimeline(reservations, filteredSpaces, 9, 20);
     }

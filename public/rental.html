@@ -69,7 +69,7 @@
             e.preventDefault();
             const userPhone = document.getElementById('user-phone').value;
             if (!/^\d{4}$/.test(userPhone)) {
-                showModal('핸드폰번호 끝 4자리를 입력해주세요.');
+                showPhoneErrorModal();
                 document.getElementById('user-phone').focus();
                 return;
             }
@@ -136,7 +136,7 @@
               <style>
                 .agree-radio {
                   appearance: none;
-                  width: 20px; height: 20px;
+                  width: 16px; height: 16px;
                   border: 2px solid #e0e7ef;
                   border-radius: 50%;
                   outline: none;
@@ -154,12 +154,12 @@
                 }
                 .agree-label {
                   display: flex; align-items: center; gap: 4px; cursor: pointer; font-weight: 700;
-                  font-size: 1.04em;
+                  font-size: 0.98em;
                 }
                 .agree-label.yes { color: #e74c3c; }
                 .agree-label.no { color: #636e72; }
                 .modal-btn {
-                  padding: 10px 0; width: 90px; border-radius: 12px; border: none; font-weight: 700; font-size: 1.05rem; cursor: pointer;
+                  padding: 7px 0; width: 70px; border-radius: 10px; border: none; font-weight: 700; font-size: 0.98rem; cursor: pointer;
                   box-shadow: 0 2px 8px #e0e7ef22; transition: background 0.2s, color 0.2s;
                 }
                 .modal-btn.confirm {
@@ -171,36 +171,36 @@
                 }
                 .modal-btn.cancel:hover { background: linear-gradient(90deg,#fed6e3,#e0e7ef); color: #e74c3c; border-color: #e74c3c; }
               </style>
-              <div style="background:#fff;max-width:95vw;width:100%;max-width:400px;border-radius:18px;box-shadow:0 8px 32px #e74c3c33, 0 1.5px 8px #0001;font-size:1rem;font-weight:500;color:#222;text-align:left;overflow:hidden;">
-                <div style="background:linear-gradient(90deg,#fbc2eb 0%,#a6c1ee 100%);padding:18px 0 12px 0;text-align:center;">
-                  <span style="font-size:1.13rem;font-weight:800;color:#e74c3c;letter-spacing:-1px;">개인정보 수집‧이용 및 제3자 제공 동의서</span>
+              <div style="background:#fff;max-width:95vw;width:100%;max-width:220px;border-radius:14px;box-shadow:0 8px 32px #e74c3c33, 0 1.5px 8px #0001;font-size:0.92rem;font-weight:500;color:#222;text-align:left;overflow:hidden;">
+                <div style="background:linear-gradient(90deg,#fbc2eb 0%,#a6c1ee 100%);padding:10px 0 7px 0;text-align:center;">
+                  <span style="font-size:1.01rem;font-weight:800;color:#e74c3c;letter-spacing:-1px;">개인정보 동의</span>
                 </div>
-                <div style="padding:18px 18px 10px 18px;">
-                  <div style="margin-bottom:14px;line-height:1.6;">
-                    <span style="font-weight:600;">흥덕청소년문화의집</span>은 개인정보보호법 등 관련법령에 따라 문화의집 이용자를 대상으로 아래와 같이 개인정보를 수집·이용 및 제3자 제공하고자 합니다.<br><br>
-                    <b style="color:#3498db;">□ 개인정보 수집‧이용 내역</b><br>
-                    <span style="color:#555;">항목</span> : 성명, 성별, 나이, 전화번호<br>
-                    <span style="color:#555;">수집목적</span> : 이용현황 통계 작성<br>
-                    <span style="color:#555;">보유기간</span> : 3년<br>
-                    <span style="color:#888;font-size:0.93em;display:block;margin-top:2px;">※ 위의 개인정보 수집‧이용에 대한 동의를 거부할 권리가 있습니다.<br>그러나 동의를 거부할 경우 사업 참여가 제한될 수 있습니다.</span>
-                    <div style="margin-top:8px;display:flex;gap:18px;align-items:center;">
+                <div style="padding:10px 10px 6px 10px;">
+                  <div style="margin-bottom:8px;line-height:1.5;">
+                    <span style="font-weight:600;">흥덕청소년문화의집</span>은 개인정보보호법 등 관련법령에 따라 아래와 같이 개인정보를 수집·이용 및 제3자 제공하고자 합니다.<br><br>
+                    <b style="color:#3498db;">□ 수집‧이용</b><br>
+                    <span style="color:#555;">항목</span>: 성명, 성별, 나이, 전화번호<br>
+                    <span style="color:#555;">목적</span>: 이용현황 통계<br>
+                    <span style="color:#555;">보유</span>: 3년<br>
+                    <span style="color:#888;font-size:0.89em;display:block;margin-top:2px;">※ 동의 거부 시 사업 참여 제한</span>
+                    <div style="margin-top:6px;display:flex;gap:10px;align-items:center;">
                       <label class="agree-label yes"><input type="radio" name="agree1" value="yes" class="agree-radio agree-yes"> 동의</label>
                       <label class="agree-label no"><input type="radio" name="agree1" value="no" class="agree-radio agree-no"> 미동의</label>
                     </div>
                   </div>
-                  <div style="margin-bottom:10px;line-height:1.6;">
-                    <b style="color:#3498db;">□ 개인정보 제3자 제공 내역</b><br>
-                    <span style="color:#555;">제공받는 기관</span> : 용인시청소년미래재단, 지자체, 관련 업무 상위 기관 ·부서<br>
-                    <span style="color:#555;">제공목적</span> : 시설 이용 현황<br>
-                    <span style="color:#555;">제공하는 항목</span> : 성명, 성별, 나이, 전화번호<br>
-                    <span style="color:#555;">보유기간</span> : 3년<br>
-                    <span style="color:#888;font-size:0.93em;display:block;margin-top:2px;">※ 위의 개인정보 제공에 대한 동의를 거부할 권리가 있습니다.<br>그러나 동의를 거부할 경우 사업 참여 및 중요사항 전달에 제한을 받을 수 있습니다.<br>위와 같이 개인정보를 제3자 제공하는데 동의하십니까?</span>
-                    <div style="margin-top:8px;display:flex;gap:18px;align-items:center;">
+                  <div style="margin-bottom:6px;line-height:1.5;">
+                    <b style="color:#3498db;">□ 제3자 제공</b><br>
+                    <span style="color:#555;">기관</span>: 용인시청소년미래재단 등<br>
+                    <span style="color:#555;">목적</span>: 시설 이용 현황<br>
+                    <span style="color:#555;">항목</span>: 성명, 성별, 나이, 전화번호<br>
+                    <span style="color:#555;">보유</span>: 3년<br>
+                    <span style="color:#888;font-size:0.89em;display:block;margin-top:2px;">※ 동의 거부 시 사업 참여 및 안내 제한<br>제공 동의하십니까?</span>
+                    <div style="margin-top:6px;display:flex;gap:10px;align-items:center;">
                       <label class="agree-label yes"><input type="radio" name="agree2" value="yes" class="agree-radio agree-yes"> 동의</label>
                       <label class="agree-label no"><input type="radio" name="agree2" value="no" class="agree-radio agree-no"> 미동의</label>
                     </div>
                   </div>
-                  <div style="text-align:center; margin-top:14px;display:flex;gap:12px;justify-content:center;">
+                  <div style="text-align:center; margin-top:8px;display:flex;gap:8px;justify-content:center;">
                     <button id="agreement-confirm" class="modal-btn confirm">확인</button>
                     <button id="agreement-cancel" class="modal-btn cancel">취소</button>
                   </div>
@@ -229,6 +229,31 @@
             if (formCard) formCard.style.display = 'none';
             showAgreementModal();
         });
+
+        // 전화번호 4자리 미입력 시 모달
+        function showPhoneErrorModal() {
+            let modal = document.createElement('div');
+            modal.style.position = 'fixed';
+            modal.style.left = 0;
+            modal.style.top = 0;
+            modal.style.width = '100vw';
+            modal.style.height = '100vh';
+            modal.style.background = 'rgba(0,0,0,0.35)';
+            modal.style.display = 'flex';
+            modal.style.alignItems = 'center';
+            modal.style.justifyContent = 'center';
+            modal.style.zIndex = 9999;
+            modal.innerHTML = `<div style="background:#fff;padding:22px 18px;border-radius:14px;box-shadow:0 4px 24px #e74c3c22;font-size:1.05rem;font-weight:600;color:#e74c3c;text-align:center;min-width:180px;max-width:90vw;">
+                전화번호 형식이 올바르지 않습니다.<br><br>
+                <button style='margin-top:12px;padding:7px 22px;border-radius:10px;background:linear-gradient(90deg,#e74c3c,#c0392b);border:none;font-weight:700;font-size:1.01rem;color:#fff;cursor:pointer;' onclick='this.parentElement.parentElement.remove()'>확인</button>
+            </div>`;
+            document.body.appendChild(modal);
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+        }
     </script>
 </body>
 </html> 
