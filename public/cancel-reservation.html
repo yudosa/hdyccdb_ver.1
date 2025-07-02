@@ -442,7 +442,10 @@
             backdrop.appendChild(modal);
             document.body.appendChild(backdrop);
 
-            document.getElementById('modalCancelBtn').onclick = () => backdrop.remove();
+            document.getElementById('modalCancelBtn').onclick = () => {
+                backdrop.remove();
+                isCancelling = false;
+            };
             document.getElementById('modalConfirmBtn').onclick = () => {
                 backdrop.remove();
                 onConfirm();
