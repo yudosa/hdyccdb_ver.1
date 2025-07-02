@@ -133,47 +133,50 @@
             modal.style.justifyContent = 'center';
             modal.style.zIndex = 9999;
             modal.innerHTML = `
-              <div style="background:#fff;max-width:560px;width:80vw;min-width:0;border-radius:22px;box-shadow:0 4px 24px #e74c3c33;font-size:1.01rem;font-weight:500;color:#222;text-align:left;overflow:hidden;display:flex;flex-direction:column;">
-                <div style="background:linear-gradient(90deg,#fbc2eb 0%,#a6c1ee 100%);padding:18px 0 12px 0;text-align:center;">
-                  <span style="font-size:1.18rem;font-weight:800;color:#e74c3c;letter-spacing:-1px;">개인정보 수집‧이용 및 제3자 제공 동의서</span>
+              <div style="background:#fff;max-width:700px;width:98vw;min-width:0;border-radius:32px;box-shadow:0 12px 64px #e74c3c33;font-size:1.18rem;font-weight:500;color:#222;text-align:left;overflow:hidden;display:flex;flex-direction:column;">
+                <div style="background:linear-gradient(90deg,#fbc2eb 0%,#a6c1ee 100%);padding:32px 0 18px 0;text-align:center;">
+                  <span style="font-size:1.45rem;font-weight:800;color:#e74c3c;letter-spacing:-1px;">개인정보 수집‧이용 및 제3자 제공 동의서</span>
                 </div>
-                <div style="flex:1;max-height:260px;overflow-y:auto;padding:18px 24px 0 24px;">
-                  <div style="margin-bottom:14px;line-height:1.5;font-size:1.01rem;">
-                    <span style="font-weight:600;">흥덕청소년문화의집</span>은 개인정보보호법 등 관련법령에 따라 아래와 같이 개인정보를 수집·이용 및 제3자 제공하고자 합니다.<br><br>
-                    <b style="color:#3498db;">□ 개인정보 수집‧이용 내역</b><br>
-                    <span style="color:#555;">항목</span>: 성명, 성별, 나이, 전화번호<br>
-                    <span style="color:#555;">수집목적</span>: 이용현황 통계 작성<br>
-                    <span style="color:#555;">보유기간</span>: 3년<br>
+                <div style="flex:1;max-height:900px;overflow-y:auto;padding:36px 56px 0 56px;display:flex;flex-direction:column;gap:36px;">
+                  <div style="background:#f8fafd;border-radius:18px;padding:28px 32px 18px 32px;box-shadow:0 2px 12px #a6c1ee22;margin-bottom:0;">
+                    <b style="color:#3498db;display:block;margin-bottom:8px;">□ 개인정보 수집‧이용 내역</b>
+                    <div style="color:#222;line-height:1.7;font-size:1.18rem;">
+                      항목: 성명, 성별, 나이, 전화번호<br>
+                      수집목적: 이용현황 통계 작성<br>
+                      보유기간: 3년
+                    </div>
                     <div style="color:#888;font-size:1.05rem;margin-top:10px;">※ 위의 개인정보 수집‧이용에 대한 동의를 거부할 권리가 있습니다. 그러나 동의를 거부할 경우 시설 이용이 제한될 수 있습니다.</div>
-                    <div style="margin-top:10px;display:flex;gap:18px;align-items:center;">
-                      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:1.01rem;font-weight:700;color:#e74c3c;">
-                        <input type="checkbox" id="agree1" style="width:18px;height:18px;"> 동의
+                    <div style="display:flex;justify-content:flex-end;gap:24px;margin-top:18px;">
+                      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:1.13rem;font-weight:700;color:#e74c3c;">
+                        <input type="checkbox" id="agree1" style="width:22px;height:22px;"> 동의
                       </label>
-                      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:1.01rem;font-weight:700;color:#636e72;">
-                        <input type="checkbox" id="disagree1" style="width:18px;height:18px;"> 미동의
+                      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:1.13rem;font-weight:700;color:#636e72;">
+                        <input type="checkbox" id="disagree1" style="width:22px;height:22px;"> 미동의
                       </label>
                     </div>
                   </div>
-                  <div style="margin-bottom:14px;line-height:1.5;font-size:1.01rem;">
-                    <b style="color:#3498db;">□ 개인정보 제3자 제공 내역</b><br>
-                    <span style="color:#555;">제공받는 기관</span>: 용인시청소년미래재단, 지자체, 관련 업무 상위 기관 ·부서<br>
-                    <span style="color:#555;">제공목적</span>: 시설 이용 현황<br>
-                    <span style="color:#555;">제공하는 항목</span>: 성명, 성별, 나이, 전화번호<br>
-                    <span style="color:#555;">보유기간</span>: 3년<br>
-                    <span style="color:#888;font-size:0.93em;display:block;margin-top:2px;">※ 위의 개인정보 제공에 대한 동의를 거부할 권리가 있습니다.<br>그러나 동의를 거부할 경우 사업 참여 및 중요사항 전달에 제한을 받을 수 있습니다.<br>위와 같이 개인정보를 제3자 제공하는데 동의하십니까?</span>
-                    <div style="margin-top:10px;display:flex;gap:18px;align-items:center;">
-                      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:1.01rem;font-weight:700;color:#e74c3c;">
-                        <input type="checkbox" id="agree2" style="width:18px;height:18px;"> 동의
+                  <div style="background:#f8fafd;border-radius:18px;padding:28px 32px 18px 32px;box-shadow:0 2px 12px #a6c1ee22;margin-bottom:0;">
+                    <b style="color:#3498db;display:block;margin-bottom:8px;">□ 개인정보 제3자 제공 내역</b>
+                    <div style="color:#222;line-height:1.7;font-size:1.18rem;">
+                      제공받는 기관: 용인시청소년미래재단, 지자체, 관련 업무 상위 기관·부서<br>
+                      제공목적: 시설 이용 현황<br>
+                      제공하는 항목: 성명, 성별, 나이, 전화번호<br>
+                      보유기간: 3년
+                    </div>
+                    <div style="color:#888;font-size:1.05rem;margin-top:10px;">위의 개인정보 제공에 대한 동의를 거부할 권리가 있습니다 그러나 동의를 거부할 경우 시설 이용이 제한될 수 있습니다.</div>
+                    <div style="display:flex;justify-content:flex-end;gap:24px;margin-top:18px;">
+                      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:1.13rem;font-weight:700;color:#e74c3c;">
+                        <input type="checkbox" id="agree2" style="width:22px;height:22px;"> 동의
                       </label>
-                      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:1.01rem;font-weight:700;color:#636e72;">
-                        <input type="checkbox" id="disagree2" style="width:18px;height:18px;"> 미동의
+                      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:1.13rem;font-weight:700;color:#636e72;">
+                        <input type="checkbox" id="disagree2" style="width:22px;height:22px;"> 미동의
                       </label>
                     </div>
                   </div>
                 </div>
-                <div style="padding:14px 24px 18px 24px;display:flex;gap:16px;justify-content:center;background:#fff;box-shadow:0 -2px 8px #e0e7ef22;">
-                  <button id="agreement-confirm" style="padding:10px 0;width:100px;border-radius:12px;background:linear-gradient(90deg,#e74c3c,#c0392b);border:none;font-weight:700;font-size:1.08rem;color:#fff;cursor:pointer;">확인</button>
-                  <button id="agreement-cancel" style="padding:10px 0;width:100px;border-radius:12px;background:linear-gradient(90deg,#e0e7ef,#fed6e3);color:#222;border:none;font-weight:700;font-size:1.08rem;cursor:pointer;">취소</button>
+                <div style="padding:24px 56px 36px 56px;display:flex;gap:32px;justify-content:center;background:#fff;box-shadow:0 -2px 8px #e0e7ef22;">
+                  <button id="agreement-confirm" style="padding:18px 0;width:180px;border-radius:18px;background:linear-gradient(90deg,#e74c3c,#c0392b);border:none;font-weight:700;font-size:1.25rem;color:#fff;cursor:pointer;">확인</button>
+                  <button id="agreement-cancel" style="padding:18px 0;width:180px;border-radius:18px;background:linear-gradient(90deg,#e0e7ef,#fed6e3);color:#222;border:none;font-weight:700;font-size:1.25rem;cursor:pointer;">취소</button>
                 </div>
               </div>
             `;
