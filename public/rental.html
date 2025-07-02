@@ -274,6 +274,11 @@
                 }
             });
         }
+
+        document.querySelector('button[type="button"]').onclick = function() {
+            sessionStorage.removeItem('agreedPersonalInfo');
+            history.back();
+        };
     </script>
 </body>
 </html> 

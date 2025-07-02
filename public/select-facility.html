@@ -78,6 +78,13 @@
         document.body.appendChild(modal);
         modal.querySelector('.custom-modal-btn').onclick = () => modal.remove();
     }
+
+    window.addEventListener('DOMContentLoaded', function() {
+        if (sessionStorage.getItem('agreedPersonalInfo') !== 'y') {
+            alert('개인정보 수집 및 이용에 동의해야 예약이 가능합니다.');
+            window.location.href = 'rental.html';
+        }
+    });
     </script>
 </body>
 </html> 
