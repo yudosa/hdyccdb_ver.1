@@ -74,11 +74,19 @@
                 return;
             }
             const userName = document.getElementById('user-name').value;
+            const userGender = document.getElementById('user-gender').value;
+            const userAge = document.getElementById('user-age').value;
             if (userName) {
                 localStorage.setItem('userName', userName);
             }
             if (userPhone) {
                 localStorage.setItem('userPhone', userPhone);
+            }
+            if (userGender) {
+                localStorage.setItem('userGender', userGender);
+            }
+            if (userAge) {
+                localStorage.setItem('userAge', userAge);
             }
             window.location.href = 'select-facility.html';
         });
