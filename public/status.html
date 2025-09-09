@@ -360,7 +360,28 @@
 </head>
 <body>
     <div class="container vertical-layout">
-        <img src="dc2.jpg" alt="흥덕청소년 문화의집 건물" class="main-building-img" style="display:block; max-width:700px; width:90vw; margin:32px auto 0 auto; border-radius:28px; box-shadow:0 4px 24px #e0e7ef22;">
+        <div class="banner-section">
+            <div class="banner-image">
+                <div class="image-slider">
+                    <img src="dc.jpg" alt="동천청소년 문화의집 건물" class="main-building-img active">
+                    <img src="dc2.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                    <img src="dc3.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                    <img src="dc4.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                    <img src="dc5.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                    <img src="dc6.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                    <img src="dc7.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                </div>
+                <div class="slider-dots">
+                    <span class="dot active" onclick="currentSlide(1)"></span>
+                    <span class="dot" onclick="currentSlide(2)"></span>
+                    <span class="dot" onclick="currentSlide(3)"></span>
+                    <span class="dot" onclick="currentSlide(4)"></span>
+                    <span class="dot" onclick="currentSlide(5)"></span>
+                    <span class="dot" onclick="currentSlide(6)"></span>
+                    <span class="dot" onclick="currentSlide(7)"></span>
+                </div>
+            </div>
+        </div>
         <!-- 이용 현황 카드 -->
         <div class="main-card" style="background:#fff; border-radius:28px; box-shadow:0 4px 24px #e0e7ef22; max-width:700px; width:90vw; margin:32px auto 0 auto; padding:32px 16px 24px 16px; text-align:center;">
             <h1 style="font-size:1.47rem; font-weight:800; color:#222; margin-bottom:8px;">이용 현황</h1>
@@ -955,6 +976,39 @@
     }
     document.addEventListener('DOMContentLoaded', () => loadAndRenderGanttTimeline(selectedCategory));
     document.getElementById('statusDate')?.addEventListener('change', () => loadAndRenderGanttTimeline(selectedCategory));
+    </script>
+    
+    <script>
+    // 이미지 슬라이더 기능
+    let currentSlideIndex = 0;
+    const slides = document.querySelectorAll('.image-slider .main-building-img');
+    const dots = document.querySelectorAll('.dot');
+
+    function showSlide(index) {
+        // 모든 슬라이드 숨기기
+        slides.forEach(slide => slide.classList.remove('active'));
+        dots.forEach(dot => dot.classList.remove('active'));
+        
+        // 현재 슬라이드 보이기
+        slides[index].classList.add('active');
+        dots[index].classList.add('active');
+    }
+
+    function nextSlide() {
+        currentSlideIndex = (currentSlideIndex + 1) % slides.length;
+        showSlide(currentSlideIndex);
+    }
+
+    function currentSlide(index) {
+        currentSlideIndex = index - 1;
+        showSlide(currentSlideIndex);
+    }
+
+    // 자동 슬라이드 (2초마다)
+    setInterval(nextSlide, 2000);
+
+    // 초기 슬라이드 설정
+    showSlide(0);
     </script>
 </body>
 </html> 

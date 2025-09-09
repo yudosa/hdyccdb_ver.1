@@ -15,16 +15,22 @@
             <div class="current-datetime"></div>
             <div class="banner-image">
                 <div class="image-slider">
-                    <img src="dc-1.jpg" alt="동천청소년 문화의집 건물" class="main-building-img active">
-                    <img src="dc-2.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
-                    <img src="dc-3.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
-                    <img src="dc.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                    <img src="dc.jpg" alt="동천청소년 문화의집 건물" class="main-building-img active">
+                    <img src="dc2.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                    <img src="dc3.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                    <img src="dc4.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                    <img src="dc5.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                    <img src="dc6.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                    <img src="dc7.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
                 </div>
                 <div class="slider-dots">
                     <span class="dot active" onclick="currentSlide(1)"></span>
                     <span class="dot" onclick="currentSlide(2)"></span>
                     <span class="dot" onclick="currentSlide(3)"></span>
                     <span class="dot" onclick="currentSlide(4)"></span>
+                    <span class="dot" onclick="currentSlide(5)"></span>
+                    <span class="dot" onclick="currentSlide(6)"></span>
+                    <span class="dot" onclick="currentSlide(7)"></span>
                 </div>
             </div>
         </div>
@@ -217,8 +223,8 @@
         showSlide(currentSlideIndex);
     }
 
-    // 자동 슬라이드 (5초마다)
-    setInterval(nextSlide, 5000);
+    // 자동 슬라이드 (2초마다)
+    setInterval(nextSlide, 2000);
 
     // 초기 슬라이드 설정
     showSlide(0);

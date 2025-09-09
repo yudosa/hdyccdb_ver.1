@@ -186,7 +186,28 @@
 <body>
     <div class="rental-wrapper">
         <div class="rental-container">
-            <img src="dc2.jpg" alt="흥덕청소년 문화의집 건물" class="main-building-img">
+            <div class="banner-section">
+                <div class="banner-image">
+                    <div class="image-slider">
+                        <img src="dc.jpg" alt="동천청소년 문화의집 건물" class="main-building-img active">
+                        <img src="dc2.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                        <img src="dc3.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                        <img src="dc4.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                        <img src="dc5.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                        <img src="dc6.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                        <img src="dc7.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                    </div>
+                    <div class="slider-dots">
+                        <span class="dot active" onclick="currentSlide(1)"></span>
+                        <span class="dot" onclick="currentSlide(2)"></span>
+                        <span class="dot" onclick="currentSlide(3)"></span>
+                        <span class="dot" onclick="currentSlide(4)"></span>
+                        <span class="dot" onclick="currentSlide(5)"></span>
+                        <span class="dot" onclick="currentSlide(6)"></span>
+                        <span class="dot" onclick="currentSlide(7)"></span>
+                    </div>
+                </div>
+            </div>
             <header class="rental-header">
                 <h1 id="facilityTitle">시설 이용 신청</h1>
                 <p class="rental-subtitle">예약 날짜와 시간을 선택하세요</p>
@@ -723,6 +744,39 @@
         // 페이지 로드 시 예약 데이터 가져오기
         loadReservationData();
     });
+    </script>
+    
+    <script>
+    // 이미지 슬라이더 기능
+    let currentSlideIndex = 0;
+    const slides = document.querySelectorAll('.image-slider .main-building-img');
+    const dots = document.querySelectorAll('.dot');
+
+    function showSlide(index) {
+        // 모든 슬라이드 숨기기
+        slides.forEach(slide => slide.classList.remove('active'));
+        dots.forEach(dot => dot.classList.remove('active'));
+        
+        // 현재 슬라이드 보이기
+        slides[index].classList.add('active');
+        dots[index].classList.add('active');
+    }
+
+    function nextSlide() {
+        currentSlideIndex = (currentSlideIndex + 1) % slides.length;
+        showSlide(currentSlideIndex);
+    }
+
+    function currentSlide(index) {
+        currentSlideIndex = index - 1;
+        showSlide(currentSlideIndex);
+    }
+
+    // 자동 슬라이드 (2초마다)
+    setInterval(nextSlide, 2000);
+
+    // 초기 슬라이드 설정
+    showSlide(0);
     </script>
 </body>
 </html> 
