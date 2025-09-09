@@ -10,26 +10,61 @@
 </head>
 <body>
     <div class="container vertical-layout">
-        <div class="main-img-block">
-            <img src="dc.JPG" alt="흥덕청소년 문화의집 건물" class="main-building-img">
-        </div>
-        <header>
+        <!-- 상단 배너 섹션 -->
+        <div class="banner-section">
             <div class="current-datetime"></div>
-            <div class="welcome-block">
-                <span class="main-title">용인특례시 흥덕청소년문화의집<br>오신것을 환영합니다</span>
+            <div class="banner-image">
+                <img src="dc.JPG" alt="흥덕청소년 문화의집 건물" class="main-building-img">
+                <div class="banner-overlay">
+                    <h1 class="banner-title">흥덕청소년문화의집</h1>
+                    <p class="banner-subtitle">방문을 환영합니다♥</p>
+                </div>
             </div>
-            <img src="jo.png" alt="마스코트" class="mascot-img-below">
-            <p class="welcome-desc">청소년 문화의집 방문을 진심으로 환영합니다.<br>아래 탭에서 원하는 서비스를 선택하세요!</p>
-        </header>
-        <nav class="main-tabs">
-            <div class="tab-row">
-                <a href="rental.html" class="tab-btn">시설 이용</a>
-                <a href="cancel-reservation.html" class="tab-btn">예약 취소</a>
+        </div>
+
+        <!-- 입장하기 섹션 -->
+        <div class="entry-section">
+            <div class="entry-content">
+                <div class="entry-text">
+                    <div class="entry-emoji">⭐</div>
+                    <div class="entry-message">
+                        <p class="entry-question">잠깐!!! 입장하기 누르셨어요?</p>
+                        <p class="entry-desc">오늘 첫 방문을 기다려요</p>
+                    </div>
+                </div>
+                <button class="entry-btn">
+                    <span class="entry-icon">⭐</span>
+                    입장하기
+                </button>
             </div>
-            <div class="tab-row single">
-                <a href="status.html" class="tab-btn wide-tab">이용현황</a>
+        </div>
+
+        <!-- 메인 서비스 카드들 -->
+        <div class="services-section">
+            <div class="service-category">
+                <h3 class="category-title">시설 이용 신청</h3>
+                <div class="service-cards">
+                    <a href="rental.html" class="service-card pink">
+                        <div class="card-icon">🪄</div>
+                        <span class="card-text">이용신청</span>
+                    </a>
+                    <a href="cancel-reservation.html" class="service-card pink">
+                        <div class="card-icon">🏃</div>
+                        <span class="card-text">취소·중도퇴실</span>
+                    </a>
+                </div>
             </div>
-        </nav>
+
+            <div class="service-category">
+                <h3 class="category-title">이용 현황</h3>
+                <div class="service-cards">
+                    <a href="status.html" class="service-card blue">
+                        <div class="card-icon">⏳</div>
+                        <span class="card-text">이용현황 조회</span>
+                    </a>
+                </div>
+            </div>
+        </div>
         <main>
             <section id="tab-cancel" class="tab-section" style="display:none;">
                 <h3>예약 취소</h3>
@@ -87,20 +122,58 @@
         </main>
         <div id="notification" class="notification"></div>
     </div>
-    <div class="facility-qr-row">
-        <section class="facilities-info facility-info-card facility-info-3line">
-            <h3>시설 안내</h3>
-            <div class="facility-3line">
-                <div class="facility-title">흥덕청소년문화의집</div>
-                <div class="facility-address">경기도 용인시 기흥구 흥덕2로 110</div>
-                <div class="facility-tel">T. 031-328-9765</div>
-                <div class="facility-fax">F. 031-328-9766</div>
+
+    <!-- 연락처 정보 섹션 -->
+    <div class="info-section">
+        <div class="info-content">
+            <div class="info-category">
+                <h3 class="info-title">이용문의</h3>
+                <div class="info-items">
+                    <div class="info-item">
+                        <span class="info-label">전화</span>
+                        <span class="info-value">031-328-9765</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">팩스</span>
+                        <span class="info-value">031-328-9766</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">주소</span>
+                        <span class="info-value">경기도 용인시 기흥구 흥덕2로 110</span>
+                    </div>
+                </div>
             </div>
-        </section>
-        <section class="qr-info-card">
-            <h3>QR 안내</h3>
-            <img src="qr.jpg" alt="QR 코드" class="facility-qr-img">
-        </section>
+            
+            <div class="info-category">
+                <h3 class="info-title">운영시간</h3>
+                <div class="info-items">
+                    <div class="info-item">
+                        <span class="info-label">월-금</span>
+                        <span class="info-value">09:00~20:00</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">토</span>
+                        <span class="info-value">10:00~18:00</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">일</span>
+                        <span class="info-value">10:00~15:00</span>
+                    </div>
+                    <div class="info-note">
+                        *휴관일: 월요일, 공휴일, 근로자의날
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="qr-section">
+            <img src="qr.jpg" alt="QR 코드" class="qr-image">
+            <p class="qr-text">QR 안내</p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p class="footer-text">흥덕청소년문화의집</p>
     </div>
     <script>
     // 현재 시간/날짜 표시
