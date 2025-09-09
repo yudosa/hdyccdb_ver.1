@@ -99,24 +99,25 @@ body {
 
 .service-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 12px;
 }
 
 .service-card {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    justify-content: center;
-    padding: 12px 8px;
+    justify-content: flex-start;
+    padding: 15px;
     border-radius: 15px;
     text-decoration: none;
     color: white;
     font-weight: 700;
-    font-size: 0.95rem;
+    font-size: 1rem;
     transition: all 0.3s ease;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    min-height: 80px;
+    min-height: 100px;
+    gap: 15px;
 }
 
 .service-card:hover {
@@ -145,21 +146,22 @@ body {
 }
 
 .card-image {
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
     object-fit: contain;
     object-position: center;
     display: block;
-    margin: 0 auto;
+    margin: 0;
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
 }
 
 .card-text {
-    text-align: center;
+    text-align: left;
     line-height: 1.2;
-    margin-top: 2px;
-    font-size: 0.9rem;
+    margin: 0;
+    font-size: 1.1rem;
+    flex: 1;
 }
 
 /* 정보 섹션 */
