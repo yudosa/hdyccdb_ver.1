@@ -9,7 +9,7 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
     color: #333;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #f5f5f5;
     min-height: 100vh;
 }
 
@@ -25,7 +25,7 @@ body {
 .banner-section {
     position: relative;
     width: 100%;
-    height: 300px;
+    height: 350px;
     overflow: hidden;
     border-radius: 0 0 30px 30px;
     box-shadow: 0 8px 32px rgba(0,0,0,0.1);
@@ -41,6 +41,7 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center center;
     display: block;
 }
 
@@ -50,7 +51,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.8) 0%, rgba(118, 75, 162, 0.8) 100%);
+    background: linear-gradient(135deg, rgba(255, 152, 0, 0.6) 0%, rgba(255, 193, 7, 0.6) 100%);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -133,7 +134,7 @@ body {
 }
 
 .entry-btn {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #ff9800 0%, #ffc107 100%);
     color: white;
     border: none;
     border-radius: 15px;
@@ -144,13 +145,13 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-    box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 4px 16px rgba(255, 152, 0, 0.3);
     transition: all 0.3s ease;
 }
 
 .entry-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 6px 20px rgba(255, 152, 0, 0.4);
 }
 
 .entry-icon {
@@ -208,15 +209,18 @@ body {
 }
 
 .service-card.pink {
-    background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+    color: #333;
 }
 
 .service-card.blue {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    color: white;
 }
 
 .service-card.orange {
     background: linear-gradient(135deg, #ffa726 0%, #fb8c00 100%);
+    color: white;
 }
 
 .card-icon {
@@ -351,7 +355,7 @@ body {
 /* 반응형 디자인 */
 @media (max-width: 768px) {
     .banner-section {
-        height: 250px;
+        height: 280px;
     }
     
     .banner-title {
@@ -408,7 +412,7 @@ body {
 
 @media (max-width: 480px) {
     .banner-section {
-        height: 200px;
+        height: 220px;
     }
     
     .banner-title {
