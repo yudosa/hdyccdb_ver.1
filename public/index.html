@@ -14,7 +14,18 @@
         <div class="banner-section">
             <div class="current-datetime"></div>
             <div class="banner-image">
-                <img src="dc.JPG" alt="동천청소년 문화의집 건물" class="main-building-img">
+                <div class="image-slider">
+                    <img src="dc-1.jpg" alt="동천청소년 문화의집 건물" class="main-building-img active">
+                    <img src="dc-2.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                    <img src="dc-3.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                    <img src="dc.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                </div>
+                <div class="slider-dots">
+                    <span class="dot active" onclick="currentSlide(1)"></span>
+                    <span class="dot" onclick="currentSlide(2)"></span>
+                    <span class="dot" onclick="currentSlide(3)"></span>
+                    <span class="dot" onclick="currentSlide(4)"></span>
+                </div>
             </div>
         </div>
 
@@ -180,6 +191,37 @@
     }
     setInterval(updateDateTime, 1000);
     updateDateTime();
+
+    // 이미지 슬라이더 기능
+    let currentSlideIndex = 0;
+    const slides = document.querySelectorAll('.image-slider .main-building-img');
+    const dots = document.querySelectorAll('.dot');
+
+    function showSlide(index) {
+        // 모든 슬라이드 숨기기
+        slides.forEach(slide => slide.classList.remove('active'));
+        dots.forEach(dot => dot.classList.remove('active'));
+        
+        // 현재 슬라이드 보이기
+        slides[index].classList.add('active');
+        dots[index].classList.add('active');
+    }
+
+    function nextSlide() {
+        currentSlideIndex = (currentSlideIndex + 1) % slides.length;
+        showSlide(currentSlideIndex);
+    }
+
+    function currentSlide(index) {
+        currentSlideIndex = index - 1;
+        showSlide(currentSlideIndex);
+    }
+
+    // 자동 슬라이드 (5초마다)
+    setInterval(nextSlide, 5000);
+
+    // 초기 슬라이드 설정
+    showSlide(0);
     // 전화번호 자동 포맷팅
     document.getElementById('user-phone').addEventListener('input', function(e) {
         let value = e.target.value.replace(/[^0-9]/g, '');
