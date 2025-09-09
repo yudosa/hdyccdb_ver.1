@@ -12,7 +12,8 @@
     "init-db": "node init-db.js",
     "init-firebase": "node init-firebase.js",
     "init-realtime": "node init-realtime-db.js",
-    "build": "echo 'No build step required'"
+    "build": "npm install",
+    "postinstall": "echo 'Build completed'"
   },
   "keywords": [
     "reservation",

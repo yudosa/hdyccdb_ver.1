@@ -9,7 +9,7 @@ services:
       type: nodejs
       version: 18
       buildCommand: npm install
-      startCommand: npm start
+      startCommand: node app.js
     env:
       - name: NODE_ENV
         value: production
