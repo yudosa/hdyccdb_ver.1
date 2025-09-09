@@ -198,13 +198,13 @@
                         <img src="dc7.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
                     </div>
                     <div class="slider-dots">
-                        <span class="dot active" onclick="currentSlide(1)"></span>
-                        <span class="dot" onclick="currentSlide(2)"></span>
-                        <span class="dot" onclick="currentSlide(3)"></span>
-                        <span class="dot" onclick="currentSlide(4)"></span>
-                        <span class="dot" onclick="currentSlide(5)"></span>
-                        <span class="dot" onclick="currentSlide(6)"></span>
-                        <span class="dot" onclick="currentSlide(7)"></span>
+                        <span class="dot active"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
                     </div>
                 </div>
             </div>
@@ -763,10 +763,13 @@
         showSlide(currentSlideIndex);
     }
 
-    function currentSlide(index) {
-        currentSlideIndex = index - 1;
-        showSlide(currentSlideIndex);
-    }
+    // 도트 클릭 이벤트
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            currentSlideIndex = index;
+            showSlide(currentSlideIndex);
+        });
+    });
 
     // 자동 슬라이드 (3초마다)
     setInterval(nextSlide, 3000);

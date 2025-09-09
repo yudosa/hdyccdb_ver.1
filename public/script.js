@@ -359,4 +359,53 @@ if (startReservationBtn && reservationMain) {
         document.querySelector('header').style.display = 'none';
         reservationMain.style.display = 'block';
     });
-} 
+}
+
+// 이미지 슬라이더 초기화 및 실행
+function initializeImageSlider() {
+    const images = document.querySelectorAll('.main-building-img');
+    const dots = document.querySelectorAll('.dot');
+    let currentIndex = 0;
+    
+    if (images.length === 0) return;
+    
+    // 이미지 전환 함수
+    function showImage(index) {
+        // 모든 이미지 숨기기
+        images.forEach(img => img.classList.remove('active'));
+        dots.forEach(dot => dot.classList.remove('active'));
+        
+        // 현재 이미지 보이기
+        if (images[index]) {
+            images[index].classList.add('active');
+        }
+        if (dots[index]) {
+            dots[index].classList.add('active');
+        }
+    }
+    
+    // 다음 이미지로 전환
+    function nextImage() {
+        currentIndex = (currentIndex + 1) % images.length;
+        showImage(currentIndex);
+    }
+    
+    // 도트 클릭 이벤트
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            currentIndex = index;
+            showImage(currentIndex);
+        });
+    });
+    
+    // 첫 번째 이미지 표시
+    showImage(0);
+    
+    // 3초마다 자동 전환
+    setInterval(nextImage, 3000);
+}
+
+// 페이지 로드 시 이미지 슬라이더 초기화
+document.addEventListener('DOMContentLoaded', function() {
+    initializeImageSlider();
+}); 
