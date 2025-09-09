@@ -15,9 +15,6 @@
             <div class="current-datetime"></div>
             <div class="banner-image">
                 <img src="dc.JPG" alt="동천청소년 문화의집 건물" class="main-building-img">
-                <div class="banner-text">
-                    <h1 class="banner-title">동천청소년문화의집 방문을 환영합니다♥</h1>
-                </div>
             </div>
         </div>
 
@@ -176,8 +173,8 @@
         
         // 디지털 시계 스타일로 표시
         document.querySelector('.current-datetime').innerHTML = 
-            `<div style="font-size: 0.9rem; margin-bottom: 5px; opacity: 0.9;">${y}-${m}-${d} (${weekday})</div>
-             <div style="font-size: 1.3rem; font-weight: 800;">${h}:${min}:${s}</div>`;
+            `<div style="font-size: 1rem; margin-bottom: 2px; opacity: 0.9;">${y}-${m}-${d} (${weekday})</div>
+             <div style="font-size: 1.5rem; font-weight: 800;">${h}:${min}:${s}</div>`;
     }
     setInterval(updateDateTime, 1000);
     updateDateTime();
