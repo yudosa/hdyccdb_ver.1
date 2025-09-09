@@ -137,9 +137,8 @@ body {
 }
 
 .service-cards {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 12px;
 }
 
@@ -186,8 +185,8 @@ body {
 }
 
 .card-image {
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
     object-fit: contain;
     object-position: center;
     display: block;
@@ -200,7 +199,10 @@ body {
     text-align: center;
     line-height: 1.2;
     margin: 0;
-    font-size: 1.1rem;
+    font-size: 1.3rem;
+    white-space: nowrap;
+    width: 100%;
+    display: block;
 }
 
 /* 정보 섹션 */
@@ -417,8 +419,7 @@ body {
     }
     
     .service-cards {
-        flex-direction: column;
-        align-items: center;
+        grid-template-columns: 1fr 1fr;
         gap: 15px;
     }
     
@@ -432,15 +433,15 @@ body {
     }
     
     .card-image {
-        width: 70px;
-        height: 70px;
+        width: 90px;
+        height: 90px;
         object-position: center;
         image-rendering: -webkit-optimize-contrast;
         image-rendering: crisp-edges;
     }
     
     .card-text {
-        font-size: 0.9rem;
+        font-size: 1.1rem;
     }
     
     .info-content {
@@ -510,8 +511,7 @@ body {
     }
     
     .service-cards {
-        flex-direction: column;
-        align-items: center;
+        grid-template-columns: 1fr;
         gap: 10px;
     }
     
@@ -525,15 +525,15 @@ body {
     }
     
     .card-image {
-        width: 60px;
-        height: 60px;
+        width: 80px;
+        height: 80px;
         object-position: center;
         image-rendering: -webkit-optimize-contrast;
         image-rendering: crisp-edges;
     }
     
     .card-text {
-        font-size: 0.85rem;
+        font-size: 1rem;
     }
     
     .info-section {
