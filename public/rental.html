@@ -73,7 +73,7 @@
                         </div>
                     </div>
                     <div class="form-actions-centered" style="display:flex; flex-direction:row; gap:8px;">
-                        <button type="button" class="btn-secondary-centered" onclick="history.back()">◀ 이전</button>
+                        <button type="button" class="btn-secondary-centered" onclick="window.location.href='index.html'">◀ 이전</button>
                         <button type="submit" class="btn-secondary-centered" style="background:linear-gradient(90deg,#fbc2eb 0%,#a6c1ee 100%);">다음 ▶</button>
                     </div>
                 </form>
@@ -297,7 +297,7 @@
 
         document.querySelector('button[type="button"]').onclick = function() {
             sessionStorage.removeItem('agreedPersonalInfo');
-            history.back();
+            window.location.href = 'index.html';
         };
     </script>
     

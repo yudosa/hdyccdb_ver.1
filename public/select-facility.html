@@ -71,7 +71,7 @@
                         </div>
                         <div style="margin-top: 20px; text-align: left;">
                             <div style="color: #3498db; font-weight: 700; font-size: 1.1rem; margin-bottom: 15px;">자율이용</div>
-                            <div class="facility-card-row facility-card-row-single" style="justify-content: flex-start;">
+                            <div class="facility-card-row facility-card-row-single" style="justify-content: flex-start; margin-left: 50%;">
                                 <div class="facility-card facility-card-other" id="autonomousCard">
                                     <div class="facility-emoji">📚</div>
                                     <div class="facility-name">자율이용</div>
@@ -81,7 +81,7 @@
                     </div>
                 </div>
                 <div class="form-actions-centered" style="display:flex; flex-direction:row; gap:8px;">
-                    <button class="btn-secondary-centered facility-back-btn" onclick="history.back()">◀ 이전</button>
+                    <button class="btn-secondary-centered facility-back-btn" onclick="window.location.href='index.html'">◀ 이전</button>
                     <button class="btn-secondary-centered facility-home-btn" onclick="sessionStorage.removeItem('agreedPersonalInfo'); window.location.href='index.html'">↻ 처음으로</button>
                 </div>
             </main>
@@ -251,7 +251,7 @@
         if (backBtn) {
             backBtn.addEventListener('click', function(e) {
                 e.preventDefault();
-                history.back();
+                window.location.href = 'index.html';
             });
         }
         
