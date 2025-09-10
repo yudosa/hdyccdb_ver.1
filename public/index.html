@@ -177,11 +177,35 @@
 
     <div class="footer">
         <div class="footer-content">
-            <div class="footer-text">동천청소년문화의집</div>
             <div class="footer-logos">
-                <div class="logo-slider">
-                    <img src="logo1.png" alt="로고1" class="footer-logo active">
-                    <img src="logo2.png" alt="로고2" class="footer-logo">
+                <div class="logo-marquee">
+                    <div class="logo-track">
+                        <img src="logo1.png" alt="로고1" class="footer-logo">
+                        <img src="logo2.png" alt="로고2" class="footer-logo">
+                        <img src="logo3.png" alt="로고3" class="footer-logo">
+                        <img src="logo4.png" alt="로고4" class="footer-logo">
+                        <img src="logo5.png" alt="로고5" class="footer-logo">
+                        <img src="logo6.png" alt="로고6" class="footer-logo">
+                        <img src="logo7.png" alt="로고7" class="footer-logo">
+                        <img src="logo8.png" alt="로고8" class="footer-logo">
+                        <img src="logo9.png" alt="로고9" class="footer-logo">
+                        <img src="logo10.png" alt="로고10" class="footer-logo">
+                        <img src="logo11.png" alt="로고11" class="footer-logo">
+                        <img src="logo12.png" alt="로고12" class="footer-logo">
+                        <!-- 반복을 위해 다시 추가 -->
+                        <img src="logo1.png" alt="로고1" class="footer-logo">
+                        <img src="logo2.png" alt="로고2" class="footer-logo">
+                        <img src="logo3.png" alt="로고3" class="footer-logo">
+                        <img src="logo4.png" alt="로고4" class="footer-logo">
+                        <img src="logo5.png" alt="로고5" class="footer-logo">
+                        <img src="logo6.png" alt="로고6" class="footer-logo">
+                        <img src="logo7.png" alt="로고7" class="footer-logo">
+                        <img src="logo8.png" alt="로고8" class="footer-logo">
+                        <img src="logo9.png" alt="로고9" class="footer-logo">
+                        <img src="logo10.png" alt="로고10" class="footer-logo">
+                        <img src="logo11.png" alt="로고11" class="footer-logo">
+                        <img src="logo12.png" alt="로고12" class="footer-logo">
+                    </div>
                 </div>
             </div>
         </div>
@@ -243,25 +267,7 @@
     // 초기 슬라이드 설정
     showSlide(0);
 
-    // 푸터 로고 슬라이더 기능
-    let currentLogoIndex = 0;
-    const logoSlides = document.querySelectorAll('.footer-logo');
-
-    function showLogoSlide(index) {
-        logoSlides.forEach(slide => slide.classList.remove('active'));
-        logoSlides[index].classList.add('active');
-    }
-
-    function nextLogoSlide() {
-        currentLogoIndex = (currentLogoIndex + 1) % logoSlides.length;
-        showLogoSlide(currentLogoIndex);
-    }
-
-    // 로고 자동 슬라이드 (4초마다)
-    setInterval(nextLogoSlide, 4000);
-
-    // 초기 로고 슬라이드 설정
-    showLogoSlide(0);
+    // 푸터 로고 마키 애니메이션은 CSS로 처리
     // 전화번호 자동 포맷팅
     document.getElementById('user-phone').addEventListener('input', function(e) {
         let value = e.target.value.replace(/[^0-9]/g, '');
