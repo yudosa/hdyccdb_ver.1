@@ -424,11 +424,10 @@
         { name: '소회의실', id: 'meeting' },
         { name: '닌텐도', id: 'nintendo', details: ['닌텐도1','닌텐도2','닌텐도3'] },
         { name: '플레이스테이션', id: 'ps', details: ['플레이스테이션1','플레이스테이션2','플레이스테이션3'] },
-        { name: '노래방', id: 'karaoke', details: ['노래방1','노래방2'] },
-        { name: '보드게임', id: 'board' }
+        { name: '노래방', id: 'karaoke', details: ['노래방1','노래방2'] }
     ];
     // 샘플 카테고리(필터)
-    const categories = ['전체', '댄스연습실', '소회의실', '닌텐도', '플레이스테이션', '노래방', '보드게임'];
+    const categories = ['전체', '댄스연습실', '소회의실', '닌텐도', '플레이스테이션', '노래방'];
     // 샘플 예약 데이터(detail 필드 포함)
     async function getSampleReservations(date) {
         if (!date) {
@@ -467,10 +466,11 @@
             return []; // 오류 시 빈 배열 반환
         }
     }
-    // 1시간 단위 헤더 생성
-    function getHourSlots(startHour = 9, endHour = 20) {
+    // 1시간 단위 헤더 생성 (일요일은 18시까지)
+    function getHourSlots(startHour = 9, endHour = 20, isSunday = false) {
         const slots = [];
-        for (let h = startHour; h < endHour; h++) {
+        const actualEndHour = isSunday ? 18 : endHour;
+        for (let h = startHour; h < actualEndHour; h++) {
             slots.push(`${String(h).padStart(2, '0')}:00`);
         }
         return slots;
@@ -514,11 +514,20 @@
     function renderGanttTimeline(reservations, spaces, startHour = 9, endHour = 20) {
         const container = document.getElementById('ganttTimelineWrap');
         if (!container) return;
+        
+        // 선택된 날짜가 일요일인지 확인
+        const selectedDate = document.getElementById('statusDate')?.value || getTodayStr();
+        const dateObj = new Date(selectedDate);
+        const isSunday = dateObj.getDay() === 0;
+        
+        // 일요일이면 18시까지로 조정
+        const actualEndHour = isSunday ? 18 : endHour;
+        
         // 1시간 단위 헤더
         const hourSlots = [];
         const columnWidth = 180; // px, for both name and time columns (플스 등 이름이 긴 시설 대응)
-        const totalHours = endHour - startHour;
-        for (let h = startHour; h < endHour; h++) {
+        const totalHours = actualEndHour - startHour;
+        for (let h = startHour; h < actualEndHour; h++) {
             hourSlots.push(`${String(h).padStart(2, '0')}:00`);
         }
         // 헤더 (flex)
@@ -970,8 +979,14 @@
         const response = await fetch(`/api/reservations/date/${date}?_=${Date.now()}`, { cache: 'no-store' });
         let reservations = await response.json();
         let filteredSpaces = (category === '전체' || !category) ? spaces : spaces.filter(s => s.name === category);
+        
+        // 선택된 날짜가 일요일인지 확인하여 운영시간 조정
+        const dateObj = new Date(date);
+        const isSunday = dateObj.getDay() === 0;
+        const endHour = isSunday ? 18 : 20;
+        
         // status 관계없이 모든 예약 표시
-        renderGanttTimeline(reservations, filteredSpaces, 9, 20);
+        renderGanttTimeline(reservations, filteredSpaces, 9, endHour);
     }
     document.addEventListener('DOMContentLoaded', () => loadAndRenderGanttTimeline(selectedCategory));
     document.getElementById('statusDate')?.addEventListener('change', () => loadAndRenderGanttTimeline(selectedCategory));
@@ -1056,5 +1071,23 @@
         }
     }
     </style>
+    
+    <!-- 로고 애니메이션 - 맨 하단 고정 -->
+    <div class="logo-marquee">
+        <div class="logo-track">
+            <img src="logo12.png" alt="로고12" class="footer-logo">
+            <img src="logo1.png" alt="로고1" class="footer-logo">
+            <img src="logo2.png" alt="로고2" class="footer-logo">
+            <img src="logo3.png" alt="로고3" class="footer-logo">
+            <img src="logo4.png" alt="로고4" class="footer-logo">
+            <img src="logo5.png" alt="로고5" class="footer-logo">
+            <img src="logo6.png" alt="로고6" class="footer-logo">
+            <img src="logo7.png" alt="로고7" class="footer-logo">
+            <img src="logo8.png" alt="로고8" class="footer-logo">
+            <img src="logo9.png" alt="로고9" class="footer-logo">
+            <img src="logo10.png" alt="로고10" class="footer-logo">
+            <img src="logo11.png" alt="로고11" class="footer-logo">
+        </div>
+    </div>
 </body>
 </html> 

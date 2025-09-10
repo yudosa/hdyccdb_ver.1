@@ -512,13 +512,24 @@
                             if (m === 60) { m = 0; h += 1; }
                         }
                     } else {
-                        // 1시간 단위
+                        // 1시간 단위 또는 2시간 단위 (댄스연습실, 소회의실)
                         const startHour = parseInt(reservation.start_time.split(':')[0]);
                         const endHour = parseInt(reservation.end_time.split(':')[0]);
-                        for (let h = startHour; h < endHour; h++) {
-                            const timeStr = `${h.toString().padStart(2, '0')}:00`;
+                        const duration = endHour - startHour;
+                        
+                        if (duration === 2 && (reservation.facility === '댄스연습실' || reservation.facility === '소회의실')) {
+                            // 2시간 연속 예약인 경우 시작 시간만 예약된 것으로 표시
+                            const timeStr = `${startHour.toString().padStart(2, '0')}:00`;
                             if (!reservationData[key][reservation.date].includes(timeStr)) {
                                 reservationData[key][reservation.date].push(timeStr);
+                            }
+                        } else {
+                            // 1시간 단위 예약
+                            for (let h = startHour; h < endHour; h++) {
+                                const timeStr = `${h.toString().padStart(2, '0')}:00`;
+                                if (!reservationData[key][reservation.date].includes(timeStr)) {
+                                    reservationData[key][reservation.date].push(timeStr);
+                                }
                             }
                         }
                     }
@@ -535,8 +546,8 @@
         const timeSlots = getTimeSlots(dayOfWeek);
         
         if (facility && (facility === '댄스연습실' || facility === '소회의실')) {
-            // 댄스연습실과 소회의실은 2시간 연속 예약 가능
-            return timeSlots;
+            // 댄스연습실과 소회의실은 2시간 연속 예약 가능하므로 마지막 시간은 제외
+            return timeSlots.slice(0, -1); // 마지막 시간 슬롯 제거 (2시간 연속 예약 불가)
         } else {
             // 일반 시설은 1시간 단위 예약
             return timeSlots;
@@ -569,12 +580,13 @@
             }
             const isDisabled = isReserved || isPastTime;
             const disabledText = isReserved ? ' (예약됨)' : '';
+            const durationText = (selectedFacility === '댄스연습실' || selectedFacility === '소회의실') ? ' (2시간)' : '';
             let buttonClass = 'time-btn';
             if (isDisabled) buttonClass += ' disabled';
             if (selectedTime === time) buttonClass += ' selected';
             let buttonHtml = `<button class="${buttonClass}" data-time="${time}"`;
             if (isDisabled) buttonHtml += ' disabled';
-            buttonHtml += `>${time}${disabledText}</button>`;
+            buttonHtml += `>${time}${durationText}${disabledText}</button>`;
             html += buttonHtml;
         });
         return html;
@@ -664,7 +676,7 @@
     async function createReservation(data) {
         try {
             // detail 없는 시설은 '-'로 통일
-            if (data.facility === '댄스연습실' || data.facility === '다목적실') {
+            if (data.facility === '댄스연습실' || data.facility === '소회의실' || data.facility === '다목적실') {
                 data.detail = '-';
             }
             const response = await fetch('/api/reservations', {
@@ -881,5 +893,23 @@
         color: #3498db !important;
     }
     </style>
+    
+    <!-- 로고 애니메이션 - 맨 하단 고정 -->
+    <div class="logo-marquee">
+        <div class="logo-track">
+            <img src="logo12.png" alt="로고12" class="footer-logo">
+            <img src="logo1.png" alt="로고1" class="footer-logo">
+            <img src="logo2.png" alt="로고2" class="footer-logo">
+            <img src="logo3.png" alt="로고3" class="footer-logo">
+            <img src="logo4.png" alt="로고4" class="footer-logo">
+            <img src="logo5.png" alt="로고5" class="footer-logo">
+            <img src="logo6.png" alt="로고6" class="footer-logo">
+            <img src="logo7.png" alt="로고7" class="footer-logo">
+            <img src="logo8.png" alt="로고8" class="footer-logo">
+            <img src="logo9.png" alt="로고9" class="footer-logo">
+            <img src="logo10.png" alt="로고10" class="footer-logo">
+            <img src="logo11.png" alt="로고11" class="footer-logo">
+        </div>
+    </div>
 </body>
 </html> 

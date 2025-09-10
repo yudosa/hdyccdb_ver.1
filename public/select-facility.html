@@ -46,20 +46,10 @@
                                 <div class="facility-name">플레이스테이션</div>
                             </div>
                         </div>
-                        <div class="facility-card-row facility-card-row-multi">
+                        <div class="facility-card-row facility-card-row-single">
                             <div class="facility-card facility-card-karaoke" onclick="window.location.href='reservation-date.html'">
                                 <div class="facility-emoji">🎤</div>
                                 <div class="facility-name">노래방</div>
-                            </div>
-                            <div class="facility-card facility-card-board" onclick="window.location.href='reservation-date.html'">
-                                <div class="facility-emoji">🎲</div>
-                                <div class="facility-name">보드게임</div>
-                            </div>
-                        </div>
-                        <div class="simple-use-section">
-                            <div class="simple-use-card" onclick="window.location.href='reservation-date.html'">
-                                <div class="facility-emoji">📋</div>
-                                <div class="facility-name">단순 이용</div>
                             </div>
                         </div>
                     </div>
@@ -75,12 +65,12 @@
                                 <div class="facility-name">소회의실</div>
                             </div>
                         </div>
-                        <div class="simple-use-section">
-                            <div class="simple-use-card" onclick="window.location.href='reservation-date.html'">
-                                <div class="facility-emoji">📋</div>
-                                <div class="facility-name">단순 이용</div>
-                            </div>
-                        </div>
+                    </div>
+                </div>
+                <div class="other-use-section">
+                    <div class="other-use-card" onclick="window.location.href='reservation-date.html'">
+                        <div class="facility-emoji">🔧</div>
+                        <div class="facility-name">그 외 이용</div>
                     </div>
                 </div>
                 <div class="form-actions-centered" style="display:flex; flex-direction:row; gap:8px;">
@@ -100,8 +90,8 @@
         });
     });
 
-    // 단순 이용 카드 클릭 시 시설명 저장
-    document.querySelectorAll('.simple-use-card').forEach(card => {
+    // 그 외 이용 카드 클릭 시 시설명 저장
+    document.querySelectorAll('.other-use-card').forEach(card => {
         card.addEventListener('click', function() {
             let name = card.querySelector('.facility-name').textContent.trim();
             sessionStorage.setItem('selectedFacility', name);
@@ -191,35 +181,55 @@
         margin-bottom: 20px !important;
         max-width: 100% !important;
     }
-    .simple-use-section {
-        margin-top: 15px !important;
+    .other-use-section {
+        margin: 30px 20px 20px 20px !important;
         display: flex !important;
         justify-content: center !important;
     }
-    .simple-use-card {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-        border-radius: 16px !important;
-        padding: 20px !important;
+    .other-use-card {
+        background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%) !important;
+        border-radius: 20px !important;
+        padding: 25px 40px !important;
         text-align: center !important;
         cursor: pointer !important;
         transition: transform 0.2s ease, box-shadow 0.2s ease !important;
-        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3) !important;
-        min-width: 120px !important;
-        max-width: 200px !important;
+        box-shadow: 0 6px 20px rgba(255, 154, 158, 0.3) !important;
+        min-width: 200px !important;
+        max-width: 300px !important;
+        border: 2px solid rgba(255, 255, 255, 0.3) !important;
     }
-    .simple-use-card:hover {
-        transform: translateY(-2px) !important;
-        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4) !important;
+    .other-use-card:hover {
+        transform: translateY(-3px) !important;
+        box-shadow: 0 8px 25px rgba(255, 154, 158, 0.4) !important;
     }
-    .simple-use-card .facility-emoji {
-        font-size: 2rem !important;
-        margin-bottom: 8px !important;
+    .other-use-card .facility-emoji {
+        font-size: 2.5rem !important;
+        margin-bottom: 10px !important;
     }
-    .simple-use-card .facility-name {
-        color: white !important;
-        font-weight: 600 !important;
-        font-size: 1rem !important;
+    .other-use-card .facility-name {
+        color: #333 !important;
+        font-weight: 700 !important;
+        font-size: 1.2rem !important;
+        text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8) !important;
     }
     </style>
+    
+    <!-- 로고 애니메이션 - 맨 하단 고정 -->
+    <div class="logo-marquee">
+        <div class="logo-track">
+            <img src="logo12.png" alt="로고12" class="footer-logo">
+            <img src="logo1.png" alt="로고1" class="footer-logo">
+            <img src="logo2.png" alt="로고2" class="footer-logo">
+            <img src="logo3.png" alt="로고3" class="footer-logo">
+            <img src="logo4.png" alt="로고4" class="footer-logo">
+            <img src="logo5.png" alt="로고5" class="footer-logo">
+            <img src="logo6.png" alt="로고6" class="footer-logo">
+            <img src="logo7.png" alt="로고7" class="footer-logo">
+            <img src="logo8.png" alt="로고8" class="footer-logo">
+            <img src="logo9.png" alt="로고9" class="footer-logo">
+            <img src="logo10.png" alt="로고10" class="footer-logo">
+            <img src="logo11.png" alt="로고11" class="footer-logo">
+        </div>
+    </div>
 </body>
 </html> 

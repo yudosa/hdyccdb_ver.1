@@ -13,7 +13,7 @@
             box-shadow: 0 4px 16px rgba(52, 152, 219, 0.10);
             padding: 48px 32px 32px 32px;
             margin: 0 auto;
-            max-width: 700px;
+            max-width: 100%;
             width: 100%;
             display: flex;
             flex-direction: column;
@@ -209,37 +209,38 @@
     </style>
 </head>
 <body>
-    <div class="rental-wrapper">
-        <div class="rental-container">
-            <div class="banner-section">
-                <div class="current-datetime"></div>
-                <div class="banner-image">
-                    <div class="image-slider">
-                        <img src="dc1.jpg" alt="동천청소년 문화의집 건물" class="main-building-img active">
-                        <img src="dc2.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
-                        <img src="dc3.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
-                        <img src="dc4.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
-                        <img src="dc5.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
-                        <img src="dc6.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
-                        <img src="dc7.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
-                        <img src="dc8.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
-                    </div>
-                    <div class="slider-dots">
-                        <span class="dot active"></span>
-                        <span class="dot"></span>
-                        <span class="dot"></span>
-                        <span class="dot"></span>
-                        <span class="dot"></span>
-                        <span class="dot"></span>
-                        <span class="dot"></span>
-                        <span class="dot"></span>
-                    </div>
+    <div class="container vertical-layout">
+        <!-- 상단 배너 섹션 -->
+        <div class="banner-section">
+            <div class="current-datetime"></div>
+            <div class="banner-image">
+                <div class="image-slider">
+                    <img src="dc1.jpg" alt="동천청소년 문화의집 건물" class="main-building-img active">
+                    <img src="dc2.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                    <img src="dc3.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                    <img src="dc4.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                    <img src="dc5.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                    <img src="dc6.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                    <img src="dc7.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                    <img src="dc8.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                </div>
+                </div>
+                <div class="slider-dots">
+                    <span class="dot active"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
                 </div>
             </div>
+        </div>
             <main class="rental-main">
                 <div class="cancel-form-block">
-                    <div class="cancel-title" style="font-size:1.47rem; font-weight:800; color:#e74c3c; margin-bottom:8px;">예약 조회</div>
-                    <div class="cancel-desc" style="font-size:1.12rem; color:#555; text-align:center; margin-bottom:21px;">이름과 전화번호를 입력하여 본인의 예약 내역을 확인하세요.</div>
+                    <div class="cancel-title" style="font-size:1.47rem; font-weight:800; color:#e74c3c; margin-bottom:8px;">예약·이용 취소</div>
+                    <div class="cancel-desc" style="font-size:1.12rem; color:#555; text-align:center; margin-bottom:21px;">이름과 전화번호를 입력하여 본인의 예약 내역을 확인하시고 취소하세요.</div>
                     
                     <form class="search-form" id="searchForm">
                         <div class="form-group">
@@ -263,7 +264,6 @@
                 </div>
             </main>
         </div>
-    </div>
 
     <script>
         let isCancelling = false;
@@ -686,5 +686,23 @@
         }
     }
     </style>
+    
+    <!-- 로고 애니메이션 - 맨 하단 고정 -->
+    <div class="logo-marquee">
+        <div class="logo-track">
+            <img src="logo12.png" alt="로고12" class="footer-logo">
+            <img src="logo1.png" alt="로고1" class="footer-logo">
+            <img src="logo2.png" alt="로고2" class="footer-logo">
+            <img src="logo3.png" alt="로고3" class="footer-logo">
+            <img src="logo4.png" alt="로고4" class="footer-logo">
+            <img src="logo5.png" alt="로고5" class="footer-logo">
+            <img src="logo6.png" alt="로고6" class="footer-logo">
+            <img src="logo7.png" alt="로고7" class="footer-logo">
+            <img src="logo8.png" alt="로고8" class="footer-logo">
+            <img src="logo9.png" alt="로고9" class="footer-logo">
+            <img src="logo10.png" alt="로고10" class="footer-logo">
+            <img src="logo11.png" alt="로고11" class="footer-logo">
+        </div>
+    </div>
 </body>
 </html>
