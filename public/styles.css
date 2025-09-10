@@ -25,9 +25,9 @@ body {
 .banner-section {
     position: relative;
     width: 100%;
-    height: 25vh;
-    min-height: 200px;
-    max-height: 300px;
+    height: 35vh;
+    min-height: 250px;
+    max-height: 400px;
     overflow: hidden;
     border-radius: 0;
     box-shadow: 0 8px 32px rgba(0,0,0,0.1);
@@ -369,14 +369,53 @@ body {
     background: #333;
     color: white;
     text-align: center;
-    padding: 20px;
+    padding: 15px 20px;
     margin-top: 20px;
+}
+
+.footer-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .footer-text {
     font-size: 1.1rem;
     font-weight: 600;
     letter-spacing: 1px;
+    flex: 1;
+}
+
+.footer-logos {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo-slider {
+    position: relative;
+    width: 60px;
+    height: 30px;
+    overflow: hidden;
+}
+
+.footer-logo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.footer-logo.active {
+    opacity: 1;
 }
 
 /* 현재 시간 표시 - 디지털 시계 스타일 */
@@ -401,9 +440,9 @@ body {
 /* 반응형 디자인 */
 @media (max-width: 768px) {
     .banner-section {
-        height: 20vh;
-        min-height: 180px;
-        max-height: 250px;
+        height: 30vh;
+        min-height: 220px;
+        max-height: 320px;
     }
     
     
@@ -467,13 +506,23 @@ body {
         margin: 10px 20px;
         font-size: 1.1rem;
     }
+    
+    .footer-content {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .logo-slider {
+        width: 50px;
+        height: 25px;
+    }
 }
 
 @media (max-width: 480px) {
     .banner-section {
-        height: 18vh;
-        min-height: 150px;
-        max-height: 200px;
+        height: 25vh;
+        min-height: 180px;
+        max-height: 250px;
     }
     
     .info-content {
@@ -554,6 +603,11 @@ body {
         object-position: center;
         image-rendering: -webkit-optimize-contrast;
         image-rendering: crisp-edges;
+    }
+    
+    .logo-slider {
+        width: 40px;
+        height: 20px;
     }
 }
 

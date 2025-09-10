@@ -176,7 +176,15 @@
     </div>
 
     <div class="footer">
-        <p class="footer-text">동천청소년문화의집</p>
+        <div class="footer-content">
+            <div class="footer-text">동천청소년문화의집</div>
+            <div class="footer-logos">
+                <div class="logo-slider">
+                    <img src="logo1.png" alt="로고1" class="footer-logo active">
+                    <img src="logo2.png" alt="로고2" class="footer-logo">
+                </div>
+            </div>
+        </div>
     </div>
     <script>
     // 현재 시간/날짜 표시 - 디지털 시계 스타일
@@ -234,6 +242,26 @@
 
     // 초기 슬라이드 설정
     showSlide(0);
+
+    // 푸터 로고 슬라이더 기능
+    let currentLogoIndex = 0;
+    const logoSlides = document.querySelectorAll('.footer-logo');
+
+    function showLogoSlide(index) {
+        logoSlides.forEach(slide => slide.classList.remove('active'));
+        logoSlides[index].classList.add('active');
+    }
+
+    function nextLogoSlide() {
+        currentLogoIndex = (currentLogoIndex + 1) % logoSlides.length;
+        showLogoSlide(currentLogoIndex);
+    }
+
+    // 로고 자동 슬라이드 (4초마다)
+    setInterval(nextLogoSlide, 4000);
+
+    // 초기 로고 슬라이드 설정
+    showLogoSlide(0);
     // 전화번호 자동 포맷팅
     document.getElementById('user-phone').addEventListener('input', function(e) {
         let value = e.target.value.replace(/[^0-9]/g, '');
@@ -265,11 +293,11 @@
         modal.style.alignItems = 'center';
         modal.style.justifyContent = 'center';
         modal.style.zIndex = 9999;
-        modal.style.padding = '20px';
+        modal.style.padding = '15px';
         modal.innerHTML = `
-            <div class="modal-content" style="background:#fff;padding:24px 20px;border-radius:16px;box-shadow:0 4px 24px #e74c3c22;font-size:1rem;font-weight:600;color:#e74c3c;text-align:center;min-width:200px;max-width:85vw;width:100%;">
+            <div class="modal-content" style="background:#fff;padding:20px 16px;border-radius:12px;box-shadow:0 4px 24px #e74c3c22;font-size:0.9rem;font-weight:600;color:#e74c3c;text-align:center;min-width:180px;max-width:90vw;width:100%;max-height:80vh;overflow-y:auto;">
                 ${msg}<br><br>
-                <button class="modal-button" style='margin-top:16px;padding:12px 24px;border-radius:10px;background:linear-gradient(90deg,#e74c3c,#c0392b);border:none;font-weight:700;font-size:1rem;color:#fff;cursor:pointer;width:100%;max-width:200px;' onclick='this.parentElement.parentElement.remove()'>확인</button>
+                <button class="modal-button" style='margin-top:12px;padding:10px 20px;border-radius:8px;background:linear-gradient(90deg,#e74c3c,#c0392b);border:none;font-weight:700;font-size:0.9rem;color:#fff;cursor:pointer;width:100%;max-width:150px;' onclick='this.parentElement.parentElement.remove()'>확인</button>
             </div>
         `;
         document.body.appendChild(modal);
@@ -338,30 +366,36 @@
     /* 모바일 모달 최적화 */
     @media (max-width: 768px) {
         .modal-content {
-            padding: 20px 16px !important;
-            font-size: 0.9rem !important;
-            max-width: 90vw !important;
-            margin: 0 10px !important;
+            padding: 16px 12px !important;
+            font-size: 0.85rem !important;
+            max-width: 95vw !important;
+            margin: 0 5px !important;
+            max-height: 70vh !important;
+            overflow-y: auto !important;
         }
         .modal-button {
-            padding: 10px 20px !important;
-            font-size: 0.9rem !important;
+            padding: 8px 16px !important;
+            font-size: 0.85rem !important;
             width: 100% !important;
-            max-width: 150px !important;
+            max-width: 120px !important;
+            margin-top: 10px !important;
         }
     }
     
     @media (max-width: 480px) {
         .modal-content {
-            padding: 16px 12px !important;
-            font-size: 0.85rem !important;
-            max-width: 95vw !important;
-            margin: 0 5px !important;
+            padding: 12px 8px !important;
+            font-size: 0.8rem !important;
+            max-width: 98vw !important;
+            margin: 0 2px !important;
+            max-height: 60vh !important;
+            overflow-y: auto !important;
         }
         .modal-button {
-            padding: 8px 16px !important;
-            font-size: 0.85rem !important;
-            max-width: 120px !important;
+            padding: 6px 12px !important;
+            font-size: 0.8rem !important;
+            max-width: 100px !important;
+            margin-top: 8px !important;
         }
     }
     </style>
