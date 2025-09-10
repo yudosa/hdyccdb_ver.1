@@ -210,18 +210,16 @@
             </div>
             <main class="rental-main">
                 <div class="rental-form-centered reservation-date-form">
-                    <div class="detail-card">
+                    <div class="detail-card" id="detailCard" style="display:none;">
                         <div class="detail-label">세부선택</div>
                         <select class="detail-select" id="detailSelect">
-                            <option value="닌텐도1">🎮 닌텐도1</option>
-                            <option value="닌텐도2">🎮 닌텐도2</option>
-                            <option value="닌텐도3">🎮 닌텐도3</option>
+                            <option value="">시설을 선택해주세요</option>
                         </select>
                     </div>
                     <div class="reservation-calendar-block">
                         <div class="calendar-header">
                             <button class="calendar-nav-btn" id="prevMonth">◀</button>
-                            <span class="calendar-title" id="calendarTitle"></span>
+                            <span class="calendar-title" id="calendarTitle">2024년 12월</span>
                             <button class="calendar-nav-btn" id="nextMonth">▶</button>
                         </div>
                         <table class="reservation-calendar">
@@ -238,10 +236,15 @@
                         <div style="margin-bottom: 20px; text-align: center;">
                             <h3 style="color: #3498db; margin: 0;">날짜를 선택해주세요</h3>
                         </div>
+                        <div class="time-btn-group" id="timeBtnGroup">
+                            <div style="text-align: center; color: #666; padding: 20px;">
+                                먼저 시설과 날짜를 선택해주세요
+                            </div>
+                        </div>
                     </div>
                     <div class="form-actions-centered">
-                        <button class="btn-secondary-centered" style="color:#222;">◀ 이전</button>
-                        <button class="btn-secondary-centered" style="color:#222;">다음 ▶</button>
+                        <button class="btn-secondary-centered" onclick="history.back()" style="color:#222;">◀ 이전</button>
+                        <button class="btn-secondary-centered" onclick="proceedToNext()" style="color:#222;">다음 ▶</button>
                     </div>
                 </div>
             </main>
@@ -338,7 +341,13 @@
             console.log('setDetailOptions - selectedFacility:', selectedFacility, 'selectedDetail:', selectedDetail);
         }
     }
-    setDetailOptions();
+    // 페이지 로드 시 선택된 시설 정보 가져오기
+    const selectedFacilityFromStorage = sessionStorage.getItem('selectedFacility');
+    if (selectedFacilityFromStorage) {
+        setDetailOptions(selectedFacilityFromStorage);
+    } else {
+        setDetailOptions();
+    }
 
     // 세부선택 버튼 클릭
     detailSelect.addEventListener('change', function() {
@@ -769,6 +778,35 @@
 
     // 초기 슬라이드 설정
     showSlide(0);
+
+    // 다음 단계로 진행하는 함수
+    function proceedToNext() {
+        if (!selectedFacility) {
+            alert('시설을 선택해주세요.');
+            return;
+        }
+        if (!selectedDate) {
+            alert('날짜를 선택해주세요.');
+            return;
+        }
+        if (!selectedTime) {
+            alert('시간을 선택해주세요.');
+            return;
+        }
+        
+        // 예약 정보를 저장하고 다음 페이지로 이동
+        const reservationInfo = {
+            facility: selectedFacility,
+            detail: selectedDetail,
+            date: selectedDate,
+            time: selectedTime
+        };
+        
+        sessionStorage.setItem('reservationInfo', JSON.stringify(reservationInfo));
+        alert('예약 정보가 저장되었습니다.');
+        // 다음 페이지로 이동 (예: reservation-complete.html)
+        // window.location.href = 'reservation-complete.html';
+    }
     </script>
     <style>
     .reservation-calendar-block {
