@@ -175,34 +175,10 @@
         </div>
     </div>
 
-    <!-- 로고 애니메이션 - 맨 하단 고정 -->
-    <div class="logo-marquee">
-        <div class="logo-track">
-            <img src="logo12.png" alt="로고12" class="footer-logo">
-            <img src="logo1.png" alt="로고1" class="footer-logo">
-            <img src="logo2.png" alt="로고2" class="footer-logo">
-            <img src="logo3.png" alt="로고3" class="footer-logo">
-            <img src="logo4.png" alt="로고4" class="footer-logo">
-            <img src="logo5.png" alt="로고5" class="footer-logo">
-            <img src="logo6.png" alt="로고6" class="footer-logo">
-            <img src="logo7.png" alt="로고7" class="footer-logo">
-            <img src="logo8.png" alt="로고8" class="footer-logo">
-            <img src="logo9.png" alt="로고9" class="footer-logo">
-            <img src="logo10.png" alt="로고10" class="footer-logo">
-            <img src="logo11.png" alt="로고11" class="footer-logo">
-            <!-- 반복을 위해 다시 추가 -->
-            <img src="logo12.png" alt="로고12" class="footer-logo">
-            <img src="logo1.png" alt="로고1" class="footer-logo">
-            <img src="logo2.png" alt="로고2" class="footer-logo">
-            <img src="logo3.png" alt="로고3" class="footer-logo">
-            <img src="logo4.png" alt="로고4" class="footer-logo">
-            <img src="logo5.png" alt="로고5" class="footer-logo">
-            <img src="logo6.png" alt="로고6" class="footer-logo">
-            <img src="logo7.png" alt="로고7" class="footer-logo">
-            <img src="logo8.png" alt="로고8" class="footer-logo">
-            <img src="logo9.png" alt="로고9" class="footer-logo">
-            <img src="logo10.png" alt="로고10" class="footer-logo">
-            <img src="logo11.png" alt="로고11" class="footer-logo">
+    <!-- 새로운 로고 슬라이더 -->
+    <div class="logo-slider-container">
+        <div class="logo-slider-track" id="logoSliderTrack">
+            <!-- 로고들이 JavaScript로 동적으로 추가됩니다 -->
         </div>
     </div>
     <script>
@@ -262,52 +238,51 @@
     // 초기 슬라이드 설정
     showSlide(0);
 
-    // 푸터 로고 마키 애니메이션
-    function initLogoMarquee() {
-        const logoTrack = document.querySelector('.logo-track');
-        if (!logoTrack) return;
+    // 새로운 로고 슬라이더 애니메이션
+    function initLogoSlider() {
+        const sliderTrack = document.getElementById('logoSliderTrack');
+        if (!sliderTrack) return;
         
+        // 로고 이미지 배열
+        const logos = [
+            'logo1.png', 'logo2.png', 'logo3.png', 'logo4.png', 'logo5.png',
+            'logo6.png', 'logo7.png', 'logo8.png', 'logo9.png', 'logo10.png',
+            'logo11.png', 'logo12.png'
+        ];
+        
+        // 로고들을 두 번 반복해서 추가 (무한 루프 효과)
+        const logoHTML = [...logos, ...logos].map(logo => 
+            `<img src="${logo}" alt="로고" class="logo-item" loading="lazy">`
+        ).join('');
+        
+        sliderTrack.innerHTML = logoHTML;
+        
+        // 애니메이션 시작
         let position = 0;
-        const speed = 1; // 픽셀 단위 이동 속도 (조금 더 빠르게)
+        const speed = 0.8; // 이동 속도
         
         function animate() {
             position -= speed;
-            logoTrack.style.transform = `translate3d(${position}px, 0, 0)`;
+            sliderTrack.style.transform = `translateX(${position}px)`;
             
-            // 로고가 완전히 왼쪽으로 사라지면 위치 리셋
-            const trackWidth = logoTrack.scrollWidth;
-            if (position <= -trackWidth / 2) {
+            // 첫 번째 세트가 완전히 사라지면 위치 리셋
+            const logoWidth = sliderTrack.children[0].offsetWidth + 20; // 로고 너비 + 간격
+            const resetPoint = logoWidth * logos.length;
+            
+            if (position <= -resetPoint) {
                 position = 0;
             }
             
             requestAnimationFrame(animate);
         }
         
-        // 로고 이미지들이 모두 로드된 후 애니메이션 시작
-        const logoImages = logoTrack.querySelectorAll('.footer-logo');
-        let loadedImages = 0;
-        
-        logoImages.forEach(img => {
-            if (img.complete) {
-                loadedImages++;
-            } else {
-                img.addEventListener('load', () => {
-                    loadedImages++;
-                    if (loadedImages === logoImages.length) {
-                        animate();
-                    }
-                });
-            }
-        });
-        
-        if (loadedImages === logoImages.length) {
-            animate();
-        }
+        // 애니메이션 시작
+        setTimeout(animate, 500);
     }
     
-    // 페이지 로드 후 로고 애니메이션 시작
+    // 페이지 로드 후 로고 슬라이더 시작
     document.addEventListener('DOMContentLoaded', function() {
-        setTimeout(initLogoMarquee, 1000); // 1초 후 시작
+        initLogoSlider();
     });
     // 전화번호 자동 포맷팅
     document.getElementById('user-phone').addEventListener('input', function(e) {
@@ -443,6 +418,71 @@
             font-size: 0.8rem !important;
             max-width: 100px !important;
             margin-top: 8px !important;
+        }
+    }
+    
+    /* 새로운 로고 슬라이더 스타일 */
+    .logo-slider-container {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 60px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-top: 2px solid #e0e7ef;
+        overflow: hidden;
+        z-index: 1000;
+    }
+    
+    .logo-slider-track {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        gap: 20px;
+        white-space: nowrap;
+        will-change: transform;
+    }
+    
+    .logo-item {
+        height: 50px;
+        width: auto;
+        object-fit: contain;
+        flex-shrink: 0;
+        opacity: 0.8;
+        transition: opacity 0.3s ease;
+    }
+    
+    .logo-item:hover {
+        opacity: 1;
+    }
+    
+    /* 모바일 대응 */
+    @media (max-width: 768px) {
+        .logo-slider-container {
+            height: 50px;
+        }
+        
+        .logo-item {
+            height: 40px;
+        }
+        
+        .logo-slider-track {
+            gap: 15px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .logo-slider-container {
+            height: 45px;
+        }
+        
+        .logo-item {
+            height: 35px;
+        }
+        
+        .logo-slider-track {
+            gap: 12px;
         }
     }
     </style>

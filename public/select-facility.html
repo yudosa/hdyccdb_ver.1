@@ -72,7 +72,7 @@
                         <div style="margin-top: 20px; text-align: left;">
                             <div style="color: #3498db; font-weight: 700; font-size: 1.1rem; margin-bottom: 15px;">자율이용</div>
                             <div class="facility-card-row facility-card-row-single" style="justify-content: flex-start;">
-                                <div class="facility-card facility-card-other" onclick="showAutonomousUseModal()">
+                                <div class="facility-card facility-card-other" id="autonomousCard">
                                     <div class="facility-emoji">📚</div>
                                     <div class="facility-name">자율이용</div>
                                 </div>
@@ -100,6 +100,13 @@
 
     window.showAutonomousUseModal = function() {
         console.log('자율이용 모달 함수 호출됨');
+        
+        // 기존 모달이 있다면 제거
+        const existingModal = document.querySelector('.custom-modal-bg');
+        if (existingModal) {
+            existingModal.remove();
+        }
+        
         let modal = document.createElement('div');
         modal.className = 'custom-modal-bg';
         modal.innerHTML = `
@@ -119,6 +126,7 @@
             </div>
         `;
         document.body.appendChild(modal);
+        console.log('자율이용 모달 생성 완료');
 
         // 모달 배경 클릭 시 닫기
         modal.addEventListener('click', function(e) {
@@ -256,14 +264,18 @@
         }
         
         // 자율이용 카드 클릭 이벤트 바인딩
-        document.querySelectorAll('.facility-card-other').forEach(card => {
-            card.addEventListener('click', function(e) {
+        const autonomousCard = document.getElementById('autonomousCard');
+        if (autonomousCard) {
+            autonomousCard.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
                 console.log('자율이용 카드 클릭됨');
                 showAutonomousUseModal();
             });
-        });
+            console.log('자율이용 카드 이벤트 바인딩 완료');
+        } else {
+            console.error('자율이용 카드를 찾을 수 없습니다');
+        }
     });
     </script>
     
@@ -343,6 +355,12 @@
         pointer-events: auto !important;
         position: relative !important;
         z-index: 10 !important;
+        user-select: none !important;
+    }
+    
+    #autonomousCard {
+        cursor: pointer !important;
+        pointer-events: auto !important;
     }
     .facility-card-other:hover {
         transform: translateY(-4px) scale(1.04) !important;
