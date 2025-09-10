@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="styles.css">
     <script type="module" src="firebase-config.js"></script>
     <style>
-        .time-select-block { margin-top: 28px; }
         .ampm-tabs { display: flex; gap: 12px; margin-bottom: 18px; }
         .ampm-tab { flex: 1; padding: 10px 0; border-radius: 16px; border: none; font-weight: 700; font-size: 1.08rem; background: #f5f5f5; color: #3498db; cursor: pointer; transition: background 0.18s, color 0.18s; }
         .ampm-tab.active { background: linear-gradient(90deg, #a8edea 0%, #fed6e3 100%); color: #222; }
@@ -27,6 +26,8 @@
         .time-btn.selected { 
             background: linear-gradient(90deg, #a8edea 0%, #fed6e3 100%); 
             color: #222; 
+            border: 2px solid #3498db;
+            font-weight: 700;
         }
         .time-btn.disabled {
             background: #cccccc !important;
@@ -37,15 +38,14 @@
             pointer-events: none !important;
             border: 2px solid #999999 !important;
         }
-        .reservation-calendar-block {
-            background: #fafbfc;
-            border-radius: 24px;
-            box-shadow: 0 4px 24px rgba(52, 152, 219, 0.08);
-            padding: 32px 24px 24px 24px;
-            margin: 32px 0 0 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        @media (max-width: 768px) {
+            .calendar-time-container {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .calendar-card, .time-card {
+                padding: 20px;
+            }
         }
         .calendar-header {
             display: flex;
@@ -138,6 +138,37 @@
             flex-direction: column;
             align-items: center;
         }
+        .rental-form-centered {
+            max-width: 100% !important;
+            width: 100% !important;
+            padding: 0 !important;
+        }
+        .calendar-time-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            width: 100%;
+            max-width: 100%;
+            margin-bottom: 32px;
+        }
+        .calendar-card, .time-card {
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 4px 16px rgba(52, 152, 219, 0.10);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+        }
+        .calendar-header, .time-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .time-header h3 {
+            color: #3498db;
+            margin: 0;
+            font-size: 1.18rem;
+            font-weight: 800;
+        }
         .detail-card {
             background: #fff;
             border-radius: 20px;
@@ -147,7 +178,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            max-width: 540px;
+            max-width: 100%;
             width: 100%;
         }
         .detail-label {
@@ -184,30 +215,34 @@
     </style>
 </head>
 <body>
-    <div class="rental-wrapper">
-        <div class="rental-container">
-            <div class="banner-section">
-                <div class="banner-image">
-                    <div class="image-slider">
-                        <img src="dc1.jpg" alt="동천청소년 문화의집 건물" class="main-building-img active">
-                        <img src="dc2.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
-                        <img src="dc3.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
-                        <img src="dc4.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
-                        <img src="dc5.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
-                        <img src="dc6.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
-                        <img src="dc7.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
-                    </div>
-                    <div class="slider-dots">
-                        <span class="dot active"></span>
-                        <span class="dot"></span>
-                        <span class="dot"></span>
-                        <span class="dot"></span>
-                        <span class="dot"></span>
-                        <span class="dot"></span>
-                        <span class="dot"></span>
-                    </div>
+    <div class="container vertical-layout">
+        <!-- 상단 배너 섹션 -->
+        <div class="banner-section">
+            <div class="current-datetime"></div>
+            <div class="banner-image">
+                <div class="image-slider">
+                    <img src="dc1.jpg" alt="동천청소년 문화의집 건물" class="main-building-img active">
+                    <img src="dc2.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                    <img src="dc3.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                    <img src="dc4.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                    <img src="dc5.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                    <img src="dc6.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                    <img src="dc7.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                    <img src="dc8.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                </div>
+                </div>
+                <div class="slider-dots">
+                    <span class="dot active"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
                 </div>
             </div>
+        </div>
             <main class="rental-main">
                 <div class="rental-form-centered reservation-date-form">
                     <div class="detail-card" id="detailCard" style="display:none;">
@@ -216,39 +251,40 @@
                             <option value="">시설을 선택해주세요</option>
                         </select>
                     </div>
-                    <div class="reservation-calendar-block">
-                        <div class="calendar-header">
-                            <button class="calendar-nav-btn" id="prevMonth">◀</button>
-                            <span class="calendar-title" id="calendarTitle">2024년 12월</span>
-                            <button class="calendar-nav-btn" id="nextMonth">▶</button>
+                    <div class="calendar-time-container">
+                        <div class="calendar-card">
+                            <div class="calendar-header">
+                                <button class="calendar-nav-btn" id="prevMonth">◀</button>
+                                <span class="calendar-title" id="calendarTitle">2024년 12월</span>
+                                <button class="calendar-nav-btn" id="nextMonth">▶</button>
+                            </div>
+                            <table class="reservation-calendar">
+                                <thead>
+                                    <tr>
+                                        <th>일</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th><th>토</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="calendarBody">
+                                </tbody>
+                            </table>
                         </div>
-                        <table class="reservation-calendar">
-                            <thead>
-                                <tr>
-                                    <th>일</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th><th>토</th>
-                                </tr>
-                            </thead>
-                            <tbody id="calendarBody">
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="time-select-block" id="timeSelectBlock" style="display: block;">
-                        <div style="margin-bottom: 20px; text-align: center;">
-                            <h3 style="color: #3498db; margin: 0;">날짜를 선택해주세요</h3>
-                        </div>
-                        <div class="time-btn-group" id="timeBtnGroup">
-                            <div style="text-align: center; color: #666; padding: 20px;">
-                                먼저 시설과 날짜를 선택해주세요
+                        <div class="time-card" id="timeSelectBlock" style="display: block;">
+                            <div class="time-header">
+                                <h3 style="color: #3498db; margin: 0;">시간 선택</h3>
+                            </div>
+                            <div class="time-btn-group" id="timeBtnGroup">
+                                <div style="text-align: center; color: #666; padding: 20px;">
+                                    먼저 시설과 날짜를 선택해주세요
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="form-actions-centered">
-                        <button class="btn-secondary-centered" onclick="history.back()" style="color:#222;">◀ 이전</button>
-                        <button class="btn-secondary-centered" onclick="proceedToNext()" style="color:#222;">다음 ▶</button>
+                    <div class="form-actions-centered" style="display:flex; flex-direction:row; gap:8px;">
+                        <button class="btn-secondary-centered" onclick="history.back()" style="flex:1; color:#222; padding:10px 0; font-size:0.9rem; border-radius:10px;">◀ 이전</button>
+                        <button class="btn-secondary-centered" onclick="proceedToNext()" style="flex:1; color:#222; padding:10px 0; font-size:0.9rem; border-radius:10px;">다음 ▶</button>
                     </div>
                 </div>
             </main>
-        </div>
     </div>
     <script>
         // 운영시간 설정
@@ -466,7 +502,7 @@
         const block = document.getElementById('timeSelectBlock');
         block.style.display = 'block';
         block.innerHTML = `
-            <div style="margin-bottom: 20px; text-align: center;">
+            <div class="time-header">
                 <h3 style="color: #3498db; margin: 0;">선택된 날짜: ${selectedDate}</h3>
             </div>
             <div class="time-btn-group" id="timeBtnGroup">
@@ -478,7 +514,36 @@
         if (btnGroup) {
             btnGroup.querySelectorAll('.time-btn:not(.disabled)').forEach(btn => {
                 btn.onclick = function() {
-                    selectedTime = btn.getAttribute('data-time');
+                    const clickedTime = btn.getAttribute('data-time');
+                    
+                    // 댄스연습실과 소회의실의 경우 연속된 2시간 선택 필요
+                    if (selectedFacility === '댄스연습실' || selectedFacility === '소회의실') {
+                        if (!selectedTime) {
+                            // 첫 번째 시간 선택
+                            selectedTime = clickedTime;
+                            btn.classList.add('selected');
+                        } else {
+                            // 두 번째 시간 선택 - 연속된 시간인지 확인
+                            const firstTime = parseInt(selectedTime.split(':')[0]);
+                            const secondTime = parseInt(clickedTime.split(':')[0]);
+                            
+                            if (secondTime === firstTime + 1) {
+                                // 연속된 시간이면 예약 가능
+                                selectedTime = selectedTime + ',' + clickedTime;
+                                btn.classList.add('selected');
+                            } else {
+                                // 연속되지 않은 시간이면 첫 번째 선택 취소하고 새로 선택
+                                document.querySelectorAll('.time-btn.selected').forEach(b => b.classList.remove('selected'));
+                                selectedTime = clickedTime;
+                                btn.classList.add('selected');
+                            }
+                        }
+                    } else {
+                        // 일반 시설은 1시간 단위 선택
+                        selectedTime = clickedTime;
+                        btn.classList.add('selected');
+                    }
+                    
                     showTimeSelect(); // UI 갱신
                 };
             });
@@ -545,13 +610,8 @@
     function getTimeSlotsForFacility(facility, detail, dayOfWeek) {
         const timeSlots = getTimeSlots(dayOfWeek);
         
-        if (facility && (facility === '댄스연습실' || facility === '소회의실')) {
-            // 댄스연습실과 소회의실은 2시간 연속 예약 가능하므로 마지막 시간은 제외
-            return timeSlots.slice(0, -1); // 마지막 시간 슬롯 제거 (2시간 연속 예약 불가)
-        } else {
-            // 일반 시설은 1시간 단위 예약
-            return timeSlots;
-        }
+        // 모든 시설은 1시간 단위로 표시 (댄스연습실과 소회의실도 동일)
+        return timeSlots;
     }
 
     // getTimeBtnsHTML 함수 내 시간 슬롯 생성 부분을 교체
@@ -632,19 +692,30 @@
                 return;
             }
             
+            // 댄스연습실과 소회의실의 경우 연속된 2시간 선택 확인
+            if ((selectedFacility === '댄스연습실' || selectedFacility === '소회의실') && !selectedTime.includes(',')) {
+                showModal('댄스연습실과 소회의실은 연속된 2시간을 선택해주세요.');
+                return;
+            }
+            
             // 예약 데이터 준비
             const userName = localStorage.getItem('userName') || '고객';
             const userPhone = localStorage.getItem('userPhone') || '';
             
             const userGender = localStorage.getItem('userGender') || '';
             const userAge = localStorage.getItem('userAge') || '';
+            
+            // 댄스연습실과 소회의실의 경우 시작 시간만 저장 (첫 번째 시간)
+            const startTime = selectedFacility === '댄스연습실' || selectedFacility === '소회의실' ? 
+                selectedTime.split(',')[0] : selectedTime;
+            
             const reservationData = {
                 name: userName,
                 phone: userPhone || undefined,
                 facility: selectedFacility,
                 detail: detailValue || '-',
                 date: selectedDate,
-                start_time: selectedTime,
+                start_time: startTime,
                 end_time: getEndTime(selectedTime),
                 purpose: '',
                 gender: userGender,
@@ -661,13 +732,20 @@
 
     // 종료 시간 계산 (시설에 따라 1시간 또는 2시간 후)
     function getEndTime(startTime) {
-        const [hour, minute] = startTime.split(':').map(Number);
-        
         if (selectedFacility && (selectedFacility === '댄스연습실' || selectedFacility === '소회의실')) {
-            // 댄스연습실과 소회의실은 2시간 후
-            return `${(hour + 2).toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+            // 댄스연습실과 소회의실은 연속된 2시간 선택된 경우
+            if (startTime.includes(',')) {
+                // 두 시간이 선택된 경우, 두 번째 시간이 종료 시간
+                const times = startTime.split(',');
+                return times[1];
+            } else {
+                // 아직 한 시간만 선택된 경우, 2시간 후
+                const [hour, minute] = startTime.split(':').map(Number);
+                return `${(hour + 2).toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+            }
         } else {
             // 일반 시설은 1시간 후
+            const [hour, minute] = startTime.split(':').map(Number);
             return `${(hour + 1).toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
         }
     }

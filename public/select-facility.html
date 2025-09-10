@@ -8,30 +8,34 @@
     <script type="module" src="firebase-config.js"></script>
 </head>
 <body>
-    <div class="rental-wrapper">
-        <div class="rental-container">
-            <div class="banner-section">
-                <div class="banner-image">
-                    <div class="image-slider">
-                        <img src="dc1.jpg" alt="동천청소년 문화의집 건물" class="main-building-img active">
-                        <img src="dc2.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
-                        <img src="dc3.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
-                        <img src="dc4.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
-                        <img src="dc5.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
-                        <img src="dc6.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
-                        <img src="dc7.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
-                    </div>
-                    <div class="slider-dots">
-                        <span class="dot active"></span>
-                        <span class="dot"></span>
-                        <span class="dot"></span>
-                        <span class="dot"></span>
-                        <span class="dot"></span>
-                        <span class="dot"></span>
-                        <span class="dot"></span>
-                    </div>
+    <div class="container vertical-layout">
+        <!-- 상단 배너 섹션 -->
+        <div class="banner-section">
+            <div class="current-datetime"></div>
+            <div class="banner-image">
+                <div class="image-slider">
+                    <img src="dc1.jpg" alt="동천청소년 문화의집 건물" class="main-building-img active">
+                    <img src="dc2.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                    <img src="dc3.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                    <img src="dc4.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                    <img src="dc5.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                    <img src="dc6.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                    <img src="dc7.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                    <img src="dc8.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                </div>
+                </div>
+                <div class="slider-dots">
+                    <span class="dot active"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
                 </div>
             </div>
+        </div>
             <main class="rental-main">
                 <div class="facility-floor-row">
                     <div class="facility-floor-card">
@@ -67,10 +71,15 @@
                         </div>
                     </div>
                 </div>
-                <div class="other-use-section">
-                    <div class="other-use-card" onclick="window.location.href='reservation-date.html'">
-                        <div class="facility-emoji">🔧</div>
-                        <div class="facility-name">그 외 이용</div>
+                <div class="facility-floor-row">
+                    <div class="facility-floor-card">
+                        <div class="facility-floor-label">그 외 이용</div>
+                        <div class="facility-card-row facility-card-row-single">
+                            <div class="facility-card facility-card-other" onclick="window.location.href='reservation-date.html'">
+                                <div class="facility-emoji">📚</div>
+                                <div class="facility-name">그 외 이용</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="form-actions-centered" style="display:flex; flex-direction:row; gap:8px;">
@@ -78,7 +87,6 @@
                     <button class="btn-secondary-centered facility-home-btn" onclick="sessionStorage.removeItem('agreedPersonalInfo'); window.location.href='index.html'" style="flex:1; color:#222; padding:10px 0; font-size:0.9rem; border-radius:10px;">↻ 처음으로</button>
                 </div>
             </main>
-        </div>
     </div>
     <script>
     // 시설 카드 클릭 시 시설명 저장
@@ -91,7 +99,7 @@
     });
 
     // 그 외 이용 카드 클릭 시 시설명 저장
-    document.querySelectorAll('.other-use-card').forEach(card => {
+    document.querySelectorAll('.facility-card-other').forEach(card => {
         card.addEventListener('click', function() {
             let name = card.querySelector('.facility-name').textContent.trim();
             sessionStorage.setItem('selectedFacility', name);
@@ -116,6 +124,25 @@
         if (sessionStorage.getItem('agreedPersonalInfo') !== 'y') {
             alert('개인정보 수집 및 이용에 동의해야 예약이 가능합니다.');
             window.location.href = 'rental.html';
+        }
+        
+        // 버튼 이벤트 명시적 바인딩
+        const backBtn = document.querySelector('.facility-back-btn');
+        const homeBtn = document.querySelector('.facility-home-btn');
+        
+        if (backBtn) {
+            backBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                history.back();
+            });
+        }
+        
+        if (homeBtn) {
+            homeBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                sessionStorage.removeItem('agreedPersonalInfo');
+                window.location.href = 'index.html';
+            });
         }
     });
     </script>
@@ -166,27 +193,35 @@
         padding: 10px 0 !important;
         font-size: 0.9rem !important;
         border-radius: 10px !important;
+        cursor: pointer !important;
+        z-index: 10 !important;
+        position: relative !important;
+        pointer-events: auto !important;
     }
     .rental-main {
         margin-top: 40px !important;
         max-width: 100% !important;
         padding: 0 !important;
+        width: 100% !important;
     }
     .facility-floor-row {
         gap: 30px !important;
         max-width: 100% !important;
-        padding: 0 20px !important;
+        width: 100% !important;
+        padding: 0 !important;
     }
     .facility-floor-card {
         margin-bottom: 20px !important;
         max-width: 100% !important;
+        width: 100% !important;
+        padding: 24px !important;
     }
-    .other-use-section {
-        margin: 30px 20px 20px 20px !important;
+    .facility-card-row-single {
         display: flex !important;
         justify-content: center !important;
+        gap: 20px !important;
     }
-    .other-use-card {
+    .facility-card-other {
         background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%) !important;
         border-radius: 20px !important;
         padding: 25px 40px !important;
@@ -197,16 +232,17 @@
         min-width: 200px !important;
         max-width: 300px !important;
         border: 2px solid rgba(255, 255, 255, 0.3) !important;
+        flex: 0 0 auto !important;
     }
-    .other-use-card:hover {
+    .facility-card-other:hover {
         transform: translateY(-3px) !important;
         box-shadow: 0 8px 25px rgba(255, 154, 158, 0.4) !important;
     }
-    .other-use-card .facility-emoji {
+    .facility-card-other .facility-emoji {
         font-size: 2.5rem !important;
         margin-bottom: 10px !important;
     }
-    .other-use-card .facility-name {
+    .facility-card-other .facility-name {
         color: #333 !important;
         font-weight: 700 !important;
         font-size: 1.2rem !important;
