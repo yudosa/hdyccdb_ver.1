@@ -68,9 +68,14 @@
                                 <div class="facility-emoji">🏢</div>
                                 <div class="facility-name">소회의실</div>
                             </div>
-                            <div class="facility-card facility-card-other" id="autonomousCard">
-                                <div class="facility-emoji">📚</div>
-                                <div class="facility-name">자율이용</div>
+                        </div>
+                        <div style="margin-top: 20px; text-align: left;">
+                            <div style="color: #3498db; font-weight: 700; font-size: 1.1rem; margin-bottom: 15px;">자율이용</div>
+                            <div class="facility-card-row facility-card-row-single" style="justify-content: flex-start;">
+                                <div class="facility-card facility-card-other" id="autonomousCard">
+                                    <div class="facility-emoji">📚</div>
+                                    <div class="facility-name">자율이용</div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -308,6 +313,28 @@
 
     // 초기 슬라이드 설정
     showSlide(0);
+    
+    // 현재 시간/날짜 표시 - 디지털 시계 스타일
+    function updateDateTime() {
+        const now = new Date();
+        const y = now.getFullYear();
+        const m = String(now.getMonth()+1).padStart(2,'0');
+        const d = String(now.getDate()).padStart(2,'0');
+        const h = String(now.getHours()).padStart(2,'0');
+        const min = String(now.getMinutes()).padStart(2,'0');
+        const s = String(now.getSeconds()).padStart(2,'0');
+        
+        // 요일 배열
+        const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
+        const weekday = weekdays[now.getDay()];
+        
+        // 디지털 시계 스타일로 표시
+        document.querySelector('.current-datetime').innerHTML = 
+            `<div style="font-size: 1rem; margin-bottom: 2px; opacity: 0.9;">${y}-${m}-${d} (${weekday})</div>
+             <div style="font-size: 1.5rem; font-weight: 800;">${h}:${min}:${s}</div>`;
+    }
+    setInterval(updateDateTime, 1000);
+    updateDateTime();
     </script>
     <style>
     .form-actions-centered {
@@ -350,6 +377,28 @@
         cursor: pointer !important;
         pointer-events: auto !important;
     }
+    
+    /* 시계 스타일 */
+    .current-datetime {
+        position: absolute;
+        top: 16px;
+        right: 18px;
+        font-size: 1.32rem;
+        font-weight: 700;
+        color: #444;
+        margin: 0;
+        letter-spacing: 1px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: rgba(255,255,255,0.85);
+        padding: 2px 10px;
+        border-radius: 8px;
+    }
+    @media (max-width: 600px) {
+        .current-datetime {
+            text-align: center;
+            margin-right: 0;
+        }
+    }
     .facility-card-other:hover {
         transform: translateY(-4px) scale(1.04) !important;
         box-shadow: 0 8px 24px rgba(255, 154, 158, 0.3) !important;
@@ -357,6 +406,9 @@
     .form-actions-centered button {
         padding: 20px 50px !important;
         font-size: 1.3rem !important;
+        min-width: 200px !important;
+        white-space: nowrap !important;
+        flex: 1 !important;
     }
     
     /* 자율이용 모달 스타일 */
