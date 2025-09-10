@@ -1033,5 +1033,27 @@
     // 초기 슬라이드 설정
     showSlide(0);
     </script>
+    <style>
+    .current-datetime {
+        position: absolute;
+        top: 16px;
+        right: 18px;
+        font-size: 1.32rem;
+        font-weight: 700;
+        color: #444;
+        margin: 0;
+        letter-spacing: 1px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: rgba(255,255,255,0.85);
+        padding: 2px 10px;
+        border-radius: 8px;
+    }
+    @media (max-width: 600px) {
+        .current-datetime {
+            text-align: center;
+            margin-right: 0;
+        }
+    }
+    </style>
 </body>
 </html> 
