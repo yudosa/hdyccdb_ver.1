@@ -405,8 +405,8 @@ body {
 }
 
 .footer-logo {
-    width: 25px;
-    height: 25px;
+    width: 40px;
+    height: 30px;
     object-fit: contain;
     object-position: center;
     flex-shrink: 0;
@@ -519,8 +519,8 @@ body {
     }
     
     .footer-logo {
-        width: 20px;
-        height: 20px;
+        width: 35px;
+        height: 25px;
     }
     
     .logo-track {
@@ -620,8 +620,8 @@ body {
     }
     
     .footer-logo {
-        width: 18px;
-        height: 18px;
+        width: 30px;
+        height: 20px;
     }
     
     .logo-track {
