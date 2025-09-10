@@ -47,7 +47,7 @@
                             </div>
                             <div class="facility-card facility-card-ps" onclick="window.location.href='reservation-date.html'">
                                 <div class="facility-emoji">🕹️</div>
-                                <div class="facility-name">플레이스테이션</div>
+                                <div class="facility-name">플레이<br>스테이션</div>
                             </div>
                         </div>
                         <div class="facility-card-row facility-card-row-single">
@@ -68,16 +68,9 @@
                                 <div class="facility-emoji">🏢</div>
                                 <div class="facility-name">소회의실</div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="facility-floor-row">
-                    <div class="facility-floor-card">
-                        <div class="facility-floor-label">그 외 이용</div>
-                        <div class="facility-card-row facility-card-row-single">
                             <div class="facility-card facility-card-other" onclick="window.location.href='reservation-date.html'">
                                 <div class="facility-emoji">📚</div>
-                                <div class="facility-name">그 외 이용</div>
+                                <div class="facility-name">자율이용</div>
                             </div>
                         </div>
                     </div>
@@ -98,7 +91,7 @@
         });
     });
 
-    // 그 외 이용 카드 클릭 시 시설명 저장
+    // 자율이용 카드 클릭 시 시설명 저장
     document.querySelectorAll('.facility-card-other').forEach(card => {
         card.addEventListener('click', function() {
             let name = card.querySelector('.facility-name').textContent.trim();
@@ -216,37 +209,8 @@
         width: 100% !important;
         padding: 24px !important;
     }
-    .facility-card-row-single {
-        display: flex !important;
-        justify-content: center !important;
-        gap: 20px !important;
-    }
     .facility-card-other {
         background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%) !important;
-        border-radius: 20px !important;
-        padding: 25px 40px !important;
-        text-align: center !important;
-        cursor: pointer !important;
-        transition: transform 0.2s ease, box-shadow 0.2s ease !important;
-        box-shadow: 0 6px 20px rgba(255, 154, 158, 0.3) !important;
-        min-width: 200px !important;
-        max-width: 300px !important;
-        border: 2px solid rgba(255, 255, 255, 0.3) !important;
-        flex: 0 0 auto !important;
-    }
-    .facility-card-other:hover {
-        transform: translateY(-3px) !important;
-        box-shadow: 0 8px 25px rgba(255, 154, 158, 0.4) !important;
-    }
-    .facility-card-other .facility-emoji {
-        font-size: 2.5rem !important;
-        margin-bottom: 10px !important;
-    }
-    .facility-card-other .facility-name {
-        color: #333 !important;
-        font-weight: 700 !important;
-        font-size: 1.2rem !important;
-        text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8) !important;
     }
     </style>
     

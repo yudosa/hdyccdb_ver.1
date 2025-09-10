@@ -142,6 +142,7 @@
             max-width: 100% !important;
             width: 100% !important;
             padding: 0 !important;
+            margin-top: 40px !important;
         }
         .calendar-time-container {
             display: grid;
@@ -158,6 +159,8 @@
             padding: 24px;
             display: flex;
             flex-direction: column;
+            height: 450px;
+            align-items: stretch;
         }
         .calendar-header, .time-header {
             text-align: center;
@@ -180,6 +183,7 @@
             align-items: center;
             max-width: 100%;
             width: 100%;
+            box-sizing: border-box;
         }
         .detail-label {
             font-size: 1.18rem;
@@ -522,6 +526,11 @@
                             // 첫 번째 시간 선택
                             selectedTime = clickedTime;
                             btn.classList.add('selected');
+                        } else if (selectedTime.includes(',')) {
+                            // 이미 2시간이 선택된 경우, 새로운 선택으로 교체
+                            document.querySelectorAll('.time-btn.selected').forEach(b => b.classList.remove('selected'));
+                            selectedTime = clickedTime;
+                            btn.classList.add('selected');
                         } else {
                             // 두 번째 시간 선택 - 연속된 시간인지 확인
                             const firstTime = parseInt(selectedTime.split(':')[0]);
@@ -640,7 +649,7 @@
             }
             const isDisabled = isReserved || isPastTime;
             const disabledText = isReserved ? ' (예약됨)' : '';
-            const durationText = (selectedFacility === '댄스연습실' || selectedFacility === '소회의실') ? ' (2시간)' : '';
+            const durationText = '';
             let buttonClass = 'time-btn';
             if (isDisabled) buttonClass += ' disabled';
             if (selectedTime === time) buttonClass += ' selected';
@@ -694,7 +703,7 @@
             
             // 댄스연습실과 소회의실의 경우 연속된 2시간 선택 확인
             if ((selectedFacility === '댄스연습실' || selectedFacility === '소회의실') && !selectedTime.includes(',')) {
-                showModal('댄스연습실과 소회의실은 연속된 2시간을 선택해주세요.');
+                showModal('댄스연습실과 소회의실은 연속된 2시간을 선택해주세요. (예: 10시, 11시)');
                 return;
             }
             
