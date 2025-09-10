@@ -366,11 +366,12 @@ body {
 
 /* 푸터 */
 .footer {
-    background: #333;
-    color: white;
+    background: white;
+    color: #333;
     text-align: center;
-    padding: 15px 20px;
+    padding: 5px 20px;
     margin-top: 20px;
+    border-top: 1px solid #e0e0e0;
 }
 
 .footer-content {
@@ -391,7 +392,7 @@ body {
 
 .logo-marquee {
     width: 100%;
-    height: 120px;
+    height: 40px;
     overflow: hidden;
     position: relative;
 }
@@ -401,7 +402,7 @@ body {
     align-items: center;
     height: 100%;
     animation: logoScroll 30s linear infinite;
-    gap: 20px;
+    gap: 40px;
 }
 
 .footer-logo {
@@ -415,6 +416,12 @@ body {
 @keyframes logoScroll {
     0% {
         transform: translateX(100%);
+    }
+    20% {
+        transform: translateX(0%);
+    }
+    80% {
+        transform: translateX(0%);
     }
     100% {
         transform: translateX(-100%);
@@ -515,7 +522,7 @@ body {
     }
     
     .logo-marquee {
-        height: 105px;
+        height: 35px;
     }
     
     .footer-logo {
@@ -524,7 +531,7 @@ body {
     }
     
     .logo-track {
-        gap: 15px;
+        gap: 30px;
     }
 }
 
@@ -616,7 +623,7 @@ body {
     }
     
     .logo-marquee {
-        height: 90px;
+        height: 30px;
     }
     
     .footer-logo {
@@ -625,7 +632,7 @@ body {
     }
     
     .logo-track {
-        gap: 12px;
+        gap: 25px;
     }
 }
 
