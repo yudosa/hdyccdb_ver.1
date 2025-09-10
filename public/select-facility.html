@@ -71,7 +71,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-actions-centered">
+                <div class="form-actions-centered" style="display:flex; flex-direction:column; gap:12px;">
                     <button class="btn-secondary-centered facility-back-btn" onclick="history.back()" style="color:#222;">◀ 이전</button>
                     <button class="btn-secondary-centered facility-home-btn" onclick="sessionStorage.removeItem('agreedPersonalInfo'); window.location.href='index.html'" style="color:#222;">↻ 처음으로</button>
                 </div>
@@ -143,5 +143,28 @@
     // 초기 슬라이드 설정
     showSlide(0);
     </script>
+    <style>
+    .form-actions-centered {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 12px !important;
+    }
+    .form-actions-centered button {
+        width: 100% !important;
+    }
+    .rental-main {
+        margin-top: 40px !important;
+        max-width: 100% !important;
+        padding: 0 20px !important;
+    }
+    .facility-floor-row {
+        gap: 30px !important;
+        max-width: 100% !important;
+    }
+    .facility-floor-card {
+        margin-bottom: 20px !important;
+        max-width: 100% !important;
+    }
+    </style>
 </body>
 </html> 

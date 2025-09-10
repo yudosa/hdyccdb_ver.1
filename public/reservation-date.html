@@ -234,7 +234,11 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="time-select-block" id="timeSelectBlock"></div>
+                    <div class="time-select-block" id="timeSelectBlock" style="display: block;">
+                        <div style="margin-bottom: 20px; text-align: center;">
+                            <h3 style="color: #3498db; margin: 0;">날짜를 선택해주세요</h3>
+                        </div>
+                    </div>
                     <div class="form-actions-centered">
                         <button class="btn-secondary-centered" style="color:#222;">◀ 이전</button>
                         <button class="btn-secondary-centered" style="color:#222;">다음 ▶</button>
@@ -302,7 +306,7 @@
         if (facilityName) {
             facilityTitle.innerHTML = `<span style="color: #3498db;">${facilityName}</span> 시설 이용 신청`;
         }
-        if (facilityName === '댄스연습실') {
+        if (facilityName === '댄스연습실' || facilityName === '소회의실' || facilityName === '보드게임') {
             detailCard.style.display = 'none';
             selectedFacility = facilityName;
             selectedDetail = '-';
@@ -325,10 +329,6 @@
                 options = [
                     {v:'노래방1', t:'🎤 노래방1'},
                     {v:'노래방2', t:'🎤 노래방2'}
-                ];
-            } else if (facilityName === '보드게임') {
-                options = [
-                    {v:'보드게임', t:'🎲 보드게임'}
                 ];
             }
             detailSelect.innerHTML = options.map(o => `<option value="${o.v}">${o.t}</option>`).join('');
@@ -770,5 +770,37 @@
     // 초기 슬라이드 설정
     showSlide(0);
     </script>
+    <style>
+    .reservation-calendar-block {
+        display: block !important;
+        margin: 20px 0 !important;
+    }
+    .reservation-calendar {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        margin: 0 auto !important;
+    }
+    .time-select-block {
+        display: block !important;
+        margin: 20px 0 !important;
+    }
+    .calendar-day {
+        padding: 10px !important;
+        text-align: center !important;
+        cursor: pointer !important;
+        border: 1px solid #ddd !important;
+    }
+    .calendar-day:hover {
+        background-color: #f0f0f0 !important;
+    }
+    .calendar-day.selected {
+        background-color: #3498db !important;
+        color: white !important;
+    }
+    .calendar-day.disabled {
+        color: #ccc !important;
+        cursor: not-allowed !important;
+    }
+    </style>
 </body>
 </html> 
