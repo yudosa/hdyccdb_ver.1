@@ -68,16 +68,21 @@
                                 <div class="facility-emoji">🏢</div>
                                 <div class="facility-name">소회의실</div>
                             </div>
-                            <div class="facility-card facility-card-other">
-                                <div class="facility-emoji">📚</div>
-                                <div class="facility-name">자율이용</div>
+                        </div>
+                        <div style="margin-top: 20px; text-align: center;">
+                            <div style="color: #3498db; font-weight: 700; font-size: 1.1rem; margin-bottom: 15px;">자율이용</div>
+                            <div class="facility-card-row facility-card-row-single">
+                                <div class="facility-card facility-card-other">
+                                    <div class="facility-emoji">📚</div>
+                                    <div class="facility-name">자율이용</div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="form-actions-centered" style="display:flex; flex-direction:row; gap:8px;">
-                    <button class="btn-secondary-centered facility-back-btn" onclick="history.back()">◀ 이전</button>
-                    <button class="btn-secondary-centered facility-home-btn" onclick="sessionStorage.removeItem('agreedPersonalInfo'); window.location.href='index.html'">↻ 처음으로</button>
+                    <button class="btn-secondary-centered facility-back-btn" onclick="history.back()" style="padding:10px 0; font-size:0.9rem;">◀ 이전</button>
+                    <button class="btn-secondary-centered facility-home-btn" onclick="sessionStorage.removeItem('agreedPersonalInfo'); window.location.href='index.html'" style="padding:10px 0; font-size:0.9rem;">↻ 처음으로</button>
                 </div>
             </main>
     </div>
@@ -91,12 +96,7 @@
         });
     });
 
-    // 자율이용 카드 클릭 시 세부 선택 표시
-    document.querySelectorAll('.facility-card-other').forEach(card => {
-        card.addEventListener('click', function() {
-            showAutonomousUseModal();
-        });
-    });
+    // 자율이용 카드 클릭 이벤트는 DOMContentLoaded에서 설정
 
     function showAutonomousUseModal() {
         let modal = document.createElement('div');
@@ -246,6 +246,15 @@
                 window.location.href = 'index.html';
             });
         }
+        
+        // 자율이용 카드 클릭 이벤트 바인딩
+        document.querySelectorAll('.facility-card-other').forEach(card => {
+            card.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('자율이용 카드 클릭됨');
+                showAutonomousUseModal();
+            });
+        });
     });
     </script>
     
@@ -323,22 +332,5 @@
     }
     </style>
     
-    <!-- 로고 애니메이션 - 맨 하단 고정 -->
-    <div class="logo-marquee">
-        <div class="logo-track">
-            <img src="logo12.png" alt="로고12" class="footer-logo">
-            <img src="logo1.png" alt="로고1" class="footer-logo">
-            <img src="logo2.png" alt="로고2" class="footer-logo">
-            <img src="logo3.png" alt="로고3" class="footer-logo">
-            <img src="logo4.png" alt="로고4" class="footer-logo">
-            <img src="logo5.png" alt="로고5" class="footer-logo">
-            <img src="logo6.png" alt="로고6" class="footer-logo">
-            <img src="logo7.png" alt="로고7" class="footer-logo">
-            <img src="logo8.png" alt="로고8" class="footer-logo">
-            <img src="logo9.png" alt="로고9" class="footer-logo">
-            <img src="logo10.png" alt="로고10" class="footer-logo">
-            <img src="logo11.png" alt="로고11" class="footer-logo">
-        </div>
-    </div>
 </body>
 </html> 

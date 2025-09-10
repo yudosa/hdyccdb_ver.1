@@ -398,14 +398,14 @@ body {
 
 /* 로고 애니메이션 - 맨 하단 고정 */
 .logo-marquee {
-    position: fixed;
+    position: relative;
     bottom: 0;
     left: 0;
     width: 100%;
     height: 50px;
     background: transparent;
     overflow: hidden;
-    z-index: 99999;
+    z-index: 1;
     min-height: 50px;
     max-height: 50px;
     transform: translate3d(0, 0, 0);
@@ -478,34 +478,24 @@ body {
     }
 }
 
-/* 태블릿과 모바일에서 키패드 올라와도 로고 고정 */
+/* 태블릿과 모바일에서 로고 스타일 */
 @media (max-width: 1024px) {
     .logo-marquee {
-        position: fixed !important;
-        bottom: 0 !important;
-        left: 0 !important;
-        width: 100% !important;
-        height: 50px !important;
-        z-index: 99999 !important;
-        min-height: 50px !important;
-        max-height: 50px !important;
-        transform: translate3d(0, 0, 0) !important;
-        animation-play-state: running !important;
+        height: 50px;
+        min-height: 50px;
+        max-height: 50px;
+        transform: translate3d(0, 0, 0);
+        animation-play-state: running;
     }
 }
 
 @media (max-width: 768px) {
     .logo-marquee {
-        position: fixed !important;
-        bottom: 0 !important;
-        left: 0 !important;
-        width: 100% !important;
-        height: 50px !important;
-        z-index: 99999 !important;
-        min-height: 50px !important;
-        max-height: 50px !important;
-        transform: translate3d(0, 0, 0) !important;
-        animation-play-state: running !important;
+        height: 50px;
+        min-height: 50px;
+        max-height: 50px;
+        transform: translate3d(0, 0, 0);
+        animation-play-state: running;
     }
 }
 

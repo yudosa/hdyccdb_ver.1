@@ -169,6 +169,13 @@
         .calendar-header, .time-header {
             text-align: center;
             margin-bottom: 20px;
+            width: 100%;
+            max-width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 20px;
+            box-sizing: border-box;
         }
         .time-header h3 {
             color: #3498db;
@@ -231,32 +238,32 @@
 <body>
     <div class="container vertical-layout">
         <!-- 상단 배너 섹션 -->
-        <div class="banner-section">
+            <div class="banner-section">
             <div class="current-datetime"></div>
-            <div class="banner-image">
-                <div class="image-slider">
-                    <img src="dc1.jpg" alt="동천청소년 문화의집 건물" class="main-building-img active">
-                    <img src="dc2.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
-                    <img src="dc3.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
-                    <img src="dc4.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
-                    <img src="dc5.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
-                    <img src="dc6.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
-                    <img src="dc7.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                <div class="banner-image">
+                    <div class="image-slider">
+                        <img src="dc1.jpg" alt="동천청소년 문화의집 건물" class="main-building-img active">
+                        <img src="dc2.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                        <img src="dc3.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                        <img src="dc4.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                        <img src="dc5.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                        <img src="dc6.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                        <img src="dc7.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
                     <img src="dc8.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
                 </div>
-                </div>
-                <div class="slider-dots">
-                    <span class="dot active"></span>
+                    </div>
+                    <div class="slider-dots">
+                        <span class="dot active"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
                     <span class="dot"></span>
-                    <span class="dot"></span>
-                    <span class="dot"></span>
-                    <span class="dot"></span>
-                    <span class="dot"></span>
-                    <span class="dot"></span>
-                    <span class="dot"></span>
+                    </div>
                 </div>
             </div>
-        </div>
             <main class="rental-main">
                 <div class="rental-form-centered reservation-date-form">
                     <div class="detail-card" id="detailCard" style="display:none;">
@@ -267,30 +274,30 @@
                     </div>
                     <div class="calendar-time-container">
                         <div class="calendar-card">
-                            <div class="calendar-header">
-                                <button class="calendar-nav-btn" id="prevMonth">◀</button>
+                        <div class="calendar-header">
+                            <button class="calendar-nav-btn" id="prevMonth">◀</button>
                                 <span class="calendar-title" id="calendarTitle">2024년 12월</span>
-                                <button class="calendar-nav-btn" id="nextMonth">▶</button>
-                            </div>
-                            <table class="reservation-calendar">
-                                <thead>
-                                    <tr>
-                                        <th>일</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th><th>토</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="calendarBody">
-                                </tbody>
-                            </table>
+                            <button class="calendar-nav-btn" id="nextMonth">▶</button>
                         </div>
+                        <table class="reservation-calendar">
+                            <thead>
+                                <tr>
+                                    <th>일</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th><th>토</th>
+                                </tr>
+                            </thead>
+                            <tbody id="calendarBody">
+                            </tbody>
+                        </table>
+                    </div>
                         <div class="time-card" id="timeSelectBlock" style="display: block;">
                             <div class="time-header">
                                 <h3 style="color: #3498db; margin: 0;">시간 선택</h3>
-                            </div>
+                    </div>
                             <div class="time-btn-group" id="timeBtnGroup">
-                                <div style="text-align: center; color: #666; padding: 20px;">
+                                <div style="text-align: center; color: #666; padding: 20px; display: flex; justify-content: center; align-items: center; height: 100%; font-size: 1.1rem; font-weight: 600;">
                                     먼저 시설과 날짜를 선택해주세요
-                                </div>
-                            </div>
+                </div>
+        </div>
                         </div>
                     </div>
                     <div class="form-actions-centered" style="display:flex; flex-direction:row; gap:8px;">
@@ -539,8 +546,12 @@
         `;
         // 시간 버튼 클릭 이벤트 바인딩
         const btnGroup = document.getElementById('timeBtnGroup');
+        console.log('시간 버튼 그룹 찾기:', btnGroup);
         if (btnGroup) {
-            btnGroup.querySelectorAll('.time-btn:not(.disabled)').forEach(btn => {
+            const timeButtons = btnGroup.querySelectorAll('.time-btn:not(.disabled)');
+            console.log('시간 버튼 개수:', timeButtons.length);
+            timeButtons.forEach((btn, index) => {
+                console.log(`시간 버튼 ${index}:`, btn.textContent, btn.getAttribute('data-time'));
                 btn.onclick = function() {
                     const clickedTime = btn.getAttribute('data-time');
                     
@@ -585,9 +596,11 @@
                             }
                         }
                     } else {
-                        // 일반 시설은 1시간 단위 선택
+                        // 일반 시설은 1시간 단위 선택 (중복 선택 방지)
+                        document.querySelectorAll('.time-btn.selected').forEach(b => b.classList.remove('selected'));
                         selectedTime = clickedTime;
                         btn.classList.add('selected');
+                        console.log('일반 시설 시간 선택:', selectedTime);
                     }
                     
                     showTimeSelect(); // UI 갱신
@@ -636,10 +649,10 @@
                             }
                         } else {
                             // 1시간 단위 예약
-                            for (let h = startHour; h < endHour; h++) {
-                                const timeStr = `${h.toString().padStart(2, '0')}:00`;
-                                if (!reservationData[key][reservation.date].includes(timeStr)) {
-                                    reservationData[key][reservation.date].push(timeStr);
+                        for (let h = startHour; h < endHour; h++) {
+                            const timeStr = `${h.toString().padStart(2, '0')}:00`;
+                            if (!reservationData[key][reservation.date].includes(timeStr)) {
+                                reservationData[key][reservation.date].push(timeStr);
                                 }
                             }
                         }
@@ -670,6 +683,11 @@
         const reserved = Object.keys(reservationData).length > 0 ? 
             getReservedTimes(selectedFacility, selectedDetail, selectedDate) : [];
         console.log('getTimeBtnsHTML - reserved:', reserved);
+        
+        if (!slots || slots.length === 0) {
+            console.error('시간 슬롯이 없습니다!');
+            return '<div style="text-align: center; color: #666; padding: 20px;">시간 슬롯을 불러올 수 없습니다.</div>';
+        }
         let html = '';
         slots.forEach(time => {
             const paddedTime = time.padStart(5, '0');
@@ -786,7 +804,7 @@
                 return times[1];
             } else {
                 // 아직 한 시간만 선택된 경우, 2시간 후
-                const [hour, minute] = startTime.split(':').map(Number);
+        const [hour, minute] = startTime.split(':').map(Number);
                 return `${(hour + 2).toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
             }
         } else {
@@ -819,7 +837,7 @@
         
         createReservation(reservationData);
     }
-
+    
     // 예약 생성 API 호출
     async function createReservation(data) {
         try {
@@ -1042,22 +1060,5 @@
     }
     </style>
     
-    <!-- 로고 애니메이션 - 맨 하단 고정 -->
-    <div class="logo-marquee">
-        <div class="logo-track">
-            <img src="logo12.png" alt="로고12" class="footer-logo">
-            <img src="logo1.png" alt="로고1" class="footer-logo">
-            <img src="logo2.png" alt="로고2" class="footer-logo">
-            <img src="logo3.png" alt="로고3" class="footer-logo">
-            <img src="logo4.png" alt="로고4" class="footer-logo">
-            <img src="logo5.png" alt="로고5" class="footer-logo">
-            <img src="logo6.png" alt="로고6" class="footer-logo">
-            <img src="logo7.png" alt="로고7" class="footer-logo">
-            <img src="logo8.png" alt="로고8" class="footer-logo">
-            <img src="logo9.png" alt="로고9" class="footer-logo">
-            <img src="logo10.png" alt="로고10" class="footer-logo">
-            <img src="logo11.png" alt="로고11" class="footer-logo">
-        </div>
-    </div>
 </body>
 </html> 
