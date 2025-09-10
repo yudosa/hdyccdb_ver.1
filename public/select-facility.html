@@ -81,8 +81,8 @@
                     </div>
                 </div>
                 <div class="form-actions-centered" style="display:flex; flex-direction:row; gap:8px;">
-                    <button class="btn-secondary-centered facility-back-btn" onclick="history.back()" style="padding:15px 0; font-size:1.1rem;">◀ 이전</button>
-                    <button class="btn-secondary-centered facility-home-btn" onclick="sessionStorage.removeItem('agreedPersonalInfo'); window.location.href='index.html'" style="padding:15px 0; font-size:1.1rem;">↻ 처음으로</button>
+                    <button class="btn-secondary-centered facility-back-btn" onclick="history.back()">◀ 이전</button>
+                    <button class="btn-secondary-centered facility-home-btn" onclick="sessionStorage.removeItem('agreedPersonalInfo'); window.location.href='index.html'">↻ 처음으로</button>
                 </div>
             </main>
     </div>
@@ -99,6 +99,7 @@
     // 자율이용 카드 클릭 이벤트는 DOMContentLoaded에서 설정
 
     window.showAutonomousUseModal = function() {
+        console.log('자율이용 모달 함수 호출됨');
         let modal = document.createElement('div');
         modal.className = 'custom-modal-bg';
         modal.innerHTML = `
@@ -118,6 +119,13 @@
             </div>
         `;
         document.body.appendChild(modal);
+
+        // 모달 배경 클릭 시 닫기
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                modal.remove();
+            }
+        });
 
         // 옵션 버튼 스타일
         const style = document.createElement('style');
@@ -247,7 +255,15 @@
             });
         }
         
-        // 자율이용 카드 클릭 이벤트는 onclick 속성으로 처리됨
+        // 자율이용 카드 클릭 이벤트 바인딩
+        document.querySelectorAll('.facility-card-other').forEach(card => {
+            card.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('자율이용 카드 클릭됨');
+                showAutonomousUseModal();
+            });
+        });
     });
     </script>
     
@@ -324,10 +340,52 @@
         background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%) !important;
         cursor: pointer !important;
         transition: all 0.3s ease !important;
+        pointer-events: auto !important;
+        position: relative !important;
+        z-index: 10 !important;
     }
     .facility-card-other:hover {
         transform: translateY(-4px) scale(1.04) !important;
         box-shadow: 0 8px 24px rgba(255, 154, 158, 0.3) !important;
+    }
+    .form-actions-centered button {
+        padding: 12px 0 !important;
+        font-size: 1rem !important;
+    }
+    
+    /* 자율이용 모달 스타일 */
+    .custom-modal-bg {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        background: rgba(0, 0, 0, 0.5) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        z-index: 9999 !important;
+    }
+    
+    .custom-modal {
+        background: white !important;
+        border-radius: 20px !important;
+        padding: 30px !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+        max-width: 90vw !important;
+        width: 100% !important;
+    }
+    
+    .custom-modal-btn {
+        background: linear-gradient(90deg, #a8edea 0%, #fed6e3 100%) !important;
+        color: #222 !important;
+        border: none !important;
+        border-radius: 12px !important;
+        padding: 12px 24px !important;
+        font-weight: 700 !important;
+        cursor: pointer !important;
+        width: 100% !important;
+        margin-top: 10px !important;
     }
     </style>
     

@@ -14,6 +14,9 @@
             display: grid; 
             grid-template-columns: repeat(3, 1fr); 
             gap: 12px; 
+            width: 100%;
+            max-width: 100%;
+            justify-items: center;
         }
         .time-btn { 
             min-width: 90px; 
@@ -26,6 +29,8 @@
             color: #3498db; 
             cursor: pointer; 
             transition: background 0.18s, color 0.18s; 
+            text-align: center;
+            width: 100%;
         }
         .time-btn.selected { 
             background: linear-gradient(90deg, #a8edea 0%, #fed6e3 100%); 
@@ -57,12 +62,17 @@
             justify-content: center;
             gap: 32px;
             margin-bottom: 18px;
+            width: 100%;
+            text-align: center;
+            flex-direction: row;
         }
         .calendar-title {
             font-size: 1.45rem;
             font-weight: 700;
             color: #222;
             letter-spacing: 1px;
+            text-align: center;
+            flex: 1;
         }
         .calendar-nav-btn {
             background: linear-gradient(90deg, #ffd6e3 0%, #a8edea 100%);
@@ -87,12 +97,14 @@
             max-width: 420px;
             border-collapse: separate;
             border-spacing: 0 12px;
+            margin: 0 auto;
         }
         .reservation-calendar th {
             font-size: 1.12rem;
             color: #3498db;
             font-weight: 700;
             padding-bottom: 8px;
+            text-align: center;
         }
         .reservation-calendar td {
             text-align: center;
@@ -164,7 +176,8 @@
             display: flex;
             flex-direction: column;
             height: 450px;
-            align-items: stretch;
+            align-items: center;
+            text-align: center;
         }
         .calendar-header, .time-header {
             text-align: center;
@@ -176,6 +189,7 @@
             align-items: center;
             padding: 0 20px;
             box-sizing: border-box;
+            flex-direction: column;
         }
         .time-header h3 {
             color: #3498db;
@@ -184,6 +198,7 @@
             font-weight: 800;
             text-align: center;
             width: 100%;
+            display: block;
         }
         .detail-card {
             background: #fff;
@@ -532,6 +547,7 @@
     initCalendar();
 
     function showTimeSelect() {
+        console.log('showTimeSelect 호출됨 - selectedFacility:', selectedFacility, 'selectedDetail:', selectedDetail, 'selectedDate:', selectedDate);
         const block = document.getElementById('timeSelectBlock');
         block.style.display = 'block';
         
@@ -551,19 +567,16 @@
             const btnGroup = document.getElementById('timeBtnGroup');
             console.log('시간 버튼 그룹 찾기:', btnGroup);
             if (btnGroup) {
-                const timeButtons = btnGroup.querySelectorAll('.time-btn:not(.disabled)');
-                console.log('시간 버튼 개수:', timeButtons.length);
-                timeButtons.forEach((btn, index) => {
-                    console.log(`시간 버튼 ${index}:`, btn.textContent, btn.getAttribute('data-time'));
+                // 이벤트 위임 방식으로 변경
+                btnGroup.addEventListener('click', function(e) {
+                    const btn = e.target.closest('.time-btn');
+                    if (!btn || btn.classList.contains('disabled')) return;
                     
-                    // 기존 이벤트 리스너 제거
-                    btn.onclick = null;
+                    e.preventDefault();
+                    e.stopPropagation();
                     
-                    // 새 이벤트 리스너 추가
-                    btn.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        e.stopPropagation();
                     const clickedTime = btn.getAttribute('data-time');
+                    console.log('시간 버튼 클릭됨:', clickedTime, '현재 선택된 시간:', selectedTime);
                     
                     // 댄스연습실과 소회의실의 경우 연속된 2시간 선택 필요
                     if (selectedFacility === '댄스연습실' || selectedFacility === '소회의실') {
@@ -613,11 +626,39 @@
                         console.log('일반 시설 시간 선택:', selectedTime);
                     }
                     
-                        showTimeSelect(); // UI 갱신
-                    });
+                    // UI 갱신 (재귀 호출 방지)
+                    updateTimeSelectUI();
                 });
             }
         }, 100); // DOM 업데이트 후 이벤트 바인딩
+    }
+
+    // 시간 선택 UI만 업데이트하는 함수 (이벤트 리스너 재생성 없음)
+    function updateTimeSelectUI() {
+        const btnGroup = document.getElementById('timeBtnGroup');
+        if (!btnGroup) return;
+        
+        // 모든 시간 버튼의 선택 상태 업데이트
+        const timeButtons = btnGroup.querySelectorAll('.time-btn');
+        timeButtons.forEach(btn => {
+            const btnTime = btn.getAttribute('data-time');
+            btn.classList.remove('selected');
+            
+            if (selectedTime) {
+                if (selectedTime.includes(',')) {
+                    // 연속 시간 선택인 경우
+                    const times = selectedTime.split(',');
+                    if (times.includes(btnTime)) {
+                        btn.classList.add('selected');
+                    }
+                } else {
+                    // 단일 시간 선택인 경우
+                    if (selectedTime === btnTime) {
+                        btn.classList.add('selected');
+                    }
+                }
+            }
+        });
     }
 
     async function loadReservationData() {

@@ -418,19 +418,16 @@ body {
     display: flex !important;
     align-items: center !important;
     height: 100% !important;
-    animation: logoScroll 25s ease-in-out infinite !important;
     gap: 80px !important;
     position: relative !important;
     transform: translate3d(0, 0, 0) !important;
     width: max-content !important;
-    animation-play-state: running !important;
     min-width: 2000px !important;
-    /* 애니메이션 강제 실행 */
-    animation-fill-mode: both !important;
-    animation-iteration-count: infinite !important;
-    animation-timing-function: ease-in-out !important;
-    /* 애니메이션 시작 지연 제거 */
-    animation-delay: 0s !important;
+    /* JavaScript 애니메이션을 위해 CSS 애니메이션 비활성화 */
+    animation: none !important;
+    /* 부드러운 애니메이션을 위한 설정 */
+    will-change: transform !important;
+    transition: none !important;
 }
 
 .footer-logo {

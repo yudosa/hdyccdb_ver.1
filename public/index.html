@@ -262,7 +262,53 @@
     // 초기 슬라이드 설정
     showSlide(0);
 
-    // 푸터 로고 마키 애니메이션은 CSS로 처리
+    // 푸터 로고 마키 애니메이션
+    function initLogoMarquee() {
+        const logoTrack = document.querySelector('.logo-track');
+        if (!logoTrack) return;
+        
+        let position = 0;
+        const speed = 1; // 픽셀 단위 이동 속도 (조금 더 빠르게)
+        
+        function animate() {
+            position -= speed;
+            logoTrack.style.transform = `translate3d(${position}px, 0, 0)`;
+            
+            // 로고가 완전히 왼쪽으로 사라지면 위치 리셋
+            const trackWidth = logoTrack.scrollWidth;
+            if (position <= -trackWidth / 2) {
+                position = 0;
+            }
+            
+            requestAnimationFrame(animate);
+        }
+        
+        // 로고 이미지들이 모두 로드된 후 애니메이션 시작
+        const logoImages = logoTrack.querySelectorAll('.footer-logo');
+        let loadedImages = 0;
+        
+        logoImages.forEach(img => {
+            if (img.complete) {
+                loadedImages++;
+            } else {
+                img.addEventListener('load', () => {
+                    loadedImages++;
+                    if (loadedImages === logoImages.length) {
+                        animate();
+                    }
+                });
+            }
+        });
+        
+        if (loadedImages === logoImages.length) {
+            animate();
+        }
+    }
+    
+    // 페이지 로드 후 로고 애니메이션 시작
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(initLogoMarquee, 1000); // 1초 후 시작
+    });
     // 전화번호 자동 포맷팅
     document.getElementById('user-phone').addEventListener('input', function(e) {
         let value = e.target.value.replace(/[^0-9]/g, '');
