@@ -212,6 +212,7 @@
     <div class="rental-wrapper">
         <div class="rental-container">
             <div class="banner-section">
+                <div class="current-datetime"></div>
                 <div class="banner-image">
                     <div class="image-slider">
                         <img src="dc1.jpg" alt="동천청소년 문화의집 건물" class="main-building-img active">
@@ -221,9 +222,11 @@
                         <img src="dc5.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
                         <img src="dc6.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
                         <img src="dc7.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                        <img src="dc8.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
                     </div>
                     <div class="slider-dots">
                         <span class="dot active"></span>
+                        <span class="dot"></span>
                         <span class="dot"></span>
                         <span class="dot"></span>
                         <span class="dot"></span>
@@ -605,6 +608,28 @@
     </script>
     
     <script>
+    // 현재 시간/날짜 표시 - 디지털 시계 스타일
+    function updateDateTime() {
+        const now = new Date();
+        const y = now.getFullYear();
+        const m = String(now.getMonth()+1).padStart(2,'0');
+        const d = String(now.getDate()).padStart(2,'0');
+        const h = String(now.getHours()).padStart(2,'0');
+        const min = String(now.getMinutes()).padStart(2,'0');
+        const s = String(now.getSeconds()).padStart(2,'0');
+        
+        // 요일 배열
+        const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
+        const weekday = weekdays[now.getDay()];
+        
+        // 디지털 시계 스타일로 표시
+        document.querySelector('.current-datetime').innerHTML = 
+            `<div style="font-size: 1rem; margin-bottom: 2px; opacity: 0.9;">${y}-${m}-${d} (${weekday})</div>
+             <div style="font-size: 1.5rem; font-weight: 800;">${h}:${min}:${s}</div>`;
+    }
+    setInterval(updateDateTime, 1000);
+    updateDateTime();
+
     // 이미지 슬라이더 기능
     let currentSlideIndex = 0;
     const slides = document.querySelectorAll('.image-slider .main-building-img');

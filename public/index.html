@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>흥덕청소년 문화의집 - 시설 이용 예약</title>
+    <title>동천청소년 문화의집 - 시설 이용 예약</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <script type="module" src="firebase-config.js"></script>
@@ -22,9 +22,12 @@
                     <img src="dc5.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
                     <img src="dc6.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
                     <img src="dc7.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                    <img src="dc8.jpg" alt="동천청소년 문화의집 건물" class="main-building-img">
+                </div>
                 </div>
                 <div class="slider-dots">
                     <span class="dot active"></span>
+                    <span class="dot"></span>
                     <span class="dot"></span>
                     <span class="dot"></span>
                     <span class="dot"></span>
@@ -262,10 +265,11 @@
         modal.style.alignItems = 'center';
         modal.style.justifyContent = 'center';
         modal.style.zIndex = 9999;
+        modal.style.padding = '20px';
         modal.innerHTML = `
-            <div style="background:#fff;padding:32px 28px;border-radius:18px;box-shadow:0 4px 24px #e74c3c22;font-size:1.15rem;font-weight:600;color:#e74c3c;text-align:center;min-width:220px;max-width:90vw;">
+            <div class="modal-content" style="background:#fff;padding:24px 20px;border-radius:16px;box-shadow:0 4px 24px #e74c3c22;font-size:1rem;font-weight:600;color:#e74c3c;text-align:center;min-width:200px;max-width:85vw;width:100%;">
                 ${msg}<br><br>
-                <button style='margin-top:18px;padding:10px 28px;border-radius:12px;background:linear-gradient(90deg,#e74c3c,#c0392b);border:none;font-weight:700;font-size:1.08rem;color:#fff;cursor:pointer;' onclick='this.parentElement.parentElement.remove()'>확인</button>
+                <button class="modal-button" style='margin-top:16px;padding:12px 24px;border-radius:10px;background:linear-gradient(90deg,#e74c3c,#c0392b);border:none;font-weight:700;font-size:1rem;color:#fff;cursor:pointer;width:100%;max-width:200px;' onclick='this.parentElement.parentElement.remove()'>확인</button>
             </div>
         `;
         document.body.appendChild(modal);
@@ -328,6 +332,36 @@
         .current-datetime {
             text-align: center;
             margin-right: 0;
+        }
+    }
+    
+    /* 모바일 모달 최적화 */
+    @media (max-width: 768px) {
+        .modal-content {
+            padding: 20px 16px !important;
+            font-size: 0.9rem !important;
+            max-width: 90vw !important;
+            margin: 0 10px !important;
+        }
+        .modal-button {
+            padding: 10px 20px !important;
+            font-size: 0.9rem !important;
+            width: 100% !important;
+            max-width: 150px !important;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .modal-content {
+            padding: 16px 12px !important;
+            font-size: 0.85rem !important;
+            max-width: 95vw !important;
+            margin: 0 5px !important;
+        }
+        .modal-button {
+            padding: 8px 16px !important;
+            font-size: 0.85rem !important;
+            max-width: 120px !important;
         }
     }
     </style>
