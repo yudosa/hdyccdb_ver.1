@@ -69,10 +69,10 @@
                                 <div class="facility-name">소회의실</div>
                             </div>
                         </div>
-                        <div style="margin-top: 20px; text-align: center;">
+                        <div style="margin-top: 20px; text-align: left;">
                             <div style="color: #3498db; font-weight: 700; font-size: 1.1rem; margin-bottom: 15px;">자율이용</div>
-                            <div class="facility-card-row facility-card-row-single">
-                                <div class="facility-card facility-card-other">
+                            <div class="facility-card-row facility-card-row-single" style="justify-content: flex-start;">
+                                <div class="facility-card facility-card-other" onclick="showAutonomousUseModal()">
                                     <div class="facility-emoji">📚</div>
                                     <div class="facility-name">자율이용</div>
                                 </div>
@@ -81,8 +81,8 @@
                     </div>
                 </div>
                 <div class="form-actions-centered" style="display:flex; flex-direction:row; gap:8px;">
-                    <button class="btn-secondary-centered facility-back-btn" onclick="history.back()" style="padding:10px 0; font-size:0.9rem;">◀ 이전</button>
-                    <button class="btn-secondary-centered facility-home-btn" onclick="sessionStorage.removeItem('agreedPersonalInfo'); window.location.href='index.html'" style="padding:10px 0; font-size:0.9rem;">↻ 처음으로</button>
+                    <button class="btn-secondary-centered facility-back-btn" onclick="history.back()" style="padding:15px 0; font-size:1.1rem;">◀ 이전</button>
+                    <button class="btn-secondary-centered facility-home-btn" onclick="sessionStorage.removeItem('agreedPersonalInfo'); window.location.href='index.html'" style="padding:15px 0; font-size:1.1rem;">↻ 처음으로</button>
                 </div>
             </main>
     </div>
@@ -98,7 +98,7 @@
 
     // 자율이용 카드 클릭 이벤트는 DOMContentLoaded에서 설정
 
-    function showAutonomousUseModal() {
+    window.showAutonomousUseModal = function() {
         let modal = document.createElement('div');
         modal.className = 'custom-modal-bg';
         modal.innerHTML = `
@@ -164,10 +164,10 @@
                 }, 200);
             });
         });
-    }
+    };
 
     // 자율이용 예약 생성 함수
-    async function createAutonomousReservation(selectedOption) {
+    window.createAutonomousReservation = async function(selectedOption) {
         const userName = localStorage.getItem('userName') || '고객';
         const userPhone = localStorage.getItem('userPhone') || '';
         const userGender = localStorage.getItem('userGender') || '';
@@ -207,9 +207,9 @@
             console.error('예약 생성 오류:', error);
             showModal('예약 생성 중 오류가 발생했습니다.');
         }
-    }
+    };
 
-    function showModal(message) {
+    window.showModal = function(message) {
         let modal = document.createElement('div');
         modal.className = 'custom-modal-bg';
         modal.innerHTML = `
@@ -220,7 +220,7 @@
         `;
         document.body.appendChild(modal);
         modal.querySelector('.custom-modal-btn').onclick = () => modal.remove();
-    }
+    };
 
     window.addEventListener('DOMContentLoaded', function() {
         if (sessionStorage.getItem('agreedPersonalInfo') !== 'y') {
@@ -247,14 +247,7 @@
             });
         }
         
-        // 자율이용 카드 클릭 이벤트 바인딩
-        document.querySelectorAll('.facility-card-other').forEach(card => {
-            card.addEventListener('click', function(e) {
-                e.preventDefault();
-                console.log('자율이용 카드 클릭됨');
-                showAutonomousUseModal();
-            });
-        });
+        // 자율이용 카드 클릭 이벤트는 onclick 속성으로 처리됨
     });
     </script>
     
@@ -329,6 +322,12 @@
     }
     .facility-card-other {
         background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%) !important;
+        cursor: pointer !important;
+        transition: all 0.3s ease !important;
+    }
+    .facility-card-other:hover {
+        transform: translateY(-4px) scale(1.04) !important;
+        box-shadow: 0 8px 24px rgba(255, 154, 158, 0.3) !important;
     }
     </style>
     
