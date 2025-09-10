@@ -160,7 +160,7 @@
             background: #fff;
             border-radius: 20px;
             box-shadow: 0 4px 16px rgba(52, 152, 219, 0.10);
-            padding: 24px 0;
+            padding: 24px 16px;
             display: flex;
             flex-direction: column;
             height: 450px;
@@ -525,6 +525,10 @@
     function showTimeSelect() {
         const block = document.getElementById('timeSelectBlock');
         block.style.display = 'block';
+        
+        // 시간 선택 초기화
+        selectedTime = null;
+        
         block.innerHTML = `
             <div class="time-header">
                 <h3 style="color: #3498db; margin: 0;">선택된 날짜: ${selectedDate}</h3>
@@ -542,33 +546,42 @@
                     
                     // 댄스연습실과 소회의실의 경우 연속된 2시간 선택 필요
                     if (selectedFacility === '댄스연습실' || selectedFacility === '소회의실') {
-                        if (!selectedTime) {
+                        console.log('댄스/소회의실 시간 선택:', clickedTime, '현재 선택:', selectedTime);
+                        
+                        if (!selectedTime || selectedTime === '') {
                             // 첫 번째 시간 선택
                             selectedTime = clickedTime;
                             btn.classList.add('selected');
+                            console.log('첫 번째 시간 선택:', selectedTime);
                         } else if (selectedTime.includes(',')) {
                             // 이미 2시간이 선택된 경우, 새로운 선택으로 교체
                             document.querySelectorAll('.time-btn.selected').forEach(b => b.classList.remove('selected'));
                             selectedTime = clickedTime;
                             btn.classList.add('selected');
+                            console.log('새로운 시간으로 교체:', selectedTime);
                         } else {
                             // 두 번째 시간 선택 - 연속된 시간인지 확인
                             const firstTime = parseInt(selectedTime.split(':')[0]);
                             const secondTime = parseInt(clickedTime.split(':')[0]);
                             
+                            console.log('두 번째 시간 선택 시도:', firstTime, '->', secondTime);
+                            
                             if (secondTime === firstTime + 1) {
-                                // 연속된 시간이면 예약 가능
+                                // 연속된 다음 시간이면 예약 가능
                                 selectedTime = selectedTime + ',' + clickedTime;
                                 btn.classList.add('selected');
+                                console.log('연속 시간 선택 완료:', selectedTime);
                             } else if (secondTime === firstTime - 1) {
                                 // 이전 시간을 선택한 경우 (예: 11시 선택 후 10시 선택)
                                 selectedTime = clickedTime + ',' + selectedTime;
                                 btn.classList.add('selected');
+                                console.log('이전 시간 선택 완료:', selectedTime);
                             } else {
                                 // 연속되지 않은 시간이면 첫 번째 선택 취소하고 새로 선택
                                 document.querySelectorAll('.time-btn.selected').forEach(b => b.classList.remove('selected'));
                                 selectedTime = clickedTime;
                                 btn.classList.add('selected');
+                                console.log('연속되지 않은 시간, 새로 선택:', selectedTime);
                             }
                         }
                     } else {
