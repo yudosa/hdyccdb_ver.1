@@ -298,23 +298,27 @@
     }
 
     // 시설명에 따라 세부선택 옵션 동적 생성
-    const facilityName = localStorage.getItem('reservationFacility') || '';
+    let facilityName = '';
     const detailCard = document.querySelector('.detail-card');
     const detailLabel = document.querySelector('.detail-label');
     const detailSelect = document.getElementById('detailSelect');
 
-    function setDetailOptions() {
+    function setDetailOptions(facility) {
+        facilityName = facility || sessionStorage.getItem('selectedFacility') || '';
+        console.log('setDetailOptions - facilityName:', facilityName);
+        
         // 제목 동적 변경
         const facilityTitle = document.getElementById('facilityTitle');
-        if (facilityName) {
+        if (facilityTitle && facilityName) {
             facilityTitle.innerHTML = `<span style="color: #3498db;">${facilityName}</span> 시설 이용 신청`;
         }
+        
         if (facilityName === '댄스연습실' || facilityName === '소회의실' || facilityName === '보드게임') {
             detailCard.style.display = 'none';
             selectedFacility = facilityName;
             selectedDetail = '-';
         } else {
-            detailCard.style.display = '';
+            detailCard.style.display = 'block';
             let options = '';
             if (facilityName === '닌텐도') {
                 options = [
@@ -340,13 +344,6 @@
             selectedDetail = detailSelect.value.replace(/\s+/g, '');
             console.log('setDetailOptions - selectedFacility:', selectedFacility, 'selectedDetail:', selectedDetail);
         }
-    }
-    // 페이지 로드 시 선택된 시설 정보 가져오기
-    const selectedFacilityFromStorage = sessionStorage.getItem('selectedFacility');
-    if (selectedFacilityFromStorage) {
-        setDetailOptions(selectedFacilityFromStorage);
-    } else {
-        setDetailOptions();
     }
 
     // 세부선택 버튼 클릭
@@ -738,7 +735,22 @@
         if (sessionStorage.getItem('agreedPersonalInfo') !== 'y') {
             alert('개인정보 수집 및 이용에 동의해야 예약이 가능합니다.');
             window.location.href = 'rental.html';
+            return;
         }
+        
+        // 페이지 로드 시 선택된 시설 정보 가져오기
+        const selectedFacilityFromStorage = sessionStorage.getItem('selectedFacility');
+        console.log('페이지 로드 - selectedFacilityFromStorage:', selectedFacilityFromStorage);
+        
+        if (selectedFacilityFromStorage) {
+            setDetailOptions(selectedFacilityFromStorage);
+        } else {
+            // 시설이 선택되지 않은 경우 이전 페이지로 이동
+            alert('시설을 선택해주세요.');
+            window.location.href = 'select-facility.html';
+            return;
+        }
+        
         // 페이지 로드 시 예약 데이터 가져오기
         loadReservationData();
     });
@@ -809,35 +821,64 @@
     }
     </script>
     <style>
+    /* 달력과 시간대 강제 표시 */
     .reservation-calendar-block {
         display: block !important;
         margin: 20px 0 !important;
+        visibility: visible !important;
+        opacity: 1 !important;
     }
     .reservation-calendar {
         width: 100% !important;
-        border-collapse: collapse !important;
+        border-collapse: separate !important;
+        border-spacing: 0 12px !important;
         margin: 0 auto !important;
+        display: table !important;
     }
     .time-select-block {
         display: block !important;
         margin: 20px 0 !important;
+        visibility: visible !important;
+        opacity: 1 !important;
     }
     .calendar-day {
-        padding: 10px !important;
+        width: 48px !important;
+        height: 48px !important;
+        line-height: 48px !important;
         text-align: center !important;
         cursor: pointer !important;
-        border: 1px solid #ddd !important;
+        border-radius: 50% !important;
+        background: #fff !important;
+        color: #222 !important;
+        margin: 0 auto !important;
+        display: block !important;
+        font-size: 1.18rem !important;
+        font-weight: 600 !important;
+        border: 2px solid transparent !important;
+        box-shadow: 0 1px 4px rgba(52, 152, 219, 0.06) !important;
     }
-    .calendar-day:hover {
-        background-color: #f0f0f0 !important;
+    .calendar-day:hover:not(.disabled) {
+        background: #e0f7fa !important;
+        color: #3498db !important;
+        border: 2px solid #a8edea !important;
     }
     .calendar-day.selected {
-        background-color: #3498db !important;
-        color: white !important;
+        background: linear-gradient(90deg, #a8edea 0%, #fed6e3 100%) !important;
+        color: #fff !important;
+        border: 2px solid #3498db !important;
+        box-shadow: 0 4px 16px rgba(52, 152, 219, 0.13) !important;
     }
     .calendar-day.disabled {
-        color: #ccc !important;
+        background: #f0f0f0 !important;
+        color: #bbb !important;
         cursor: not-allowed !important;
+        text-decoration: line-through !important;
+    }
+    .calendar-day.sunday {
+        color: #e74c3c !important;
+    }
+    .calendar-day.saturday {
+        color: #3498db !important;
     }
     </style>
 </body>

@@ -56,6 +56,12 @@
                                 <div class="facility-name">보드게임</div>
                             </div>
                         </div>
+                        <div class="simple-use-section">
+                            <div class="simple-use-card" onclick="window.location.href='reservation-date.html'">
+                                <div class="facility-emoji">📋</div>
+                                <div class="facility-name">단순 이용</div>
+                            </div>
+                        </div>
                     </div>
                     <div class="facility-floor-card">
                         <div class="facility-floor-label">3F</div>
@@ -67,6 +73,12 @@
                             <div class="facility-card facility-card-meeting" onclick="window.location.href='reservation-date.html'">
                                 <div class="facility-emoji">🏢</div>
                                 <div class="facility-name">소회의실</div>
+                            </div>
+                        </div>
+                        <div class="simple-use-section">
+                            <div class="simple-use-card" onclick="window.location.href='reservation-date.html'">
+                                <div class="facility-emoji">📋</div>
+                                <div class="facility-name">단순 이용</div>
                             </div>
                         </div>
                     </div>
@@ -81,6 +93,15 @@
     <script>
     // 시설 카드 클릭 시 시설명 저장
     document.querySelectorAll('.facility-card').forEach(card => {
+        card.addEventListener('click', function() {
+            let name = card.querySelector('.facility-name').textContent.trim();
+            sessionStorage.setItem('selectedFacility', name);
+            window.location.href = 'reservation-date.html';
+        });
+    });
+
+    // 단순 이용 카드 클릭 시 시설명 저장
+    document.querySelectorAll('.simple-use-card').forEach(card => {
         card.addEventListener('click', function() {
             let name = card.querySelector('.facility-name').textContent.trim();
             sessionStorage.setItem('selectedFacility', name);
@@ -169,6 +190,35 @@
     .facility-floor-card {
         margin-bottom: 20px !important;
         max-width: 100% !important;
+    }
+    .simple-use-section {
+        margin-top: 15px !important;
+        display: flex !important;
+        justify-content: center !important;
+    }
+    .simple-use-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        border-radius: 16px !important;
+        padding: 20px !important;
+        text-align: center !important;
+        cursor: pointer !important;
+        transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3) !important;
+        min-width: 120px !important;
+        max-width: 200px !important;
+    }
+    .simple-use-card:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4) !important;
+    }
+    .simple-use-card .facility-emoji {
+        font-size: 2rem !important;
+        margin-bottom: 8px !important;
+    }
+    .simple-use-card .facility-name {
+        color: white !important;
+        font-weight: 600 !important;
+        font-size: 1rem !important;
     }
     </style>
 </body>
