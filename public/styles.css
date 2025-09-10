@@ -5,6 +5,27 @@
     box-sizing: border-box;
 }
 
+/* 공통 버튼 스타일 */
+.btn-secondary-centered {
+    background: linear-gradient(90deg, #a8edea 0%, #fed6e3 100%);
+    color: #222;
+    font-weight: 700;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 0;
+    font-size: 0.9rem;
+    flex: 1;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-secondary-centered:hover {
+    background: linear-gradient(90deg, #fed6e3 0%, #a8edea 100%);
+    color: #222;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
@@ -384,15 +405,19 @@ body {
     height: 50px !important;
     background: transparent !important;
     overflow: hidden !important;
-    z-index: 9999 !important;
-    transform: translateZ(0) !important;
-    will-change: transform !important;
-    /* 태블릿 키패드 올라올 때 고정 */
+    z-index: 99999 !important;
+    /* 키패드 올라와도 절대 고정 */
     position: fixed !important;
     bottom: 0 !important;
-    /* 뷰포트 높이 변화 무시 */
+    /* 뷰포트 높이 변화 완전 무시 */
     min-height: 50px !important;
     max-height: 50px !important;
+    /* 하드웨어 가속 강화 */
+    transform: translate3d(0, 0, 0) !important;
+    will-change: transform !important;
+    /* 키패드 올라와도 위치 고정 */
+    position: fixed !important;
+    bottom: 0 !important;
 }
 
 .logo-track {
@@ -402,10 +427,14 @@ body {
     animation: logoScroll 25s ease-in-out infinite !important;
     gap: 80px !important;
     position: relative !important;
-    transform: translateZ(0) !important;
+    transform: translate3d(0, 0, 0) !important;
     width: max-content !important;
     animation-play-state: running !important;
     min-width: 2000px !important;
+    /* 애니메이션 강제 실행 */
+    animation-fill-mode: both !important;
+    animation-iteration-count: infinite !important;
+    animation-timing-function: ease-in-out !important;
 }
 
 .footer-logo {
@@ -420,40 +449,40 @@ body {
 
 @keyframes logoScroll {
     0% {
-        transform: translateX(100%) !important;
+        transform: translate3d(100%, 0, 0) !important;
     }
     5% {
-        transform: translateX(100%) !important;
+        transform: translate3d(100%, 0, 0) !important;
     }
     15% {
-        transform: translateX(0%) !important;
+        transform: translate3d(0%, 0, 0) !important;
     }
     25% {
-        transform: translateX(0%) !important;
+        transform: translate3d(0%, 0, 0) !important;
     }
     35% {
-        transform: translateX(-20%) !important;
+        transform: translate3d(-20%, 0, 0) !important;
     }
     45% {
-        transform: translateX(-20%) !important;
+        transform: translate3d(-20%, 0, 0) !important;
     }
     55% {
-        transform: translateX(-40%) !important;
+        transform: translate3d(-40%, 0, 0) !important;
     }
     65% {
-        transform: translateX(-40%) !important;
+        transform: translate3d(-40%, 0, 0) !important;
     }
     75% {
-        transform: translateX(-60%) !important;
+        transform: translate3d(-60%, 0, 0) !important;
     }
     85% {
-        transform: translateX(-60%) !important;
+        transform: translate3d(-60%, 0, 0) !important;
     }
     95% {
-        transform: translateX(-80%) !important;
+        transform: translate3d(-80%, 0, 0) !important;
     }
     100% {
-        transform: translateX(-80%) !important;
+        transform: translate3d(-80%, 0, 0) !important;
     }
 }
 
@@ -465,12 +494,15 @@ body {
         left: 0 !important;
         width: 100% !important;
         height: 50px !important;
-        /* 뷰포트 높이 변화 무시 */
+        z-index: 99999 !important;
+        /* 뷰포트 높이 변화 완전 무시 */
         min-height: 50px !important;
         max-height: 50px !important;
-        /* 키패드 올라와도 위치 고정 */
+        /* 키패드 올라와도 절대 고정 */
         bottom: 0 !important;
-        transform: translateZ(0) !important;
+        transform: translate3d(0, 0, 0) !important;
+        /* 키패드 올라와도 애니메이션 유지 */
+        animation-play-state: running !important;
     }
 }
 
@@ -481,11 +513,14 @@ body {
         left: 0 !important;
         width: 100% !important;
         height: 50px !important;
-        /* 모바일에서도 키패드 올라와도 고정 */
+        z-index: 99999 !important;
+        /* 모바일에서도 키패드 올라와도 절대 고정 */
         min-height: 50px !important;
         max-height: 50px !important;
         bottom: 0 !important;
-        transform: translateZ(0) !important;
+        transform: translate3d(0, 0, 0) !important;
+        /* 키패드 올라와도 애니메이션 유지 */
+        animation-play-state: running !important;
     }
 }
 

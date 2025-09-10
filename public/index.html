@@ -400,5 +400,49 @@
         }
     }
     </style>
+    
+    <script>
+    // 키패드 올라와도 로고 위치 고정
+    function fixLogoPosition() {
+        const logoMarquee = document.querySelector('.logo-marquee');
+        if (logoMarquee) {
+            logoMarquee.style.position = 'fixed';
+            logoMarquee.style.bottom = '0px';
+            logoMarquee.style.left = '0px';
+            logoMarquee.style.width = '100%';
+            logoMarquee.style.zIndex = '99999';
+        }
+    }
+    
+    // 뷰포트 높이 변화 감지
+    let initialViewportHeight = window.innerHeight;
+    
+    window.addEventListener('resize', function() {
+        const currentHeight = window.innerHeight;
+        const heightDifference = initialViewportHeight - currentHeight;
+        
+        // 키패드가 올라온 것으로 판단 (높이가 줄어든 경우)
+        if (heightDifference > 150) {
+            fixLogoPosition();
+        }
+    });
+    
+    // 페이지 로드 시 로고 위치 고정
+    document.addEventListener('DOMContentLoaded', function() {
+        fixLogoPosition();
+        
+        // 주기적으로 로고 위치 확인 및 고정
+        setInterval(fixLogoPosition, 1000);
+    });
+    
+    // 포커스 이벤트로 키패드 감지
+    document.addEventListener('focusin', function() {
+        setTimeout(fixLogoPosition, 100);
+    });
+    
+    document.addEventListener('focusout', function() {
+        setTimeout(fixLogoPosition, 100);
+    });
+    </script>
 </body>
 </html> 

@@ -68,6 +68,13 @@
                                 <div class="facility-emoji">🏢</div>
                                 <div class="facility-name">소회의실</div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="facility-floor-row">
+                    <div class="facility-floor-card">
+                        <div class="facility-floor-label" style="background: linear-gradient(90deg, #3498db 0%, #2980b9 100%); color: white;">자율이용</div>
+                        <div class="facility-card-row facility-card-row-single">
                             <div class="facility-card facility-card-other" onclick="window.location.href='reservation-date.html'">
                                 <div class="facility-emoji">📚</div>
                                 <div class="facility-name">자율이용</div>
@@ -76,8 +83,8 @@
                     </div>
                 </div>
                 <div class="form-actions-centered" style="display:flex; flex-direction:row; gap:8px;">
-                    <button class="btn-secondary-centered facility-back-btn" onclick="history.back()" style="flex:1; color:#222; padding:10px 0; font-size:0.9rem; border-radius:10px;">◀ 이전</button>
-                    <button class="btn-secondary-centered facility-home-btn" onclick="sessionStorage.removeItem('agreedPersonalInfo'); window.location.href='index.html'" style="flex:1; color:#222; padding:10px 0; font-size:0.9rem; border-radius:10px;">↻ 처음으로</button>
+                    <button class="btn-secondary-centered facility-back-btn" onclick="history.back()">◀ 이전</button>
+                    <button class="btn-secondary-centered facility-home-btn" onclick="sessionStorage.removeItem('agreedPersonalInfo'); window.location.href='index.html'">↻ 처음으로</button>
                 </div>
             </main>
     </div>
@@ -91,14 +98,78 @@
         });
     });
 
-    // 자율이용 카드 클릭 시 시설명 저장
+    // 자율이용 카드 클릭 시 세부 선택 표시
     document.querySelectorAll('.facility-card-other').forEach(card => {
         card.addEventListener('click', function() {
-            let name = card.querySelector('.facility-name').textContent.trim();
-            sessionStorage.setItem('selectedFacility', name);
-            window.location.href = 'reservation-date.html';
+            showAutonomousUseModal();
         });
     });
+
+    function showAutonomousUseModal() {
+        let modal = document.createElement('div');
+        modal.className = 'custom-modal-bg';
+        modal.innerHTML = `
+            <div class="custom-modal" style="max-width: 500px;">
+                <div class="custom-modal-content" style="text-align: center; margin-bottom: 20px;">
+                    <h3 style="color: #3498db; margin-bottom: 15px;">자율이용 세부 선택</h3>
+                    <p style="color: #666; font-size: 0.9rem;">이용 목적을 선택해주세요</p>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;">
+                    <button class="autonomous-option-btn" data-option="프로그램 참여">프로그램 참여</button>
+                    <button class="autonomous-option-btn" data-option="학습활동">학습활동</button>
+                    <button class="autonomous-option-btn" data-option="동아리 활동">동아리 활동</button>
+                    <button class="autonomous-option-btn" data-option="보드게임">보드게임</button>
+                    <button class="autonomous-option-btn" data-option="기타" style="grid-column: 1 / -1;">기타</button>
+                </div>
+                <button class="custom-modal-btn" onclick="this.closest('.custom-modal-bg').remove()">취소</button>
+            </div>
+        `;
+        document.body.appendChild(modal);
+
+        // 옵션 버튼 스타일
+        const style = document.createElement('style');
+        style.textContent = `
+            .autonomous-option-btn {
+                padding: 15px 10px;
+                border: 2px solid #e0e7ef;
+                border-radius: 12px;
+                background: #fff;
+                color: #3498db;
+                font-weight: 600;
+                font-size: 0.95rem;
+                cursor: pointer;
+                transition: all 0.2s ease;
+            }
+            .autonomous-option-btn:hover {
+                border-color: #3498db;
+                background: #f8f9fa;
+            }
+            .autonomous-option-btn.selected {
+                background: linear-gradient(90deg, #a8edea 0%, #fed6e3 100%);
+                border-color: #3498db;
+                color: #222;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // 옵션 선택 이벤트
+        modal.querySelectorAll('.autonomous-option-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                modal.querySelectorAll('.autonomous-option-btn').forEach(b => b.classList.remove('selected'));
+                this.classList.add('selected');
+                
+                // 선택된 옵션 저장하고 예약 페이지로 이동
+                setTimeout(() => {
+                    const selectedOption = this.getAttribute('data-option');
+                    sessionStorage.setItem('selectedFacility', '자율이용');
+                    sessionStorage.setItem('selectedDetail', selectedOption);
+                    sessionStorage.setItem('autonomousUse', 'true'); // 자율이용 플래그
+                    modal.remove();
+                    window.location.href = 'reservation-date.html';
+                }, 200);
+            });
+        });
+    }
 
     function showModal(message) {
         let modal = document.createElement('div');

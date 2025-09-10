@@ -10,7 +10,11 @@
         .ampm-tabs { display: flex; gap: 12px; margin-bottom: 18px; }
         .ampm-tab { flex: 1; padding: 10px 0; border-radius: 16px; border: none; font-weight: 700; font-size: 1.08rem; background: #f5f5f5; color: #3498db; cursor: pointer; transition: background 0.18s, color 0.18s; }
         .ampm-tab.active { background: linear-gradient(90deg, #a8edea 0%, #fed6e3 100%); color: #222; }
-        .time-btn-group { display: flex; flex-wrap: wrap; gap: 12px; }
+        .time-btn-group { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 12px; 
+        }
         .time-btn { 
             min-width: 90px; 
             padding: 12px 0; 
@@ -156,7 +160,7 @@
             background: #fff;
             border-radius: 20px;
             box-shadow: 0 4px 16px rgba(52, 152, 219, 0.10);
-            padding: 24px;
+            padding: 24px 0;
             display: flex;
             flex-direction: column;
             height: 450px;
@@ -176,11 +180,13 @@
             background: #fff;
             border-radius: 20px;
             box-shadow: 0 4px 16px rgba(52, 152, 219, 0.10);
-            padding: 32px 24px 24px 24px;
+            padding: 32px 0 24px 0;
             margin-bottom: 32px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
+            text-align: center;
             max-width: 100%;
             width: 100%;
             box-sizing: border-box;
@@ -191,6 +197,8 @@
             color: #3498db;
             margin-bottom: 18px;
             letter-spacing: 1px;
+            text-align: center;
+            width: 100%;
         }
         .detail-select {
             width: 100%;
@@ -210,6 +218,8 @@
             background-position: right 16px center;
             background-size: 20px;
             padding-right: 48px;
+            margin: 0 auto;
+            display: block;
         }
         .detail-select:focus {
             outline: none;
@@ -284,8 +294,8 @@
                         </div>
                     </div>
                     <div class="form-actions-centered" style="display:flex; flex-direction:row; gap:8px;">
-                        <button class="btn-secondary-centered" onclick="history.back()" style="flex:1; color:#222; padding:10px 0; font-size:0.9rem; border-radius:10px;">◀ 이전</button>
-                        <button class="btn-secondary-centered" onclick="proceedToNext()" style="flex:1; color:#222; padding:10px 0; font-size:0.9rem; border-radius:10px;">다음 ▶</button>
+                        <button class="btn-secondary-centered" onclick="history.back()">◀ 이전</button>
+                        <button class="btn-secondary-centered" onclick="proceedToNext()">다음 ▶</button>
                     </div>
                 </div>
             </main>
@@ -351,6 +361,16 @@
         const facilityTitle = document.getElementById('facilityTitle');
         if (facilityTitle && facilityName) {
             facilityTitle.innerHTML = `<span style="color: #3498db;">${facilityName}</span> 시설 이용 신청`;
+        }
+        
+        // 자율이용인 경우 시간 선택 건너뛰기
+        if (sessionStorage.getItem('autonomousUse') === 'true') {
+            detailCard.style.display = 'none';
+            selectedFacility = '자율이용';
+            selectedDetail = sessionStorage.getItem('selectedDetail') || '기타';
+            // 자율이용은 시간 선택 없이 바로 예약 완료로 이동
+            proceedToReservationComplete();
+            return;
         }
         
         if (facilityName === '댄스연습실' || facilityName === '소회의실' || facilityName === '보드게임') {
@@ -539,6 +559,10 @@
                             if (secondTime === firstTime + 1) {
                                 // 연속된 시간이면 예약 가능
                                 selectedTime = selectedTime + ',' + clickedTime;
+                                btn.classList.add('selected');
+                            } else if (secondTime === firstTime - 1) {
+                                // 이전 시간을 선택한 경우 (예: 11시 선택 후 10시 선택)
+                                selectedTime = clickedTime + ',' + selectedTime;
                                 btn.classList.add('selected');
                             } else {
                                 // 연속되지 않은 시간이면 첫 번째 선택 취소하고 새로 선택
@@ -759,6 +783,30 @@
         }
     }
     
+    // 자율이용 예약 완료 처리
+    function proceedToReservationComplete() {
+        const userName = localStorage.getItem('userName') || '고객';
+        const userPhone = localStorage.getItem('userPhone') || '';
+        const userGender = localStorage.getItem('userGender') || '';
+        const userAge = localStorage.getItem('userAge') || '';
+        const selectedDetail = sessionStorage.getItem('selectedDetail') || '기타';
+        
+        const reservationData = {
+            name: userName,
+            phone: userPhone || undefined,
+            gender: userGender || undefined,
+            age: userAge || undefined,
+            facility: '자율이용',
+            detail: selectedDetail,
+            date: new Date().toISOString().split('T')[0], // 오늘 날짜
+            start_time: '09:00',
+            end_time: '18:00',
+            status: 'active'
+        };
+        
+        createReservation(reservationData);
+    }
+
     // 예약 생성 API 호출
     async function createReservation(data) {
         try {
