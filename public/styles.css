@@ -391,7 +391,7 @@ body {
 
 .logo-marquee {
     width: 100%;
-    height: 30px;
+    height: 120px;
     overflow: hidden;
     position: relative;
 }
@@ -405,8 +405,8 @@ body {
 }
 
 .footer-logo {
-    width: 40px;
-    height: 30px;
+    width: 150px;
+    height: 120px;
     object-fit: contain;
     object-position: center;
     flex-shrink: 0;
@@ -515,12 +515,12 @@ body {
     }
     
     .logo-marquee {
-        height: 25px;
+        height: 105px;
     }
     
     .footer-logo {
-        width: 35px;
-        height: 25px;
+        width: 135px;
+        height: 105px;
     }
     
     .logo-track {
@@ -616,12 +616,12 @@ body {
     }
     
     .logo-marquee {
-        height: 20px;
+        height: 90px;
     }
     
     .footer-logo {
-        width: 30px;
-        height: 20px;
+        width: 120px;
+        height: 90px;
     }
     
     .logo-track {
