@@ -68,14 +68,9 @@
                                 <div class="facility-emoji">🏢</div>
                                 <div class="facility-name">소회의실</div>
                             </div>
-                        </div>
-                        <div style="margin-top: 20px; text-align: left;">
-                            <div style="color: #3498db; font-weight: 700; font-size: 1.1rem; margin-bottom: 15px;">자율이용</div>
-                            <div class="facility-card-row facility-card-row-single" style="justify-content: flex-start;">
-                                <div class="facility-card facility-card-other" id="autonomousCard">
-                                    <div class="facility-emoji">📚</div>
-                                    <div class="facility-name">자율이용</div>
-                                </div>
+                            <div class="facility-card facility-card-other" id="autonomousCard">
+                                <div class="facility-emoji">📚</div>
+                                <div class="facility-name">자율이용</div>
                             </div>
                         </div>
                     </div>
@@ -87,8 +82,8 @@
             </main>
     </div>
     <script>
-    // 시설 카드 클릭 시 시설명 저장
-    document.querySelectorAll('.facility-card').forEach(card => {
+    // 시설 카드 클릭 시 시설명 저장 (자율이용 제외)
+    document.querySelectorAll('.facility-card:not(#autonomousCard)').forEach(card => {
         card.addEventListener('click', function() {
             let name = card.querySelector('.facility-name').textContent.trim();
             sessionStorage.setItem('selectedFacility', name);
@@ -116,11 +111,11 @@
                     <p style="color: #666; font-size: 0.9rem;">이용 목적을 선택해주세요</p>
                 </div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;">
-                    <button class="autonomous-option-btn" data-option="프로그램 참여">프로그램 참여</button>
-                    <button class="autonomous-option-btn" data-option="학습활동">학습활동</button>
-                    <button class="autonomous-option-btn" data-option="동아리 활동">동아리 활동</button>
                     <button class="autonomous-option-btn" data-option="보드게임">보드게임</button>
-                    <button class="autonomous-option-btn" data-option="기타" style="grid-column: 1 / -1;">기타</button>
+                    <button class="autonomous-option-btn" data-option="프로그램 참여">프로그램 참여</button>
+                    <button class="autonomous-option-btn" data-option="동아리 활동">동아리 활동</button>
+                    <button class="autonomous-option-btn" data-option="학습 활동">학습 활동</button>
+                    <button class="autonomous-option-btn" data-option="기타 활동" style="grid-column: 1 / -1;">기타 활동</button>
                 </div>
                 <button class="custom-modal-btn" onclick="this.closest('.custom-modal-bg').remove()">취소</button>
             </div>
@@ -320,16 +315,6 @@
         flex-direction: row !important;
         gap: 8px !important;
     }
-    .form-actions-centered button {
-        flex: 1 !important;
-        padding: 10px 0 !important;
-        font-size: 0.9rem !important;
-        border-radius: 10px !important;
-        cursor: pointer !important;
-        z-index: 10 !important;
-        position: relative !important;
-        pointer-events: auto !important;
-    }
     .rental-main {
         margin-top: 40px !important;
         max-width: 100% !important;
@@ -356,6 +341,9 @@
         position: relative !important;
         z-index: 10 !important;
         user-select: none !important;
+        flex: 1 1 0 !important;
+        min-width: 110px !important;
+        max-width: 140px !important;
     }
     
     #autonomousCard {
@@ -367,8 +355,8 @@
         box-shadow: 0 8px 24px rgba(255, 154, 158, 0.3) !important;
     }
     .form-actions-centered button {
-        padding: 12px 0 !important;
-        font-size: 1rem !important;
+        padding: 20px 50px !important;
+        font-size: 1.3rem !important;
     }
     
     /* 자율이용 모달 스타일 */

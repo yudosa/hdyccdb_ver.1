@@ -2301,6 +2301,9 @@ h1 .highlight {
 
 .facility-card-row-multi {
     justify-content: center;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
 }
 
 .facility-card {
