@@ -95,65 +95,12 @@
         </div>
         <div class="program-slider-container">
             <div class="program-slider-track" id="programSliderTrack">
-                <div class="program-card active">
-                    <div class="program-image">
-                        <img src="program1.jpg" alt="베이킹교실" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlPC90ZXh0Pjwvc3ZnPg=='">
-                    </div>
-                    <div class="program-content">
-                        <h4 class="program-title">수지청소년문화의집 '수지맞은 베이킹교실 4차' 활동</h4>
-                        <div class="program-periods">
-                            <div class="period-item">
-                                <span class="period-label">신청기간</span>
-                                <span class="period-value">2025-07-23 ~ 2025-08-01</span>
-                            </div>
-                            <div class="period-item">
-                                <span class="period-label">참여기간</span>
-                                <span class="period-value">2025-08-02 ~ 2025-08-30</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="program-card">
-                    <div class="program-image">
-                        <img src="program2.jpg" alt="베이킹교실" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlPC90ZXh0Pjwvc3ZnPg=='">
-                    </div>
-                    <div class="program-content">
-                        <h4 class="program-title">수지청소년문화의집 '수지맞은 베이킹교실 3차' 활동</h4>
-                        <div class="program-periods">
-                            <div class="period-item">
-                                <span class="period-label">신청기간</span>
-                                <span class="period-value">2025-06-19 ~ 2025-07-04</span>
-                            </div>
-                            <div class="period-item">
-                                <span class="period-label">참여기간</span>
-                                <span class="period-value">2025-07-05 ~ 2025-07-26</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="program-card">
-                    <div class="program-image">
-                        <img src="program3.jpg" alt="역사활동" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlPC90ZXh0Pjwvc3ZnPg=='">
-                    </div>
-                    <div class="program-content">
-                        <h4 class="program-title">유림청소년문화의집 청소년이 배우는 역사의 진실 '청.사.진' 활동공유</h4>
-                        <div class="program-periods">
-                            <div class="period-item">
-                                <span class="period-label">신청기간</span>
-                                <span class="period-value">2025-08-30 ~ 2025-09-13</span>
-                            </div>
-                            <div class="period-item">
-                                <span class="period-label">참여기간</span>
-                                <span class="period-value">2025-08-30 ~ 2025-09-13</span>
-                            </div>
-                        </div>
-                    </div>
+                <div style="padding: 40px; text-align: center; color: #666;">
+                    프로그램 정보를 불러오는 중...
                 </div>
             </div>
             <div class="program-slider-dots" id="programSliderDots">
-                <span class="program-dot active" data-index="0"></span>
-                <span class="program-dot" data-index="1"></span>
-                <span class="program-dot" data-index="2"></span>
+                <!-- 동적으로 생성됩니다 -->
             </div>
         </div>
     </div>
@@ -645,34 +592,88 @@
         console.log('프로그램 슬라이더 초기화 완료');
     }
 
-    // 간단한 프로그램 슬라이더 기능
-    function initSimpleProgramSlider() {
-        const cards = document.querySelectorAll('.program-card');
-        const dots = document.querySelectorAll('.program-dot');
-        let currentIndex = 0;
-
-        function showSlide(index) {
-            cards.forEach(card => card.classList.remove('active'));
-            dots.forEach(dot => dot.classList.remove('active'));
+    // API에서 프로그램 데이터를 가져와서 슬라이더 초기화
+    async function initSimpleProgramSlider() {
+        try {
+            console.log('프로그램 데이터 로딩 시작...');
+            const response = await fetch('/api/programs');
+            const programs = await response.json();
             
-            if (cards[index]) cards[index].classList.add('active');
-            if (dots[index]) dots[index].classList.add('active');
+            console.log('프로그램 데이터 로딩 완료:', programs.length, '개');
             
-            currentIndex = index;
+            const sliderTrack = document.getElementById('programSliderTrack');
+            const sliderDots = document.getElementById('programSliderDots');
+            
+            if (!sliderTrack || !sliderDots) {
+                console.error('슬라이더 요소를 찾을 수 없습니다');
+                return;
+            }
+            
+            // 프로그램 카드 HTML 생성
+            const cardsHTML = programs.map((program, index) => `
+                <div class="program-card ${index === 0 ? 'active' : ''}">
+                    <div class="program-image">
+                        <img src="${program.image}" alt="${program.title}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlPC90ZXh0Pjwvc3ZnPg=='">
+                    </div>
+                    <div class="program-content">
+                        <h4 class="program-title">${program.title}</h4>
+                        <div class="program-periods">
+                            <div class="period-item">
+                                <span class="period-label">신청기간</span>
+                                <span class="period-value">${program.applicationPeriod}</span>
+                            </div>
+                            <div class="period-item">
+                                <span class="period-label">참여기간</span>
+                                <span class="period-value">${program.participationPeriod}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            // 도트 HTML 생성
+            const dotsHTML = programs.map((_, index) => 
+                `<span class="program-dot ${index === 0 ? 'active' : ''}" data-index="${index}"></span>`
+            ).join('');
+            
+            // HTML 업데이트
+            sliderTrack.innerHTML = cardsHTML;
+            sliderDots.innerHTML = dotsHTML;
+            
+            // 슬라이더 기능 초기화
+            const cards = document.querySelectorAll('.program-card');
+            const dots = document.querySelectorAll('.program-dot');
+            let currentIndex = 0;
+
+            function showSlide(index) {
+                cards.forEach(card => card.classList.remove('active'));
+                dots.forEach(dot => dot.classList.remove('active'));
+                
+                if (cards[index]) cards[index].classList.add('active');
+                if (dots[index]) dots[index].classList.add('active');
+                
+                currentIndex = index;
+            }
+
+            function nextSlide() {
+                const nextIndex = (currentIndex + 1) % cards.length;
+                showSlide(nextIndex);
+            }
+
+            // 도트 클릭 이벤트
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => showSlide(index));
+            });
+
+            // 자동 슬라이드 (5초마다)
+            setInterval(nextSlide, 5000);
+            
+            console.log('프로그램 슬라이더 초기화 완료');
+            
+        } catch (error) {
+            console.error('프로그램 데이터 로딩 실패:', error);
+            // 오류 시 기본 HTML 유지
         }
-
-        function nextSlide() {
-            const nextIndex = (currentIndex + 1) % cards.length;
-            showSlide(nextIndex);
-        }
-
-        // 도트 클릭 이벤트
-        dots.forEach((dot, index) => {
-            dot.addEventListener('click', () => showSlide(index));
-        });
-
-        // 자동 슬라이드 (5초마다)
-        setInterval(nextSlide, 5000);
     }
 
     // 페이지 로드 후 슬라이더들 시작
@@ -837,10 +838,10 @@
     }
 
     .section-label {
-        color: #333;
-        font-size: 1rem;
-        font-weight: 600;
-        margin-bottom: 12px;
+        color: #666;
+        font-size: 0.9rem;
+        font-weight: 400;
+        margin-bottom: 8px;
         text-align: left;
     }
 
