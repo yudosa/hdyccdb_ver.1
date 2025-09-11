@@ -95,12 +95,65 @@
         </div>
         <div class="program-slider-container">
             <div class="program-slider-track" id="programSliderTrack">
-                <div style="padding: 20px; text-align: center; color: #666;">
-                    프로그램 정보를 불러오는 중...
+                <div class="program-card active">
+                    <div class="program-image">
+                        <img src="program1.jpg" alt="베이킹교실" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlPC90ZXh0Pjwvc3ZnPg=='">
+                    </div>
+                    <div class="program-content">
+                        <h4 class="program-title">수지청소년문화의집 '수지맞은 베이킹교실 4차' 활동</h4>
+                        <div class="program-periods">
+                            <div class="period-item">
+                                <span class="period-label">신청기간</span>
+                                <span class="period-value">2025-07-23 ~ 2025-08-01</span>
+                            </div>
+                            <div class="period-item">
+                                <span class="period-label">참여기간</span>
+                                <span class="period-value">2025-08-02 ~ 2025-08-30</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="program-card">
+                    <div class="program-image">
+                        <img src="program2.jpg" alt="베이킹교실" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlPC90ZXh0Pjwvc3ZnPg=='">
+                    </div>
+                    <div class="program-content">
+                        <h4 class="program-title">수지청소년문화의집 '수지맞은 베이킹교실 3차' 활동</h4>
+                        <div class="program-periods">
+                            <div class="period-item">
+                                <span class="period-label">신청기간</span>
+                                <span class="period-value">2025-06-19 ~ 2025-07-04</span>
+                            </div>
+                            <div class="period-item">
+                                <span class="period-label">참여기간</span>
+                                <span class="period-value">2025-07-05 ~ 2025-07-26</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="program-card">
+                    <div class="program-image">
+                        <img src="program3.jpg" alt="역사활동" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlPC90ZXh0Pjwvc3ZnPg=='">
+                    </div>
+                    <div class="program-content">
+                        <h4 class="program-title">유림청소년문화의집 청소년이 배우는 역사의 진실 '청.사.진' 활동공유</h4>
+                        <div class="program-periods">
+                            <div class="period-item">
+                                <span class="period-label">신청기간</span>
+                                <span class="period-value">2025-08-30 ~ 2025-09-13</span>
+                            </div>
+                            <div class="period-item">
+                                <span class="period-label">참여기간</span>
+                                <span class="period-value">2025-08-30 ~ 2025-09-13</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="program-slider-dots" id="programSliderDots">
-                <!-- 슬라이드 도트들이 JavaScript로 동적으로 추가됩니다 -->
+                <span class="program-dot active" data-index="0"></span>
+                <span class="program-dot" data-index="1"></span>
+                <span class="program-dot" data-index="2"></span>
             </div>
         </div>
     </div>
@@ -108,8 +161,8 @@
     <!-- 연락처 및 운영시간 정보 -->
     <div class="contact-hours-info">
         <div class="contact-info">
-            <h3>이용문의</h3>
             <div class="contact-details">
+                <div class="section-label">이용문의</div>
                 <div class="phone-number">031-1111-2222</div>
                 <div class="phone-label">방과후아카데미</div>
                 <div class="phone-number">031-3333-4444</div>
@@ -118,10 +171,10 @@
             </div>
         </div>
         <div class="hours-info">
-            <h3>운영시간</h3>
             <div class="hours-details">
+                <div class="section-label">운영시간</div>
                 <div class="hours-row">
-                    <span class="day">화-금</span>
+                    <span class="day">화~금</span>
                     <span class="time">09:00~20:00</span>
                 </div>
                 <div class="hours-row">
@@ -140,7 +193,7 @@
                     <span class="day">토~일</span>
                     <span class="time">13:00~20:00</span>
                 </div>
-                <div class="closed-days">* 휴관일: 월요일, 공휴일, 근로자의날</div>
+                <div class="closed-days">*휴관일: 월요일, 공휴일, 근로자의날</div>
             </div>
         </div>
     </div>
@@ -446,12 +499,20 @@
     // 전역 함수로 정의
     window.initProgramSlider = function() {
         console.log('프로그램 슬라이더 초기화 시작');
+        
+        // 요소 찾기
         const sliderTrack = document.getElementById('programSliderTrack');
         const sliderDots = document.getElementById('programSliderDots');
-        if (!sliderTrack || !sliderDots) {
-            console.error('프로그램 슬라이더 요소를 찾을 수 없습니다');
+        
+        if (!sliderTrack) {
+            console.error('programSliderTrack 요소를 찾을 수 없습니다');
             return;
         }
+        if (!sliderDots) {
+            console.error('programSliderDots 요소를 찾을 수 없습니다');
+            return;
+        }
+        
         console.log('프로그램 슬라이더 요소 찾음');
 
         // 샘플 프로그램 데이터 (실제로는 API에서 가져올 수 있음)
@@ -584,10 +645,40 @@
         console.log('프로그램 슬라이더 초기화 완료');
     }
 
+    // 간단한 프로그램 슬라이더 기능
+    function initSimpleProgramSlider() {
+        const cards = document.querySelectorAll('.program-card');
+        const dots = document.querySelectorAll('.program-dot');
+        let currentIndex = 0;
+
+        function showSlide(index) {
+            cards.forEach(card => card.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+            
+            if (cards[index]) cards[index].classList.add('active');
+            if (dots[index]) dots[index].classList.add('active');
+            
+            currentIndex = index;
+        }
+
+        function nextSlide() {
+            const nextIndex = (currentIndex + 1) % cards.length;
+            showSlide(nextIndex);
+        }
+
+        // 도트 클릭 이벤트
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => showSlide(index));
+        });
+
+        // 자동 슬라이드 (5초마다)
+        setInterval(nextSlide, 5000);
+    }
+
     // 페이지 로드 후 슬라이더들 시작
     document.addEventListener('DOMContentLoaded', function() {
         window.initLogoSlider();
-        window.initProgramSlider();
+        initSimpleProgramSlider();
     });
     </script>
     <style>
@@ -745,12 +836,12 @@
         padding: 0 10px;
     }
 
-    .contact-info h3, .hours-info h3 {
-        color: #2196f3;
-        font-size: 1.2rem;
-        font-weight: 700;
-        margin-bottom: 15px;
-        text-align: center;
+    .section-label {
+        color: #333;
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+        text-align: left;
     }
 
     .contact-details, .hours-details {
