@@ -95,7 +95,9 @@
         </div>
         <div class="program-slider-container">
             <div class="program-slider-track" id="programSliderTrack">
-                <!-- 프로그램들이 JavaScript로 동적으로 추가됩니다 -->
+                <div style="padding: 20px; text-align: center; color: #666;">
+                    프로그램 정보를 불러오는 중...
+                </div>
             </div>
             <div class="program-slider-dots" id="programSliderDots">
                 <!-- 슬라이드 도트들이 JavaScript로 동적으로 추가됩니다 -->
@@ -399,8 +401,8 @@
     setInterval(updateDateTime, 1000);
     updateDateTime();
 
-    // 로고 슬라이더 애니메이션
-    function initLogoSlider() {
+    // 전역 함수로 정의
+    window.initLogoSlider = function() {
         const sliderTrack = document.getElementById('logoSliderTrack');
         if (!sliderTrack) return;
         
@@ -441,11 +443,16 @@
         setTimeout(animate, 500);
     }
     
-    // 프로그램 슬라이더 초기화
-    function initProgramSlider() {
+    // 전역 함수로 정의
+    window.initProgramSlider = function() {
+        console.log('프로그램 슬라이더 초기화 시작');
         const sliderTrack = document.getElementById('programSliderTrack');
         const sliderDots = document.getElementById('programSliderDots');
-        if (!sliderTrack || !sliderDots) return;
+        if (!sliderTrack || !sliderDots) {
+            console.error('프로그램 슬라이더 요소를 찾을 수 없습니다');
+            return;
+        }
+        console.log('프로그램 슬라이더 요소 찾음');
 
         // 샘플 프로그램 데이터 (실제로는 API에서 가져올 수 있음)
         const programs = [
@@ -574,12 +581,13 @@
 
         // 초기 슬라이드 설정
         showProgramSlide(0);
+        console.log('프로그램 슬라이더 초기화 완료');
     }
 
     // 페이지 로드 후 슬라이더들 시작
     document.addEventListener('DOMContentLoaded', function() {
-        initLogoSlider();
-        initProgramSlider();
+        window.initLogoSlider();
+        window.initProgramSlider();
     });
     </script>
     <style>
@@ -805,7 +813,7 @@
         bottom: 0;
         left: 0;
         width: 100%;
-        height: 60px;
+        height: 120px;
         background: transparent;
         overflow: hidden;
         z-index: 1000;
@@ -821,7 +829,7 @@
     }
     
     .logo-item {
-        height: 50px;
+        height: 100px;
         width: auto;
         object-fit: contain;
         flex-shrink: 0;
@@ -999,11 +1007,11 @@
         }
 
         .logo-slider-container {
-            height: 50px;
+            height: 100px;
         }
         
         .logo-item {
-            height: 40px;
+            height: 80px;
         }
         
         .logo-slider-track {
@@ -1035,11 +1043,11 @@
         }
 
         .logo-slider-container {
-            height: 45px;
+            height: 90px;
         }
         
         .logo-item {
-            height: 35px;
+            height: 70px;
         }
         
         .logo-slider-track {
